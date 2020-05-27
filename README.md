@@ -1,6 +1,8 @@
-# swoppyappflutter
+# swoppy app
 
-A new Flutter application to match business partners.
+![The swoppy logo](https://github.com/PSE-2020-HWR/swoppy-app/blob/master/swoppy_logo_v2.png)
+
+This is an app coded with Flutter to match business partners who want to buy or sell their business.
 
 ## Getting Started
 
