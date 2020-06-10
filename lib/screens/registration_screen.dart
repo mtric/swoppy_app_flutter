@@ -17,6 +17,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('ANMELDUNG'),
+      ),
       backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -34,16 +37,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             SizedBox(
               height: 48.0,
             ),
+            // E-Mail Textfeld
             TextField(
               keyboardType: TextInputType.emailAddress,
               style: TextStyle(color: Colors.black),
               textAlign: TextAlign.center,
               onChanged: (value) {
                 email = value;
-                //Do something with the user input.
               },
               decoration: InputDecoration(
-                hintText: 'Enter your email',
+                hintText: 'DEINE E-MAIL ADRESSE',
                 hintStyle: TextStyle(color: Colors.grey),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
@@ -63,16 +66,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             SizedBox(
               height: 8.0,
             ),
+            // Passwort Textfeld
             TextField(
               obscureText: true,
               style: TextStyle(color: Colors.black),
               textAlign: TextAlign.center,
               onChanged: (value) {
                 password = value;
-                //Do something with the user input.
               },
               decoration: InputDecoration(
-                hintText: 'Enter your password',
+                hintText: 'DEIN PASSWORT',
                 hintStyle: TextStyle(color: Colors.grey),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
@@ -102,6 +105,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   onPressed: () async {
                     print(email);
                     print(password);
+                    // try to register new user with credentials
                     try {
                       final newUser =
                           await _auth.createUserWithEmailAndPassword(
@@ -112,12 +116,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     } catch (e) {
                       print(e);
                     }
-                    //Implement registration functionality.
                   },
                   minWidth: 200.0,
                   height: 42.0,
                   child: Text(
-                    'Register',
+                    'ANMELDEN',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

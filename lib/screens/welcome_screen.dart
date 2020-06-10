@@ -28,6 +28,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     height: 60.0,
                   ),
                 ),
+                SizedBox(
+                  width: 10.0,
+                ),
                 Text(
                   'Swoppy',
                   style: TextStyle(
@@ -54,7 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   minWidth: 200.0,
                   height: 42.0,
                   child: Text(
-                    'Log In',
+                    'EINLOGGEN',
                   ),
                 ),
               ),
@@ -73,7 +76,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   minWidth: 200.0,
                   height: 42.0,
                   child: Text(
-                    'Register',
+                    'ANMELDEN',
                   ),
                 ),
               ),
