@@ -16,6 +16,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('LOG IN'),
+      ),
       backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -39,10 +42,9 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               onChanged: (value) {
                 email = value;
-                //Do something with the user input.
               },
               decoration: InputDecoration(
-                hintText: 'Enter your email',
+                hintText: 'DEINE E-MAIL ADRESSE',
                 hintStyle: TextStyle(color: Colors.grey),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
@@ -70,10 +72,9 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               onChanged: (value) {
                 password = value;
-                //Do something with the user input.
               },
               decoration: InputDecoration(
-                hintText: 'Enter your password.',
+                hintText: 'DEIN PASSWORT',
                 hintStyle: TextStyle(color: Colors.grey),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
@@ -105,13 +106,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () async {
                     print(email);
                     print(password);
+                    // try to login in with user credentials
                     try {
                       final user = await _auth.signInWithEmailAndPassword(
                           email: email, password: password);
                       if (user != null) {
                         Navigator.pushNamed(context, UserTestScreen.id);
                       }
-                      //Implement login functionality.
                     } catch (e) {
                       print(e);
                     }
@@ -119,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   minWidth: 200.0,
                   height: 42.0,
                   child: Text(
-                    'Log In',
+                    'EINLOGGEN',
                   ),
                 ),
               ),
