@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:Swoppy/constants.dart';
+import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/screens/video_screen.dart';
 
 class UserTestScreen extends StatefulWidget {
   static const String id = 'userTest_screen';
@@ -60,34 +61,44 @@ class _UserTestScreenState extends State<UserTestScreen> {
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              decoration: kMessageContainerDecoration,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: FlatButton(
-                      onPressed: () {
-                        getRandomNumber();
-                      },
-                      child: Image.asset('images/dice$leftDiceNumber.png'),
-                    ),
-                  ),
-                  Expanded(
-                    child: FlatButton(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Container(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: FlatButton(
                         onPressed: () {
                           getRandomNumber();
                         },
-                        child: Image.asset('images/dice$rightDiceNumber.png')),
-                  ),
-                ],
+                        child: Image.asset('images/dice$leftDiceNumber.png'),
+                      ),
+                    ),
+                    Expanded(
+                      child: FlatButton(
+                          onPressed: () {
+                            getRandomNumber();
+                          },
+                          child:
+                              Image.asset('images/dice$rightDiceNumber.png')),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              RoundedButton(
+                title: 'VIDEO',
+                colour: Colors.blueAccent,
+                onPressed: () {
+                  Navigator.pushNamed(context, VideoScreen.id);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
