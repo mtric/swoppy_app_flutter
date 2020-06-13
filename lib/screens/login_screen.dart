@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/constants.dart';
+import 'package:Swoppy/utilities/constants.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     height: 200.0,
                     child: Image.asset(
-                      'images/swoppy_logo_v2_test.png',
+                      'images/logo.png',
                     ),
                   ),
                 ),
@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               RoundedButton(
                 title: 'EINLOGGEN',
-                colour: Colors.lightBlueAccent,
+                colour: kMainGreyColor,
                 onPressed: () async {
                   setState(() {
                     showSpinner = true;

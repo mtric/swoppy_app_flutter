@@ -1,7 +1,7 @@
 import 'package:Swoppy/screens/login_screen.dart';
 import 'package:Swoppy/screens/registration_screen.dart';
+import 'package:Swoppy/utilities/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:Swoppy/components/rounded_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -45,42 +45,30 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Hero(
-                  tag: 'logo',
-                  child: Container(
-                    child: Image.asset(
-                      'images/swoppy_logo_v2_test.png',
-                    ),
-                    height: 60.0,
+            Flexible(
+              child: Hero(
+                tag: 'logo',
+                child: Container(
+                  child: Image.asset(
+                    'images/logo.png',
                   ),
+                  height: 200.0,
                 ),
-                SizedBox(
-                  width: 10.0,
-                ),
-                TypewriterAnimatedTextKit(
-                  text: ['SWOPPY'],
-                  textStyle: TextStyle(
-                    fontSize: 45.0,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
+              ),
             ),
             SizedBox(
               height: 48.0,
             ),
             RoundedButton(
               title: 'EINLOGGEN',
-              colour: Colors.lightBlueAccent,
+              colour: kMainGreyColor,
               onPressed: () {
                 Navigator.pushNamed(context, LoginScreen.id);
               },
             ),
             RoundedButton(
               title: 'ANMELDEN',
-              colour: Colors.blueAccent,
+              colour: kMainRedColor,
               onPressed: () {
                 Navigator.pushNamed(context, RegistrationScreen.id);
               },
