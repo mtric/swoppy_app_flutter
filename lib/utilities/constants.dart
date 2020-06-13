@@ -5,6 +5,12 @@ const kMainGreyColor = Color(0xFF575656);
 const kMainLightRedColor = Color(0xFFEA8597);
 const kMainLightGreyColor = Color(0xFF9C9C9C);
 
+const kSecondBlueColor = Color(0xFF256592);
+const kSecondLightBlueColor = Color(0xFF459DBB);
+const kSecondGreenColor = Color(0xFF4B9051);
+const kSecondLightGreenColor = Color(0xFF8Cb84F);
+const kSecondOrangeColor = Color(0xFFE9883E);
+
 const kSendButtonTextStyle = TextStyle(
   color: kMainLightRedColor,
   fontWeight: FontWeight.bold,
