@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const kPaddingProfileForm = EdgeInsets.symmetric(horizontal: 16.0);
+
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,
   fontWeight: FontWeight.bold,

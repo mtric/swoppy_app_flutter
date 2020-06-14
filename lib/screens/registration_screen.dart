@@ -1,6 +1,6 @@
-import 'package:Swoppy/screens/userTest_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
@@ -30,7 +30,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             Hero(
               tag: 'logo',
               child: Container(
-                height: 200.0,
+                height: 150.0,
                 child: Image.asset('images/swoppy_logo_v2_test.png'),
               ),
             ),
@@ -111,7 +111,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           await _auth.createUserWithEmailAndPassword(
                               email: email, password: password);
                       if (newUser != null) {
-                        Navigator.pushNamed(context, UserTestScreen.id);
+                        Navigator.pushNamed(context, ProfileScreen.id);
                       }
                     } catch (e) {
                       print(e);

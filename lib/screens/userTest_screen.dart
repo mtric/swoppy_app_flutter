@@ -1,8 +1,8 @@
 import 'dart:math';
 
+import 'package:Swoppy/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:Swoppy/constants.dart';
 
 class UserTestScreen extends StatefulWidget {
   static const String id = 'userTest_screen';
