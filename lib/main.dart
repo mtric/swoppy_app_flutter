@@ -3,6 +3,7 @@ import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/screens/login_screen.dart';
 import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/screens/registration_screen.dart';
+import 'package:Swoppy/screens/userTest_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,7 @@ class FlashChat extends StatelessWidget {
         ProfileScreen.id: (context) => ProfileScreen(),
         HardFactsScreen.id: (context) => HardFactsScreen(),
         DummyScreen.id: (context) => DummyScreen(),
+        UserTestScreen.id: (context) => UserTestScreen(),
       },
     );
   }

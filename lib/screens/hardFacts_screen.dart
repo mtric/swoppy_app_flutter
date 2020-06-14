@@ -2,7 +2,7 @@ import 'package:Swoppy/components/decimalTextInputFormatter.dart';
 import 'package:Swoppy/components/showDialogMissingInput.dart';
 import 'package:Swoppy/constants.dart';
 import 'package:Swoppy/screens/dummyScreen.dart';
-import 'package:Swoppy/userProfile.dart';
+import 'package:Swoppy/components/userProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   final _firestore = Firestore.instance;
   final _myLocationCodeController = TextEditingController();
 
-  String _trade = '';
+  String _tradeSector = '';
   String _locationCode = '';
   String _employee = '';
   String _turnover = '';
@@ -77,16 +77,16 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                         icon: Icon(Icons.business),
                         labelText: 'Branche',
                       ),
-                      isEmpty: _trade == '',
+                      isEmpty: _tradeSector == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
-                          value: _trade,
+                          value: _tradeSector,
                           isDense: true,
                           onChanged: (String newValue) {
                             setState(() {
                               //                    state.didChange(newValue);
-                              _trade = newValue;
-                              print(_trade);
+                              _tradeSector = newValue;
+                              print(_tradeSector);
                             });
                           },
                           items: kTradeList.map((String value) {
@@ -271,7 +271,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                   },
                 ),
                 FormBuilderSwitch(
-                  label: Text('I Accept the terms and conditions'),
+                  label: Text('Ich akzeptiere die AGBs'),
                   attribute: "accept_terms_switch",
                   initialValue: false,
                   onChanged: _onChanged,
@@ -294,7 +294,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                         'city': args.city,
                         'address': args.address,
                         'abstract': args.abstract,
-                        'trade': _trade,
+                        'tradeSector': _tradeSector,
                         'locationCode': _locationCode,
                         'employee': _employee,
                         'turnover': _turnover,
