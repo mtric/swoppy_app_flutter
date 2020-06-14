@@ -1,9 +1,10 @@
-import 'dart:math';
-
+import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/screens/picture_screen.dart';
 import 'package:Swoppy/screens/video_screen.dart';
+import 'package:Swoppy/camera_screen.dart';
 
 class UserTestScreen extends StatefulWidget {
   static const String id = 'userTest_screen';
@@ -33,21 +34,11 @@ class _UserTestScreenState extends State<UserTestScreen> {
     }
   }
 
-  int leftDiceNumber = 2;
-  int rightDiceNumber = 1;
-
-  void getRandomNumber() {
-    setState(() {
-      leftDiceNumber = Random().nextInt(6) + 1;
-      rightDiceNumber = Random().nextInt(6) + 1;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: null,
+        title: Text('User Test Screen'),
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.close),
@@ -57,44 +48,33 @@ class _UserTestScreenState extends State<UserTestScreen> {
                 //Implement logout functionality
               }),
         ],
-        title: Text('User Test Screen'),
-        backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Container(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: FlatButton(
-                        onPressed: () {
-                          getRandomNumber();
-                        },
-                        child: Image.asset('images/dice$leftDiceNumber.png'),
-                      ),
-                    ),
-                    Expanded(
-                      child: FlatButton(
-                          onPressed: () {
-                            getRandomNumber();
-                          },
-                          child:
-                              Image.asset('images/dice$rightDiceNumber.png')),
-                    ),
-                  ],
-                ),
+              RoundedButton(
+                title: 'PICTURE',
+                colour: kMainGreyColor,
+                onPressed: () {
+                  Navigator.pushNamed(context, PictureScreen.id);
+                },
               ),
               RoundedButton(
                 title: 'VIDEO',
-                colour: Colors.blueAccent,
+                colour: kMainRedColor,
                 onPressed: () {
                   Navigator.pushNamed(context, VideoScreen.id);
+                },
+              ),
+              RoundedButton(
+                title: 'CAMERA',
+                colour: kMainRedColor,
+                onPressed: () {
+                  Navigator.pushNamed(context, CameraScreen.id);
                 },
               ),
             ],

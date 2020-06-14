@@ -42,6 +42,13 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSCameraUsageDescription</key>
-	<string>Die Kamera wird zur Aufnahme des Profilvideos genutzt.</string>
+	<string>Darf die Kamera zur Aufnahme des Profilvideos genutzt werden?</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Darf das Mikrofon zur Aufnahme des Profilvideos genutzt werden?</string>
+	<key>NSAppTransportSecurity</key>
+    <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
+    </dict>
 </dict>
 </plist>

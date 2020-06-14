@@ -26,7 +26,12 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
+        color: kMainGreyColor,
         inAsyncCall: showSpinner,
+        progressIndicator: CircularProgressIndicator(
+          backgroundColor: kMainGreyColor,
+          valueColor: AlwaysStoppedAnimation<Color>(kMainRedColor),
+        ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(

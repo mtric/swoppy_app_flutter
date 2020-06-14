@@ -27,6 +27,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
+        color: kMainGreyColor,
+        progressIndicator: CircularProgressIndicator(
+          backgroundColor: kMainGreyColor,
+          valueColor: AlwaysStoppedAnimation<Color>(kMainRedColor),
+        ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(

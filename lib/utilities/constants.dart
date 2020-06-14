@@ -11,6 +11,8 @@ const kSecondGreenColor = Color(0xFF4B9051);
 const kSecondLightGreenColor = Color(0xFF8Cb84F);
 const kSecondOrangeColor = Color(0xFFE9883E);
 
+const kBottomAppBarColor = Color(0x20000000);
+
 const kSendButtonTextStyle = TextStyle(
   color: kMainLightRedColor,
   fontWeight: FontWeight.bold,

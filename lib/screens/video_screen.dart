@@ -1,130 +1,334 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
-import 'package:Swoppy/screens/display_picture_screen.dart';
+import 'package:Swoppy/utilities/constants.dart';
 
 class VideoScreen extends StatefulWidget {
-  final CameraDescription camera;
-
-  const VideoScreen({
-    Key key,
-    @required this.camera,
-  }) : super(key: key);
-
   static const String id = 'video_screen';
+
   @override
-  _VideoScreenState createState() => _VideoScreenState();
+  _VideoScreenState createState() {
+    return _VideoScreenState();
+  }
 }
 
 class _VideoScreenState extends State<VideoScreen> {
-  CameraController _controller;
-  Future<void> _initializeControllerFuture;
+  CameraController controller;
+
+  String videoPath;
+
+  List<CameraDescription> cameras;
+
+  int selectedCameraIdx;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  void dispose() {
-    // Dispose of the controller when the widget is disposed.
-    _controller.dispose();
-    super.dispose();
-  }
-
-  final _auth = FirebaseAuth.instance;
-  FirebaseUser loggedInUser;
-
   void initState() {
     super.initState();
-    // To display the current output from the Camera,
-    // create a CameraController.
-    _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
-      widget.camera,
-      // Define the resolution to use.
-      ResolutionPreset.medium,
-    );
 
-    // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controller.initialize();
-    getCurrentUser();
-  }
+    // Get the listonNewCameraSelected of available cameras.
 
-  void getCurrentUser() async {
-    try {
-      final user = await _auth.currentUser();
-      if (user != null) {
-        loggedInUser = user;
-        // print(loggedInUser.email);
+    // Then set the first camera as selected.
+
+    availableCameras().then((availableCameras) {
+      cameras = availableCameras;
+
+      if (cameras.length > 0) {
+        setState(() {
+          selectedCameraIdx = 0;
+        });
+
+        _onCameraSwitched(cameras[selectedCameraIdx]).then((void v) {});
       }
-    } catch (e) {
-      print(e);
-    }
+    }).catchError((err) {
+      print('Error: $err.code\nError Message: $err.message');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
-        leading: null,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                // logout functionality
-                _auth.signOut();
-                Navigator.pop(context);
-              }),
-        ],
-        title: Text('Video Screen'),
-        backgroundColor: Colors.lightBlueAccent,
+        title: const Text('VIDEO AUFNEHMEN'),
       ),
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return CameraPreview(_controller);
-          } else {
-            // Otherwise, display a loading indicator.
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.camera_alt),
-        // Provide an onPressed callback.
-        onPressed: () async {
-          // Take the Picture in a try / catch block. If anything goes wrong,
-          // catch the error.
-          try {
-            // Ensure that the camera is initialized.
-            await _initializeControllerFuture;
-
-            // Construct the path where the image should be saved using the
-            // pattern package.
-            final path = join(
-              // Store the picture in the temp directory.
-              // Find the temp directory using the `path_provider` plugin.
-              (await getTemporaryDirectory()).path,
-              '${DateTime.now()}.png',
-            );
-
-            // Attempt to take a picture and log where it's been saved.
-            await _controller.takePicture(path);
-
-            // If the picture was taken, display it on a new screen.
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(imagePath: path),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: Center(
+                  child: _cameraPreviewWidget(),
+                ),
               ),
-            );
-          } catch (e) {
-            // If an error occurs, log the error to the console.
-            print(e);
-          }
-        },
+              decoration: BoxDecoration(
+                color: Colors.black,
+                border: Border.all(
+                  color: controller != null && controller.value.isRecordingVideo
+                      ? Colors.redAccent
+                      : Colors.grey,
+                  width: 3.0,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                _cameraTogglesRowWidget(),
+                _captureControlRowWidget(),
+                Expanded(
+                  child: SizedBox(),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  IconData _getCameraLensIcon(CameraLensDirection direction) {
+    switch (direction) {
+      case CameraLensDirection.back:
+        return Icons.camera_rear;
+
+      case CameraLensDirection.front:
+        return Icons.camera_front;
+
+      case CameraLensDirection.external:
+        return Icons.camera;
+
+      default:
+        return Icons.device_unknown;
+    }
+  }
+
+  // Display 'Loading' text when the camera is still loading.
+  Widget _cameraPreviewWidget() {
+    if (controller == null || !controller.value.isInitialized) {
+      return CircularProgressIndicator(
+        backgroundColor: kMainGreyColor,
+        valueColor: AlwaysStoppedAnimation<Color>(kMainRedColor),
+      );
+    }
+
+    return AspectRatio(
+      aspectRatio: controller.value.aspectRatio,
+      child: CameraPreview(controller),
+    );
+  }
+
+  /// Display a row of toggle to select the camera (or a message if no camera is available).
+  Widget _cameraTogglesRowWidget() {
+    if (cameras == null) {
+      return Row();
+    }
+
+    CameraDescription selectedCamera = cameras[selectedCameraIdx];
+
+    CameraLensDirection lensDirection = selectedCamera.lensDirection;
+
+    return Expanded(
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: FlatButton.icon(
+          onPressed: _onSwitchCamera,
+          icon: Icon(_getCameraLensIcon(lensDirection)),
+          label: Text(
+              "${lensDirection.toString().substring(lensDirection.toString().indexOf('.') + 1)}"),
+        ),
+      ),
+    );
+  }
+
+  /// Display the control bar with buttons to record videos.
+  Widget _captureControlRowWidget() {
+    return Expanded(
+      child: Align(
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.videocam),
+              color: Colors.blue,
+              onPressed: controller != null &&
+                      controller.value.isInitialized &&
+                      !controller.value.isRecordingVideo
+                  ? _onRecordButtonPressed
+                  : null,
+            ),
+            IconButton(
+              icon: const Icon(Icons.stop),
+              color: Colors.red,
+              onPressed: controller != null &&
+                      controller.value.isInitialized &&
+                      controller.value.isRecordingVideo
+                  ? _onStopButtonPressed
+                  : null,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
+
+  Future<void> _onCameraSwitched(CameraDescription cameraDescription) async {
+    if (controller != null) {
+      await controller.dispose();
+    }
+
+    controller = CameraController(cameraDescription, ResolutionPreset.high);
+
+    // If the controller is updated then update the UI.
+
+    controller.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+
+      if (controller.value.hasError) {
+        Fluttertoast.showToast(
+            msg: 'Camera error ${controller.value.errorDescription}',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white);
+      }
+    });
+
+    try {
+      await controller.initialize();
+    } on CameraException catch (e) {
+      _showCameraException(e);
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void _onSwitchCamera() {
+    selectedCameraIdx =
+        selectedCameraIdx < cameras.length - 1 ? selectedCameraIdx + 1 : 0;
+
+    CameraDescription selectedCamera = cameras[selectedCameraIdx];
+
+    _onCameraSwitched(selectedCamera);
+
+    setState(() {
+      selectedCameraIdx = selectedCameraIdx;
+    });
+  }
+
+  void _onRecordButtonPressed() {
+    _startVideoRecording().then((String filePath) {
+      if (filePath != null) {
+        Fluttertoast.showToast(
+            msg: 'Recording video started',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white);
+      }
+    });
+  }
+
+  void _onStopButtonPressed() {
+    _stopVideoRecording().then((_) {
+      if (mounted) setState(() {});
+
+      Fluttertoast.showToast(
+          msg: 'Video recorded to $videoPath',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white);
+    });
+  }
+
+  Future<String> _startVideoRecording() async {
+    if (!controller.value.isInitialized) {
+      Fluttertoast.showToast(
+          msg: 'Please wait',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white);
+
+      return null;
+    }
+
+    // Do nothing if a recording is on progress
+
+    if (controller.value.isRecordingVideo) {
+      return null;
+    }
+
+    final Directory appDirectory = await getApplicationDocumentsDirectory();
+
+    final String videoDirectory = '${appDirectory.path}/Videos';
+
+    await Directory(videoDirectory).create(recursive: true);
+
+    final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
+
+    final String filePath = '$videoDirectory/$currentTime.mp4';
+
+    try {
+      await controller.startVideoRecording(filePath);
+
+      videoPath = filePath;
+    } on CameraException catch (e) {
+      _showCameraException(e);
+
+      return null;
+    }
+
+    return filePath;
+  }
+
+  Future<void> _stopVideoRecording() async {
+    if (!controller.value.isRecordingVideo) {
+      return null;
+    }
+
+    try {
+      await controller.stopVideoRecording();
+    } on CameraException catch (e) {
+      _showCameraException(e);
+
+      return null;
+    }
+  }
+
+  void _showCameraException(CameraException e) {
+    String errorText = 'Error: ${e.code}\nError Message: ${e.description}';
+
+    print(errorText);
+
+    Fluttertoast.showToast(
+        msg: 'Error: ${e.code}\n${e.description}',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white);
   }
 }
