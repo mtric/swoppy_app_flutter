@@ -1,6 +1,6 @@
 import 'package:Swoppy/components/decimalTextInputFormatter.dart';
 import 'package:Swoppy/components/showDialogMissingInput.dart';
-import 'package:Swoppy/constants.dart';
+import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/screens/dummyScreen.dart';
 import 'package:Swoppy/components/userProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

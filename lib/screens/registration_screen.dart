@@ -1,4 +1,4 @@
-import 'package:Swoppy/screens/userTest_screen.dart';
+import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -90,7 +90,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     final newUser = await _auth.createUserWithEmailAndPassword(
                         email: email, password: password);
                     if (newUser != null) {
-                      Navigator.pushNamed(context, UserTestScreen.id);
+                      Navigator.pushNamed(context, ProfileScreen.id);
                     }
 
                     setState(() {

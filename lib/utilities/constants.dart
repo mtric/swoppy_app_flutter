@@ -47,3 +47,5 @@ const kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(32.0)),
   ),
 );
+
+const kPaddingProfileForm = EdgeInsets.symmetric(horizontal: 16.0);
