@@ -1,7 +1,4 @@
-import 'package:Swoppy/screens/dummyScreen.dart';
-import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/screens/login_screen.dart';
-import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/screens/registration_screen.dart';
 import 'package:Swoppy/screens/userTest_screen.dart';
 import 'package:Swoppy/screens/video_screen.dart';

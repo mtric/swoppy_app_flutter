@@ -36,6 +36,9 @@ Future<void> main() async {
           PictureScreen.id: (context) => PictureScreen(),
           VideoScreen.id: (context) => VideoScreen(),
           CameraScreen.id: (context) => CameraScreen(),
+          ProfileScreen.id: (context) => ProfileScreen(),
+          HardFactsScreen.id: (context) => HardFactsScreen(),
+          DummyScreen.id: (context) => DummyScreen(),
         },
       ),
     );
