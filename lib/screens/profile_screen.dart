@@ -1,4 +1,4 @@
-import 'package:Swoppy/components/showDialogMissingInput.dart';
+import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/userProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -166,9 +166,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             TextFormField(
-              controller: _myEmailController,
+              enabled: false,
+              //             controller: _myEmailController,
               decoration: InputDecoration(
                 icon: Icon(Icons.email),
+                hintText: "Eingabe deaktiviert",
                 labelText: 'EMail',
               ),
               keyboardType: TextInputType.emailAddress,
@@ -237,7 +239,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               margin: const EdgeInsets.only(left: 32.0),
               onSelected: (String selected) => setState(() {
                 _picked = selected;
-                _picked == 'Käufer' ? _userID = 'buyer' : _userID = 'seller';
+                _picked == 'Käufer*' ? _userID = 'buyer' : _userID = 'seller';
               }),
               labels: <String>[
                 "Käufer*",
@@ -296,7 +298,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               _myAbstractController.text));
                     } else {
                       // Form not complete, missing or incorrect entries.
-                      showAlertDialog(context);
+                      showInputNotComplete(context);
                     }
                   },
                   child: Text('Weiter'),
