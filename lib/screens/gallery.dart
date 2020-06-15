@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
-import 'package:Swoppy/video_preview.dart';
+import 'package:Swoppy/components/video_preview.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 

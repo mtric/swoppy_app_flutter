@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import '../profileHardFactsCriteria.dart';
+import '../utilities/profileHardFactsCriteria.dart';
 
 class HardFactsScreen extends StatefulWidget {
   static const String id = 'hardFacts_screen';

@@ -6,8 +6,7 @@ import 'package:Swoppy/screens/registration_screen.dart';
 import 'package:Swoppy/screens/userTest_screen.dart';
 import 'package:Swoppy/screens/video_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
-import 'package:Swoppy/screens/picture_screen.dart';
-import 'package:Swoppy/camera_screen.dart';
+import 'package:Swoppy/screens/camera_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +32,6 @@ Future<void> main() async {
           LoginScreen.id: (context) => LoginScreen(),
           RegistrationScreen.id: (context) => RegistrationScreen(),
           UserTestScreen.id: (context) => UserTestScreen(),
-          PictureScreen.id: (context) => PictureScreen(),
           VideoScreen.id: (context) => VideoScreen(),
           CameraScreen.id: (context) => CameraScreen(),
           ProfileScreen.id: (context) => ProfileScreen(),
