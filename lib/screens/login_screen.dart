@@ -1,6 +1,6 @@
 import 'package:Swoppy/screens/userTest_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -26,11 +26,13 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Hero(
-              tag: 'logo',
-              child: Container(
-                height: 200.0,
-                child: Image.asset('images/swoppy_logo_v2_test.png'),
+            Flexible(
+              child: Hero(
+                tag: 'logo',
+                child: Container(
+                  height: 200.0,
+                  child: Image.asset('images/Logo-Nachfolge-Matching.png'),
+                ),
               ),
             ),
             SizedBox(
@@ -96,31 +98,34 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               height: 24.0,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                color: Colors.lightBlueAccent,
-                borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                elevation: 5.0,
-                child: MaterialButton(
-                  onPressed: () async {
-                    print(email);
-                    print(password);
-                    // try to login in with user credentials
-                    try {
-                      final user = await _auth.signInWithEmailAndPassword(
-                          email: email, password: password);
-                      if (user != null) {
-                        Navigator.pushNamed(context, UserTestScreen.id);
+            Hero(
+              tag: 'EINLOGGEN',
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Material(
+                  color: Colors.lightBlueAccent,
+                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  elevation: 5.0,
+                  child: MaterialButton(
+                    onPressed: () async {
+                      print(email);
+                      print(password);
+                      // try to login in with user credentials
+                      try {
+                        final user = await _auth.signInWithEmailAndPassword(
+                            email: email, password: password);
+                        if (user != null) {
+                          Navigator.pushNamed(context, UserTestScreen.id);
+                        }
+                      } catch (e) {
+                        print(e);
                       }
-                    } catch (e) {
-                      print(e);
-                    }
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: Text(
-                    'EINLOGGEN',
+                    },
+                    minWidth: 200.0,
+                    height: 42.0,
+                    child: Text(
+                      'EINLOGGEN',
+                    ),
                   ),
                 ),
               ),
