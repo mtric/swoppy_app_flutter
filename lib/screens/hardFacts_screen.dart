@@ -1,5 +1,5 @@
+import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/decimalTextInputFormatter.dart';
-import 'package:Swoppy/components/showDialogMissingInput.dart';
 import 'package:Swoppy/constants.dart';
 import 'package:Swoppy/screens/dummyScreen.dart';
 import 'package:Swoppy/components/userProfile.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import '../profileHardFactsCriteria.dart';
+import 'package:Swoppy/components/profileHardFactsCriteria.dart';
 
 class HardFactsScreen extends StatefulWidget {
   static const String id = 'hardFacts_screen';
@@ -26,7 +26,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   final _firestore = Firestore.instance;
   final _myLocationCodeController = TextEditingController();
 
-  String _tradeSector = '';
+  String _trade = '';
   String _locationCode = '';
   String _employee = '';
   String _turnover = '';
@@ -60,7 +60,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
 //              Navigator.pop(context);
 //            }),
 //      ],
-        title: Text('Hard-Facts'),
+        title: Text('Hardfacts'),
       ),
       body: Form(
         key: _formKey,
@@ -77,16 +77,16 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                         icon: Icon(Icons.business),
                         labelText: 'Branche',
                       ),
-                      isEmpty: _tradeSector == '',
+                      isEmpty: _trade == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
-                          value: _tradeSector,
+                          value: _trade,
                           isDense: true,
                           onChanged: (String newValue) {
                             setState(() {
                               //                    state.didChange(newValue);
-                              _tradeSector = newValue;
-                              print(_tradeSector);
+                              _trade = newValue;
+                              print(_trade);
                             });
                           },
                           items: kTradeList.map((String value) {
@@ -110,12 +110,12 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     SizedBox(width: 15.0),
                     Expanded(
                       child: TextFormField(
+                          controller: _myLocationCodeController,
                           inputFormatters: [
                             DecimalTextInputFormatter(
                                 decimalRange: 2, activatedNegativeValues: false)
                           ],
                           keyboardType: TextInputType.number,
-                          controller: _myLocationCodeController,
                           decoration: InputDecoration()),
                     ),
                   ],
@@ -136,7 +136,6 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                           onChanged: (String newValue) {
                             setState(() {
                               _employee = newValue;
-                              print(_employee);
                             });
                           },
                           items: kEmployeeList.map((String value) {
@@ -216,7 +215,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     return InputDecorator(
                       decoration: InputDecoration(
                         icon: Icon(Icons.euro_symbol),
-                        labelText: 'Verkaufspreis',
+                        labelText: 'Preis',
                       ),
                       isEmpty: _sellingPrice == '',
                       child: DropdownButtonHideUnderline(
@@ -281,10 +280,15 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                   color: Colors.blue,
                   textColor: Colors.white,
                   onPressed: () {
+                    _locationCode = _myLocationCodeController.text + 'xxx';
                     // Check whether all validators of the fields are valid.
                     if (_formKey.currentState.validate() && _termsAccepted) {
-                      // Add Inputs to Database
-                      _firestore.collection(args.userID).add({
+                      // Create firebase entry according to the collection (userID = seller or buyer)
+                      DocumentReference documentReference = Firestore.instance
+                          .collection(args.userID)
+                          .document(args.eMail);
+
+                      Map<String, dynamic> user = {
                         'title': args.title,
                         'lastName': args.lastName,
                         'firstName': args.firstName,
@@ -294,19 +298,22 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                         'city': args.city,
                         'address': args.address,
                         'abstract': args.abstract,
-                        'tradeSector': _tradeSector,
+                        'trade': _trade,
                         'locationCode': _locationCode,
                         'employee': _employee,
                         'turnover': _turnover,
                         'property': _property,
                         'sellingPrice': _sellingPrice,
                         'handoverTime': _handoverTime
-                      });
+                      };
 
-                      Navigator.pushNamed(context, DummyScreen.id);
+                      documentReference.setData(user).whenComplete(
+                          () => showDataSaved((context), args.userID));
+
+                      //  Navigator.pushNamed(context, DummyScreen.id);
                     } else {
                       // Form not complete, missing or incorrect entries.
-                      showAlertDialog(context);
+                      showInputNotComplete(context);
                     }
                   },
                   child: Text('Speichern'),
