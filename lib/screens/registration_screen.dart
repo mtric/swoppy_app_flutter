@@ -23,7 +23,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ANMELDUNG'),
+        title: Text('REGISTRIERUNG'),
       ),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
@@ -87,7 +87,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
               ),
               RoundedButton(
-                title: 'ANMELDEN',
+                title: 'REGISTRIEREN',
                 colour: kMainRedColor,
                 onPressed: () async {
                   setState(() {
