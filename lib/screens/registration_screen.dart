@@ -33,7 +33,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 tag: 'logo',
                 child: Container(
                   height: 150.0,
-                  child: Image.asset('images/swoppy_logo_v2_test.png'),
+                  child: Image.asset('images/Logo-Nachfolge-Matching.png'),
                 ),
               ),
             ),
@@ -98,6 +98,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             SizedBox(
               height: 24.0,
             ),
+
             Text(warnung,
                 style: TextStyle(color: Colors.red),
                 textAlign: TextAlign.center),
@@ -122,9 +123,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           Navigator.pushNamed(context, ProfileScreen.id);
                         }
                       } catch (e) {
-                        setState(() {
-                          warnung = 'Benutzer existiert bereits!';
-                        });
+                        warnung = 'Benutzer existiert bereits!';
                         print(e);
                         print(warnung);
                       }

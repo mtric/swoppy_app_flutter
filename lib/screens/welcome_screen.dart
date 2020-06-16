@@ -22,28 +22,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Flexible(
-                  child: Hero(
-                    tag: 'logo',
-                    child: Container(
-                      child: Image.asset('images/swoppy_logo_v2_test.png'),
-                      height: 60.0,
-                    ),
-                  ),
+            Flexible(
+              child: Hero(
+                tag: 'logo',
+                child: Container(
+                  child: Image.asset('images/Logo-Nachfolge-Matching.png'),
+                  height: 200.0,
                 ),
-                SizedBox(
-                  width: 10.0,
-                ),
-                Text(
-                  'Swoppy',
-                  style: TextStyle(
-                    fontSize: 45.0,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
+              ),
             ),
             SizedBox(
               height: 48.0,
@@ -112,9 +98,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () async {
-                    await signInWithGoogle().whenComplete(() {
-                      Navigator.pushNamed(context, ProfileScreen.id);
-                    });
+                    try {
+                      await signInWithGoogle().whenComplete(() {
+                        Navigator.pushNamed(context, ProfileScreen.id);
+                      });
+                    } catch (e) {
+                      print(e);
+                      Navigator.pushNamed(context, WelcomeScreen.id);
+                    }
                   },
                   minWidth: 200.0,
                   height: 42.0,
