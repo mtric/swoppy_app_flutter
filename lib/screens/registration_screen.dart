@@ -16,6 +16,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String warnung = ' ';
     return Scaffold(
       appBar: AppBar(
         title: Text('ANMELDUNG'),
@@ -27,11 +28,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Hero(
-              tag: 'logo',
-              child: Container(
-                height: 150.0,
-                child: Image.asset('images/swoppy_logo_v2_test.png'),
+            Flexible(
+              child: Hero(
+                tag: 'logo',
+                child: Container(
+                  height: 150.0,
+                  child: Image.asset('images/swoppy_logo_v2_test.png'),
+                ),
               ),
             ),
             SizedBox(
@@ -95,33 +98,43 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             SizedBox(
               height: 24.0,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                elevation: 5.0,
-                child: MaterialButton(
-                  onPressed: () async {
-                    print(email);
-                    print(password);
-                    // try to register new user with credentials
-                    try {
-                      final newUser =
-                          await _auth.createUserWithEmailAndPassword(
-                              email: email, password: password);
-                      if (newUser != null) {
-                        Navigator.pushNamed(context, ProfileScreen.id);
+            Text(warnung,
+                style: TextStyle(color: Colors.red),
+                textAlign: TextAlign.center),
+            Hero(
+              tag: 'ANMELDEN',
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Material(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  elevation: 5.0,
+                  child: MaterialButton(
+                    onPressed: () async {
+                      print(email);
+                      print(password);
+                      // try to register new user with credentials
+                      try {
+                        final newUser =
+                            await _auth.createUserWithEmailAndPassword(
+                                email: email, password: password);
+                        if (newUser != null) {
+                          Navigator.pushNamed(context, ProfileScreen.id);
+                        }
+                      } catch (e) {
+                        setState(() {
+                          warnung = 'Benutzer existiert bereits!';
+                        });
+                        print(e);
+                        print(warnung);
                       }
-                    } catch (e) {
-                      print(e);
-                    }
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: Text(
-                    'ANMELDEN',
-                    style: TextStyle(color: Colors.white),
+                    },
+                    minWidth: 200.0,
+                    height: 42.0,
+                    child: Text(
+                      'ANMELDEN',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),

@@ -24,11 +24,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Hero(
-                  tag: 'logo',
-                  child: Container(
-                    child: Image.asset('images/swoppy_logo_v2_test.png'),
-                    height: 60.0,
+                Flexible(
+                  child: Hero(
+                    tag: 'logo',
+                    child: Container(
+                      child: Image.asset('images/swoppy_logo_v2_test.png'),
+                      height: 60.0,
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -46,40 +48,58 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             SizedBox(
               height: 48.0,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                elevation: 5.0,
-                color: Colors.lightBlueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                child: MaterialButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, LoginScreen.id);
-                    //Go to login screen.
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: Text(
-                    'EINLOGGEN',
+            Hero(
+              tag: 'EINLOGGEN',
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Material(
+                  elevation: 5.0,
+                  color: Colors.lightBlueAccent,
+                  borderRadius: BorderRadius.circular(30.0),
+                  child: MaterialButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, LoginScreen.id);
+                      //Go to login screen.
+                    },
+                    minWidth: 200.0,
+                    height: 42.0,
+                    child: Text(
+                      'EINLOGGEN',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Hero(
+              tag: 'ANMELDEN',
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Material(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(30.0),
+                  elevation: 5.0,
+                  child: MaterialButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, RegistrationScreen.id);
+                      //Go to registration screen.
+                    },
+                    minWidth: 200.0,
+                    height: 42.0,
+                    child: Text(
+                      'ANMELDEN',
+                    ),
                   ),
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                elevation: 5.0,
-                child: MaterialButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, RegistrationScreen.id);
-                    //Go to registration screen.
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: Text(
-                    'ANMELDEN',
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Center(
+                child: Text(
+                  'or',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
                   ),
                 ),
               ),
