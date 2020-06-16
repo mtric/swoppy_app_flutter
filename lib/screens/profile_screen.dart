@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:Swoppy/utilities/constants.dart';
+import 'package:Swoppy/components/rounded_button.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'profile_screen';
@@ -85,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
         title: Text('Benutzerprofil'),
       ),
-      // backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       body: Form(
         key: _formKey,
         autovalidate: true,
@@ -137,8 +138,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: TextFormField(
                     controller: _myFirstNameController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.person),
+                      icon: Icon(
+                        Icons.person,
+                        color: kMainGreyColor,
+                      ),
                       labelText: 'Vorname*',
+                      labelStyle: TextStyle(
+                        color: kMainGreyColor,
+                      ),
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
@@ -154,6 +161,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     controller: _myLastNameController,
                     decoration: InputDecoration(
                       labelText: 'Nachname*',
+                      labelStyle: TextStyle(
+                        color: kMainGreyColor,
+                      ),
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
@@ -169,17 +179,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
               enabled: false,
               //             controller: _myEmailController,
               decoration: InputDecoration(
-                icon: Icon(Icons.email),
+                icon: Icon(
+                  Icons.email,
+                  color: kMainGreyColor,
+                ),
                 hintText: "Eingabe deaktiviert",
-                labelText: 'EMail',
+                hintStyle: TextStyle(color: Colors.grey),
+                labelText: 'E-Mail',
+                labelStyle: TextStyle(
+                  color: kMainGreyColor,
+                ),
               ),
               keyboardType: TextInputType.emailAddress,
             ),
             TextFormField(
               controller: _myPhoneController,
               decoration: InputDecoration(
-                icon: Icon(Icons.phone),
+                icon: Icon(
+                  Icons.phone,
+                  color: kMainGreyColor,
+                ),
                 labelText: 'Phone',
+                labelStyle: TextStyle(
+                  color: kMainGreyColor,
+                ),
               ),
               keyboardType: TextInputType.phone,
               inputFormatters: [
@@ -195,8 +218,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   keyboardType: TextInputType.number,
                   controller: _myZipCodeController,
                   decoration: InputDecoration(
-                    icon: Icon(Icons.home),
+                    icon: Icon(
+                      Icons.home,
+                      color: kMainGreyColor,
+                    ),
                     labelText: 'PLZ*',
+                    labelStyle: TextStyle(
+                      color: kMainGreyColor,
+                    ),
                   ),
                   validator: (value) {
                     if (value.isEmpty ||
@@ -215,6 +244,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     labelText: 'Ort*',
+                    labelStyle: TextStyle(
+                      color: kMainGreyColor,
+                    ),
                   ),
                   validator: (value) {
                     if (value.isEmpty) {
@@ -230,13 +262,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
               decoration: InputDecoration(
                 icon: Icon(null),
                 labelText: 'Strasse / Hausnummer',
+                labelStyle: TextStyle(
+                  color: kMainGreyColor,
+                ),
               ),
               keyboardType: TextInputType.text,
             ),
             SizedBox(height: 10),
             RadioButtonGroup(
               orientation: GroupedButtonsOrientation.HORIZONTAL,
+              activeColor: kMainRedColor,
               margin: const EdgeInsets.only(left: 32.0),
+              labelStyle: TextStyle(
+                color: Colors.black54,
+              ),
               onSelected: (String selected) => setState(() {
                 _picked = selected;
                 _picked == 'Käufer*' ? _userID = 'buyer' : _userID = 'seller';
@@ -259,28 +298,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
               maxLines: 5,
               maxLength: 120,
               controller: _myAbstractController,
+              style: TextStyle(
+                color: Colors.black54,
+                decorationColor: Colors.black54,
+              ),
               decoration: InputDecoration(
-                icon: Icon(Icons.text_fields),
+                icon: Icon(
+                  Icons.text_fields,
+                  color: kMainGreyColor,
+                ),
                 hintText: 'Kurzbeschreibung Unternehmen/Person',
-                border: OutlineInputBorder(),
+                hintStyle: TextStyle(color: Colors.grey),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
               ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                RaisedButton(
-                  color: Colors.grey,
-                  textColor: Colors.white,
+                RoundedButton(
+                  title: 'LÖSCHEN',
+                  colour: kMainGreyColor,
+                  minWidth: 100,
                   onPressed: () {
                     // reset() setzt alle Felder wieder auf den Initalwert zurück.
                     _formKey.currentState.reset();
                   },
-                  child: Text('Löschen'),
                 ),
                 SizedBox(width: 25),
-                RaisedButton(
-                  color: Colors.blue,
-                  textColor: Colors.white,
+                RoundedButton(
+                  title: 'WEITER',
+                  colour: kMainRedColor,
+                  minWidth: 100,
                   onPressed: () {
                     // Check whether all validators of the fields are valid.
                     if (_formKey.currentState.validate() && (_picked != '')) {
@@ -301,8 +351,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       showInputNotComplete(context);
                     }
                   },
-                  child: Text('Weiter'),
-                )
+                ),
               ],
             ),
           ],

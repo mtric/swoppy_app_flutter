@@ -24,7 +24,12 @@ Future<void> main() async {
           textTheme: TextTheme(
             bodyText2: TextStyle(color: Colors.black54),
           ),
+          accentColor: kMainRedColor,
+          toggleableActiveColor: kMainRedColor,
           bottomAppBarColor: kBottomAppBarColor,
+          buttonColor: Colors.grey[300],
+          focusColor: Colors.black.withOpacity(0.12),
+          hoverColor: Colors.black.withOpacity(0.04),
         ),
         initialRoute: WelcomeScreen.id,
         routes: {
