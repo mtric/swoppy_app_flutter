@@ -135,7 +135,6 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                           onChanged: (String newValue) {
                             setState(() {
                               _employee = newValue;
-                              print(_employee);
                             });
                           },
                           items: kEmployeeList.map((String value) {
@@ -280,10 +279,10 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                   color: Colors.blue,
                   textColor: Colors.white,
                   onPressed: () {
+                    _locationCode = _myLocationCodeController.text + 'xxx';
                     // Check whether all validators of the fields are valid.
                     if (_formKey.currentState.validate() && _termsAccepted) {
                       // Create firebase entry according to the collection (userID = seller or buyer)
-
                       DocumentReference documentReference = Firestore.instance
                           .collection(args.userID)
                           .document(args.eMail);
