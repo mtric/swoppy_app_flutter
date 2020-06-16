@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:Swoppy/screens/gallery.dart';
 import 'package:Swoppy/components/video_timer.dart';
+import 'package:Swoppy/utilities/constants.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart' as thumbnail;
@@ -23,7 +24,7 @@ class CameraScreenState extends State<CameraScreen>
   CameraController _controller;
   List<CameraDescription> _cameras;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool _isRecordingMode = false;
+  bool _isRecordingMode = true;
   bool _isRecording = false;
   final _timerKey = GlobalKey<VideoTimerState>();
 
@@ -62,7 +63,10 @@ class CameraScreenState extends State<CameraScreen>
         child: SizedBox(
           width: 32,
           height: 32,
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            backgroundColor: kMainGreyColor,
+            valueColor: AlwaysStoppedAnimation<Color>(kMainRedColor),
+          ),
         ),
       );
     }
@@ -77,18 +81,41 @@ class CameraScreenState extends State<CameraScreen>
       body: Stack(
         children: <Widget>[
           _buildCameraPreview(),
-          Positioned(
-            top: 24.0,
-            left: 12.0,
-            child: IconButton(
-              icon: Icon(
-                Icons.switch_camera,
-                color: Colors.white,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 44.0,
+                  left: 10.0,
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
               ),
-              onPressed: () {
-                _onCameraSwitch();
-              },
-            ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 44.0,
+                  right: 16.0,
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.switch_camera,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    _onCameraSwitch();
+                  },
+                ),
+              ),
+            ],
           ),
           if (_isRecordingMode)
             Positioned(
@@ -177,6 +204,13 @@ class CameraScreenState extends State<CameraScreen>
                 } else {
                   if (_isRecording) {
                     stopVideoRecording();
+                    // TODO: open gallery automatically for development
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Gallery(),
+                      ),
+                    );
                   } else {
                     startVideoRecording();
                   }
@@ -214,13 +248,12 @@ class CameraScreenState extends State<CameraScreen>
     if (extension == '.jpeg') {
       return lastFile;
     } else {
-      //TODO: thumbnail from video doesn't work
       String thumbPath = await thumbnail.VideoThumbnail.thumbnailFile(
         video: lastFile.path,
-        //imageFormat: thumbnail.ImageFormat.PNG,
-        quality: 30,
+        imageFormat: thumbnail.ImageFormat.JPEG,
+        quality: 50,
       );
-      // return File(String.fromCharCodes(thumb));
+      //return File(String.fromCharCodes(thumbPath));
       return File(thumbPath);
     }
   }

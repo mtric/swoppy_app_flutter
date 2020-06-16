@@ -50,6 +50,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
     }
 
     return Scaffold(
+      //backgroundColor: Colors.white,
       appBar: AppBar(
         leading: null,
 //      actions: <Widget>[

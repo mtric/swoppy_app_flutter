@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+// TODO: map "timer hits 0"-event to state to trigger video to stop
 class VideoTimer extends StatefulWidget {
   const VideoTimer({Key key}) : super(key: key);
   @override
@@ -10,7 +11,7 @@ class VideoTimer extends StatefulWidget {
 
 class VideoTimerState extends State<VideoTimer> {
   Timer _timer;
-  int _start = 0;
+  int _start = 60;
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
@@ -18,14 +19,14 @@ class VideoTimerState extends State<VideoTimer> {
       oneSec,
       (Timer timer) => setState(
         () {
-          _start = _start + 1;
+          _start = _start - 1;
         },
       ),
     );
   }
 
   void stopTimer() {
-    _start = 0;
+    _start = 60;
     _timer?.cancel();
   }
 

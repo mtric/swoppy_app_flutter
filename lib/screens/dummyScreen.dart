@@ -10,9 +10,11 @@ class _DummyScreenState extends State<DummyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-      leading: null,
-      title: Text('*** DUMMY ***'),
-    ));
+      appBar: AppBar(
+        leading: null,
+        title: Text('*** DUMMY ***'),
+      ),
+      backgroundColor: Colors.white,
+    );
   }
 }

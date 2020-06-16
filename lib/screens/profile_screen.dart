@@ -85,6 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
         title: Text('Benutzerprofil'),
       ),
+      // backgroundColor: Colors.white,
       body: Form(
         key: _formKey,
         autovalidate: true,

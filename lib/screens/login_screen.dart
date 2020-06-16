@@ -1,3 +1,4 @@
+import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/screens/userTest_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -89,6 +90,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     final user = await _auth.signInWithEmailAndPassword(
                         email: email, password: password);
                     if (user != null) {
+                      // TODO: for development with UserTestScreen
+                      //Navigator.pushNamed(context, ProfileScreen.id);
                       Navigator.pushNamed(context, UserTestScreen.id);
                     }
 
