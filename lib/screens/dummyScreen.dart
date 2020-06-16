@@ -1,10 +1,12 @@
-import 'package:Swoppy/userRole.dart';
+import 'package:Swoppy/components/userRole.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../components/rounded_button.dart';
+import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/utilities/constants.dart';
+import 'package:Swoppy/screens/video_screen.dart';
+import 'package:Swoppy/screens/camera_screen.dart';
 
 class DummyScreen extends StatefulWidget {
   static const String id = 'dummy_screen';
@@ -98,8 +100,9 @@ class _DummyScreenState extends State<DummyScreen> {
 //                Navigator.pop(context);
 //              }),
 //        ],
-        title: Text('*** DUMMY ***'),
+        title: Text('*** Test Screen ***'),
       ),
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -122,9 +125,23 @@ class _DummyScreenState extends State<DummyScreen> {
             Text('Zeitpunkt:  $handoverTime'),
             RoundedButton(
               title: 'Benutzerdaten aufrufen',
-              colour: Colors.lightBlueAccent,
+              colour: kMainGreyColor,
               onPressed: () {
                 _readData();
+              },
+            ),
+            RoundedButton(
+              title: 'VIDEO',
+              colour: kMainRedColor,
+              onPressed: () {
+                Navigator.pushNamed(context, VideoScreen.id);
+              },
+            ),
+            RoundedButton(
+              title: 'CAMERA',
+              colour: kMainRedColor,
+              onPressed: () {
+                Navigator.pushNamed(context, CameraScreen.id);
               },
             ),
           ],
