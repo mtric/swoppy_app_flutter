@@ -1,15 +1,15 @@
+import 'package:Swoppy/components/IndustryData.dart';
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/decimalTextInputFormatter.dart';
-import 'package:Swoppy/utilities/constants.dart';
-import 'package:Swoppy/screens/dummyScreen.dart';
+import 'package:Swoppy/components/flex_rounded_button.dart';
+import 'package:Swoppy/components/profileHardFactsCriteria.dart';
 import 'package:Swoppy/components/userProfile.dart';
+import 'package:Swoppy/utilities/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-
-import 'package:Swoppy/components/profileHardFactsCriteria.dart';
 
 class HardFactsScreen extends StatefulWidget {
   static const String id = 'hardFacts_screen';
@@ -23,8 +23,13 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
 
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-  final _firestore = Firestore.instance;
   final _myLocationCodeController = TextEditingController();
+
+  IndustryData data = IndustryData();
+  List<String> _industry = [''];
+  List<String> _branch = [''];
+  String _selectedIndustry = '';
+  String _selectedBranch = '';
 
   String _trade = '';
   String _locationCode = '';
@@ -33,6 +38,12 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   String _property = '';
   String _sellingPrice = '';
   String _handoverTime = '';
+
+  @override
+  void initState() {
+    _industry = List.from(_industry)..addAll(data.getIndustries());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,17 +61,9 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
     }
 
     return Scaffold(
-      //backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: null,
-//      actions: <Widget>[
-//        IconButton(
-//            icon: Icon(Icons.close),
-//            onPressed: () {
-//              _auth.signOut();
-//              Navigator.pop(context);
-//            }),
-//      ],
         title: Text('Hardfacts'),
       ),
       body: Form(
@@ -75,69 +78,102 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                   builder: (FormFieldState state) {
                     return InputDecorator(
                       decoration: InputDecoration(
-                        icon: Icon(Icons.business),
+                        icon: Icon(Icons.business, color: Colors.black),
                         labelText: 'Branche',
                       ),
-                      isEmpty: _trade == '',
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          value: _trade,
-                          isDense: true,
-                          onChanged: (String newValue) {
-                            setState(() {
-                              //                    state.didChange(newValue);
-                              _trade = newValue;
-                              print(_trade);
-                            });
-                          },
-                          items: kTradeList.map((String value) {
-                            return DropdownMenuItem(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
+                      child: DropdownButton<String>(
+                        dropdownColor: Colors.white,
+                        style: TextStyle(color: Colors.black),
+                        icon: Icon(Icons.arrow_drop_down, color: Colors.black),
+                        isExpanded: true,
+                        items: _industry.map((String dropDownStringItem) {
+                          return DropdownMenuItem<String>(
+                            value: dropDownStringItem,
+                            child: Text(dropDownStringItem),
+                          );
+                        }).toList(),
+                        onChanged: (value) => _onSelectedIndustry(value),
+                        value: _selectedIndustry,
                       ),
                     );
                   },
                 ),
-                SizedBox(height: 20.0),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                          'Standort des Unternehmens (Ersten zwei Ziffern der PLZ)'),
-                    ),
-                    SizedBox(width: 15.0),
-                    Expanded(
-                      child: TextFormField(
-                          controller: _myLocationCodeController,
-                          inputFormatters: [
-                            DecimalTextInputFormatter(
-                                decimalRange: 2, activatedNegativeValues: false)
-                          ],
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration()),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20.0),
                 FormField(
                   builder: (FormFieldState state) {
                     return InputDecorator(
                       decoration: InputDecoration(
-                        icon: Icon(Icons.people),
+                        icon: Icon(null),
+                        labelText: 'Branchensparte',
+                      ),
+                      child: DropdownButton<String>(
+                        dropdownColor: Colors.white,
+                        style: TextStyle(color: Colors.black),
+                        icon: Icon(Icons.arrow_drop_down, color: Colors.black),
+                        isExpanded: true,
+                        items: _branch.map((String dropDownStringItem) {
+                          return DropdownMenuItem<String>(
+                            value: dropDownStringItem,
+                            child: Text(dropDownStringItem),
+                          );
+                        }).toList(),
+                        onChanged: (value) => _onSelectedBranch(value),
+                        value: _selectedBranch,
+                      ),
+                    );
+                  },
+                ),
+                Row(
+                  children: <Widget>[
+                    SizedBox(width: 40.0),
+                    Expanded(
+                      flex: 40,
+                      child: Text('Standort des Unternehmens'),
+                    ),
+                    SizedBox(width: 20.0),
+                    Expanded(
+                      flex: 18,
+                      child: TextFormField(
+                        style: TextStyle(color: Colors.black),
+                        controller: _myLocationCodeController,
+                        inputFormatters: [
+                          DecimalTextInputFormatter(
+                              decimalRange: 2, activatedNegativeValues: false),
+                        ],
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          suffixText: 'XXX',
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20.0),
+                    Expanded(
+                      flex: 42,
+                      child: Text('die ersten 2 Ziffern der PLZ'),
+                    ),
+                  ],
+                ),
+                FormField(
+                  builder: (FormFieldState state) {
+                    return InputDecorator(
+                      decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
+                        icon: Icon(Icons.people, color: Colors.black),
                         labelText: 'Anzahl Mitarbeiter',
                       ),
                       isEmpty: _employee == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
+                          dropdownColor: Colors.white,
+                          style: TextStyle(color: Colors.black),
+                          icon:
+                              Icon(Icons.arrow_drop_down, color: Colors.black),
                           value: _employee,
                           isDense: true,
                           onChanged: (String newValue) {
-                            setState(() {
-                              _employee = newValue;
-                            });
+                            setState(() => _employee = newValue);
                           },
                           items: kEmployeeList.map((String value) {
                             return DropdownMenuItem(
@@ -150,24 +186,26 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     );
                   },
                 ),
-                SizedBox(height: 20.0),
                 FormField(
                   builder: (FormFieldState state) {
                     return InputDecorator(
                       decoration: InputDecoration(
-                        icon: Icon(Icons.trending_up),
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
+                        icon: Icon(Icons.trending_up, color: Colors.black),
                         labelText: 'Jahresumsatz',
                       ),
                       isEmpty: _turnover == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
+                          dropdownColor: Colors.white,
+                          style: TextStyle(color: Colors.black),
+                          icon:
+                              Icon(Icons.arrow_drop_down, color: Colors.black),
                           value: _turnover,
                           isDense: true,
                           onChanged: (String newValue) {
-                            setState(() {
-                              _turnover = newValue;
-                              print(_turnover);
-                            });
+                            setState(() => _turnover = newValue);
                           },
                           items: kTurnoverList.map((String value) {
                             return DropdownMenuItem(
@@ -180,24 +218,26 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     );
                   },
                 ),
-                SizedBox(height: 20.0),
                 FormField(
                   builder: (FormFieldState state) {
                     return InputDecorator(
                       decoration: InputDecoration(
-                        icon: Icon(Icons.business),
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
+                        icon: Icon(Icons.business, color: Colors.black),
                         labelText: 'Eigene Immobilie',
                       ),
                       isEmpty: _property == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
+                          dropdownColor: Colors.white,
+                          style: TextStyle(color: Colors.black),
+                          icon:
+                              Icon(Icons.arrow_drop_down, color: Colors.black),
                           value: _property,
                           isDense: true,
                           onChanged: (String newValue) {
-                            setState(() {
-                              _property = newValue;
-                              print(_property);
-                            });
+                            setState(() => _property = newValue);
                           },
                           items: kPropertyList.map((String value) {
                             return DropdownMenuItem(
@@ -210,24 +250,26 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     );
                   },
                 ),
-                SizedBox(height: 20.0),
                 FormField(
                   builder: (FormFieldState state) {
                     return InputDecorator(
                       decoration: InputDecoration(
-                        icon: Icon(Icons.euro_symbol),
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
+                        icon: Icon(Icons.euro_symbol, color: Colors.black),
                         labelText: 'Preis',
                       ),
                       isEmpty: _sellingPrice == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
+                          dropdownColor: Colors.white,
+                          style: TextStyle(color: Colors.black),
+                          icon:
+                              Icon(Icons.arrow_drop_down, color: Colors.black),
                           value: _sellingPrice,
                           isDense: true,
                           onChanged: (String newValue) {
-                            setState(() {
-                              _sellingPrice = newValue;
-                              print(_sellingPrice);
-                            });
+                            setState(() => _sellingPrice = newValue);
                           },
                           items: kSellingPriceList.map((String value) {
                             return DropdownMenuItem(
@@ -240,24 +282,26 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     );
                   },
                 ),
-                SizedBox(height: 20.0),
                 FormField(
                   builder: (FormFieldState state) {
                     return InputDecorator(
                       decoration: InputDecoration(
-                        icon: Icon(Icons.calendar_today),
-                        labelText: 'Zeitpunkt der Übergabe',
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
+                        icon: Icon(Icons.calendar_today, color: Colors.black),
+                        labelText: 'Übergabe-Zeitpunkt',
                       ),
                       isEmpty: _handoverTime == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
+                          dropdownColor: Colors.white,
+                          style: TextStyle(color: Colors.black),
+                          icon:
+                              Icon(Icons.arrow_drop_down, color: Colors.black),
                           value: _handoverTime,
                           isDense: true,
                           onChanged: (String newValue) {
-                            setState(() {
-                              _handoverTime = newValue;
-                              print(_handoverTime);
-                            });
+                            setState(() => _handoverTime = newValue);
                           },
                           items: kHandoverTimeList.map((String value) {
                             return DropdownMenuItem(
@@ -271,17 +315,25 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                   },
                 ),
                 FormBuilderSwitch(
-                  label: Text('Ich akzeptiere die AGBs'),
+                  label: Text('Ich akzeptiere die AGBs',
+                      style: TextStyle(color: Colors.black)),
+                  activeColor: Colors.green,
                   attribute: "accept_terms_switch",
                   initialValue: false,
+                  inactiveThumbColor: kMainGreyColor,
+                  inactiveTrackColor: kMainLightGreyColor,
                   onChanged: _onChanged,
                 ),
-                SizedBox(width: 25),
-                RaisedButton(
-                  color: Colors.blue,
-                  textColor: Colors.white,
+                FlexRoundedButton(
+                  minButtonWidth: 150.0,
+                  title: 'Speichern',
+                  colour: kMainRedColor,
                   onPressed: () {
                     _locationCode = _myLocationCodeController.text + 'xxx';
+                    _selectedBranch != ''
+                        ? _trade = _selectedBranch
+                        : _trade = _selectedIndustry;
+
                     // Check whether all validators of the fields are valid.
                     if (_formKey.currentState.validate() && _termsAccepted) {
                       // Create firebase entry according to the collection (userID = seller or buyer)
@@ -317,7 +369,6 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       showInputNotComplete(context);
                     }
                   },
-                  child: Text('Speichern'),
                 )
               ],
             ),
@@ -325,5 +376,18 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
         ),
       ),
     );
+  }
+
+  void _onSelectedIndustry(String value) {
+    setState(() {
+      _selectedBranch = '';
+      _branch = [''];
+      _selectedIndustry = value;
+      _branch = List.from(_branch)..addAll(data.getBranchByIndustry(value));
+    });
+  }
+
+  void _onSelectedBranch(String value) {
+    setState(() => _selectedBranch = value);
   }
 }

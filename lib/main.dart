@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:Swoppy/screens/camera_screen.dart';
 import 'package:Swoppy/screens/dummyScreen.dart';
 import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/screens/login_screen.dart';
@@ -6,11 +9,9 @@ import 'package:Swoppy/screens/registration_screen.dart';
 import 'package:Swoppy/screens/userTest_screen.dart';
 import 'package:Swoppy/screens/video_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
-import 'package:Swoppy/screens/camera_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:async';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -24,6 +25,12 @@ Future<void> main() async {
           textTheme: TextTheme(
             bodyText2: TextStyle(color: Colors.black54),
           ),
+          inputDecorationTheme: InputDecorationTheme(
+            labelStyle: TextStyle(color: Colors.black),
+            hintStyle: TextStyle(color: Colors.grey),
+          ),
+          brightness: Brightness.dark,
+          unselectedWidgetColor: Colors.black,
           bottomAppBarColor: kBottomAppBarColor,
         ),
         initialRoute: WelcomeScreen.id,

@@ -1,11 +1,13 @@
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
-import 'package:Swoppy/screens/hardFacts_screen.dart';
+import 'package:Swoppy/components/decimalTextInputFormatter.dart';
+import 'package:Swoppy/components/flex_rounded_button.dart';
 import 'package:Swoppy/components/userProfile.dart';
+import 'package:Swoppy/screens/hardFacts_screen.dart';
+import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
-import 'package:Swoppy/utilities/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'profile_screen';
@@ -68,6 +70,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
+  // final ValueChanged _onChanged = (val) => print(val);
+
   @override
   Widget build(BuildContext context) {
     _myEmailController.text = _email;
@@ -85,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
         title: Text('Benutzerprofil'),
       ),
-      // backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       body: Form(
         key: _formKey,
         autovalidate: true,
@@ -99,12 +103,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     builder: (FormFieldState state) {
                       return InputDecorator(
                         decoration: InputDecoration(
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey)),
                           icon: Icon(null),
                           labelText: 'Anrede',
                         ),
                         isEmpty: _title == '',
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton(
+                            dropdownColor: Colors.white,
+                            style: TextStyle(color: Colors.black),
+                            icon: Icon(Icons.arrow_drop_down,
+                                color: Colors.black),
                             value: _title,
                             isDense: true,
                             onChanged: (String newValue) {
@@ -135,9 +145,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: <Widget>[
                 Expanded(
                   child: TextFormField(
+                    style: TextStyle(color: Colors.black),
                     controller: _myFirstNameController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.person),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      icon: Icon(Icons.person, color: Colors.black),
                       labelText: 'Vorname*',
                     ),
                     validator: (value) {
@@ -151,8 +164,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(width: 15.0),
                 Expanded(
                   child: TextFormField(
+                    style: TextStyle(color: Colors.black),
                     controller: _myLastNameController,
                     decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      labelStyle: TextStyle(color: Colors.black),
                       labelText: 'Nachname*',
                     ),
                     validator: (value) {
@@ -167,35 +184,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             TextFormField(
               enabled: false,
-              //             controller: _myEmailController,
+              controller: _myEmailController,
+              style: TextStyle(color: Colors.black),
               decoration: InputDecoration(
-                icon: Icon(Icons.email),
-                hintText: "Eingabe deaktiviert",
-                labelText: 'EMail',
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey)),
+                icon: Icon(Icons.email, color: Colors.black),
               ),
               keyboardType: TextInputType.emailAddress,
             ),
             TextFormField(
               controller: _myPhoneController,
+              style: TextStyle(color: Colors.black),
               decoration: InputDecoration(
-                icon: Icon(Icons.phone),
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey)),
+                icon: Icon(Icons.phone, color: Colors.black),
                 labelText: 'Phone',
               ),
               keyboardType: TextInputType.phone,
-              inputFormatters: [
-                WhitelistingTextInputFormatter.digitsOnly,
-              ],
             ),
             Row(children: <Widget>[
               Expanded(
                 child: TextFormField(
+                  style: TextStyle(color: Colors.black),
                   inputFormatters: [
-                    LengthLimitingTextInputFormatter(5),
+                    DecimalTextInputFormatter(
+                        decimalRange: 5, activatedNegativeValues: false)
                   ],
                   keyboardType: TextInputType.number,
                   controller: _myZipCodeController,
                   decoration: InputDecoration(
-                    icon: Icon(Icons.home),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey)),
+                    icon: Icon(Icons.home, color: Colors.black),
                     labelText: 'PLZ*',
                   ),
                   validator: (value) {
@@ -211,9 +233,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(width: 15.0),
               Expanded(
                 child: TextFormField(
+                  style: TextStyle(color: Colors.black),
                   controller: _myCityController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey)),
                     labelText: 'Ort*',
                   ),
                   validator: (value) {
@@ -226,10 +251,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               )
             ]),
             TextFormField(
+              style: TextStyle(color: Colors.black),
               controller: _myAddressController,
               decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey)),
                 icon: Icon(null),
-                labelText: 'Strasse / Hausnummer',
+                labelText: 'Strasse, Haus-Nr. (optional)',
               ),
               keyboardType: TextInputType.text,
             ),
@@ -237,6 +265,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             RadioButtonGroup(
               orientation: GroupedButtonsOrientation.HORIZONTAL,
               margin: const EdgeInsets.only(left: 32.0),
+              labelStyle: TextStyle(color: Colors.black),
               onSelected: (String selected) => setState(() {
                 _picked = selected;
                 _picked == 'Käufer*' ? _userID = 'buyer' : _userID = 'seller';
@@ -258,29 +287,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
             TextFormField(
               maxLines: 5,
               maxLength: 120,
+              style: TextStyle(color: Colors.black),
               controller: _myAbstractController,
               decoration: InputDecoration(
-                icon: Icon(Icons.text_fields),
+                icon: Icon(Icons.text_fields, color: Colors.black),
                 hintText: 'Kurzbeschreibung Unternehmen/Person',
                 border: OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black)),
               ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                RaisedButton(
-                  color: Colors.grey,
-                  textColor: Colors.white,
+                FlexRoundedButton(
+                  minButtonWidth: 150.0,
+                  title: 'Löschen',
+                  colour: kMainLightRedColor,
                   onPressed: () {
                     // reset() setzt alle Felder wieder auf den Initalwert zurück.
                     _formKey.currentState.reset();
                   },
-                  child: Text('Löschen'),
                 ),
                 SizedBox(width: 25),
-                RaisedButton(
-                  color: Colors.blue,
-                  textColor: Colors.white,
+                FlexRoundedButton(
+                  minButtonWidth: 150.0,
+                  title: 'Weiter',
+                  colour: kMainRedColor,
                   onPressed: () {
                     // Check whether all validators of the fields are valid.
                     if (_formKey.currentState.validate() && (_picked != '')) {
@@ -301,7 +334,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       showInputNotComplete(context);
                     }
                   },
-                  child: Text('Weiter'),
                 )
               ],
             ),
