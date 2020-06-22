@@ -1,4 +1,4 @@
-import 'package:Swoppy/components/userRole.dart';
+import 'package:Swoppy/utilities/userRole.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -28,42 +28,17 @@ showInputNotComplete(BuildContext context) {
   );
 }
 
-//showDataSaved(BuildContext context, String userID) {
-//  Widget okButton = FlatButton(
-//    color: kMainRedColor,
-//    child: Text("weiter"),
-//    onPressed: () => Navigator.pushNamed(context, DummyScreen.id,
-//        arguments: UserRole(userID)),
-//    //      Navigator.pop(context),
-//  );
-//
-//  AlertDialog alert = AlertDialog(
-//    title: Text("Eingaben "),
-//    content: Text("erfolgreich gespeichert!"),
-//    actions: [
-//      okButton,
-//    ],
-//  );
-//
-//  showDialog(
-//    context: context,
-//    builder: (BuildContext context) {
-//      return alert;
-//    },
-//  );
-//}
-
 showDataSaved(BuildContext context) {
   Widget okButton = FlatButton(
     color: kMainRedColor,
-    child: Text("weiter"),
+    child: Text("WEITER"),
     onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
         DummyScreen.id, ModalRoute.withName(DummyScreen.id)),
   );
 
   AlertDialog alert = AlertDialog(
-    title: Text("Eingaben "),
-    content: Text("erfolgreich gespeichert!"),
+    title: Text("Speichern"),
+    content: Text("Alle Eingaben wurden erfolgreich gespeichert!"),
     actions: [
       okButton,
     ],
@@ -77,18 +52,19 @@ showDataSaved(BuildContext context) {
   );
 }
 
+// TODO: ask if user really wants to delete video
 showDelete(BuildContext context, String userID) {
   Widget okButton = FlatButton(
     color: kMainRedColor,
-    child: Text("weiter"),
+    child: Text("LÖSCHEN"),
     onPressed: () => Navigator.pushNamed(context, DummyScreen.id,
         arguments: UserRole(userID)),
     //      Navigator.pop(context),
   );
 
   AlertDialog alert = AlertDialog(
-    title: Text("Eingaben "),
-    content: Text("erfolgreich gespeichert!"),
+    title: Text("Löschen "),
+    content: Text("Wollen Sie die Datei wirklich löschen?"),
     actions: [
       okButton,
     ],

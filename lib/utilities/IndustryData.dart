@@ -1,4 +1,4 @@
-import '../components/IndustryModel.dart';
+import 'IndustryModel.dart';
 
 class IndustryData {
   List<Map> getAll() => _industries;

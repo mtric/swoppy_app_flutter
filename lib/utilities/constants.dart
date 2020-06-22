@@ -37,7 +37,7 @@ final kAppTheme = ThemeData(
       fontWeight: FontWeight.bold,
     ),
     bodyText2: TextStyle(
-      color: Colors.black54,
+      color: Colors.black,
     ),
 
     //headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),

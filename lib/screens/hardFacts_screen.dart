@@ -1,9 +1,9 @@
-import 'package:Swoppy/components/IndustryData.dart';
+import 'package:Swoppy/utilities/IndustryData.dart';
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/decimalTextInputFormatter.dart';
-import 'package:Swoppy/components/profileHardFactsCriteria.dart';
+import 'package:Swoppy/utilities/profileHardFactsCriteria.dart';
 import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/components/userProfile.dart';
+import 'package:Swoppy/utilities/userProfile.dart';
 import 'package:Swoppy/utilities/constants.dart';
 
 import 'package:flutter/services.dart';

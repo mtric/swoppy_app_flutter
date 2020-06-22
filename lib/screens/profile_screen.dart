@@ -1,6 +1,6 @@
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/components/userProfile.dart';
+import 'package:Swoppy/utilities/userProfile.dart';
 import 'package:Swoppy/components/decimalTextInputFormatter.dart';
 import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
