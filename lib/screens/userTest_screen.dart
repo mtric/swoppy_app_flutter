@@ -2,7 +2,6 @@ import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/screens/video_screen.dart';
 import 'package:Swoppy/screens/camera_screen.dart';
 
 class UserTestScreen extends StatefulWidget {
@@ -55,13 +54,6 @@ class _UserTestScreenState extends State<UserTestScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              RoundedButton(
-                title: 'VIDEO',
-                colour: kMainRedColor,
-                onPressed: () {
-                  Navigator.pushNamed(context, VideoScreen.id);
-                },
-              ),
               RoundedButton(
                 title: 'CAMERA',
                 colour: kMainRedColor,

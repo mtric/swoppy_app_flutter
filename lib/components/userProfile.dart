@@ -1,6 +1,6 @@
 class UserProfile {
   UserProfile(
-      this.userID,
+      this.userCategory,
       this.title,
       this.lastName,
       this.firstName,
@@ -11,7 +11,7 @@ class UserProfile {
       this.address,
       this.abstract);
 
-  String userID;
+  String userCategory;
   String title;
   String lastName;
   String firstName;

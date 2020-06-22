@@ -1,12 +1,12 @@
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
-import 'package:Swoppy/screens/hardFacts_screen.dart';
+import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/components/userProfile.dart';
+import 'package:Swoppy/screens/hardFacts_screen.dart';
+import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
-import 'package:Swoppy/utilities/constants.dart';
-import 'package:Swoppy/components/rounded_button.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'profile_screen';
@@ -23,9 +23,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _title = '';
   String _email = '';
   String _picked = '';
-  String _userID = '';
+  String _userCategory = '';
 
-  List<String> _titles = <String>['', 'Herr', 'Frau', 'Frau Dr.', 'Herr Dr.'];
+  List<String> _titles = <String>['', 'Frau', 'Herr', 'Frau Dr.', 'Herr Dr.'];
 
   void getCurrentUser() async {
     try {
@@ -76,14 +76,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: null,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                _auth.signOut();
-                Navigator.pop(context);
-              }),
-        ],
         title: Text('Benutzerprofil'),
       ),
       backgroundColor: Colors.white,
@@ -278,7 +270,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               onSelected: (String selected) => setState(() {
                 _picked = selected;
-                _picked == 'Käufer*' ? _userID = 'buyer' : _userID = 'seller';
+                _picked == 'Käufer*'
+                    ? _userCategory = 'buyer'
+                    : _userCategory = 'seller';
               }),
               labels: <String>[
                 "Käufer*",
@@ -317,40 +311,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                RoundedButton(
-                  title: 'LÖSCHEN',
-                  colour: kMainGreyColor,
-                  minWidth: 100,
-                  onPressed: () {
-                    // reset() setzt alle Felder wieder auf den Initalwert zurück.
-                    _formKey.currentState.reset();
-                  },
+                Expanded(
+                  child: RoundedButton(
+                    title: 'LÖSCHEN',
+                    colour: kMainGreyColor,
+                    minWidth: 100,
+                    onPressed: () {
+                      // reset() setzt alle Felder wieder auf den Initalwert zurück.
+                      _formKey.currentState.reset();
+                    },
+                  ),
                 ),
-                SizedBox(width: 25),
-                RoundedButton(
-                  title: 'WEITER',
-                  colour: kMainRedColor,
-                  minWidth: 100,
-                  onPressed: () {
-                    // Check whether all validators of the fields are valid.
-                    if (_formKey.currentState.validate() && (_picked != '')) {
-                      Navigator.pushNamed(context, HardFactsScreen.id,
-                          arguments: UserProfile(
-                              _userID,
-                              _title,
-                              _myLastNameController.text,
-                              _myFirstNameController.text,
-                              _myEmailController.text,
-                              _myPhoneController.text,
-                              _myZipCodeController.text,
-                              _myCityController.text,
-                              _myAddressController.text,
-                              _myAbstractController.text));
-                    } else {
-                      // Form not complete, missing or incorrect entries.
-                      showInputNotComplete(context);
-                    }
-                  },
+                SizedBox(
+                  width: 25,
+                ),
+                Expanded(
+                  child: RoundedButton(
+                    title: 'WEITER',
+                    colour: kMainRedColor,
+                    minWidth: 100,
+                    onPressed: () {
+                      // Check whether all validators of the fields are valid.
+                      if (_formKey.currentState.validate() && (_picked != '')) {
+                        Navigator.pushNamed(context, HardFactsScreen.id,
+                            arguments: UserProfile(
+                                _userCategory,
+                                _title,
+                                _myLastNameController.text,
+                                _myFirstNameController.text,
+                                _myEmailController.text,
+                                _myPhoneController.text,
+                                _myZipCodeController.text,
+                                _myCityController.text,
+                                _myAddressController.text,
+                                _myAbstractController.text));
+                      } else {
+                        // Form not complete, missing or incorrect entries.
+                        showInputNotComplete(context);
+                      }
+                    },
+                  ),
                 ),
               ],
             ),

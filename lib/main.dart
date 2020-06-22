@@ -4,7 +4,6 @@ import 'package:Swoppy/screens/login_screen.dart';
 import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/screens/registration_screen.dart';
 import 'package:Swoppy/screens/userTest_screen.dart';
-import 'package:Swoppy/screens/video_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/screens/camera_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
@@ -20,24 +19,13 @@ Future<void> main() async {
   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]).then((_) {
     runApp(
       MaterialApp(
-        theme: ThemeData.dark().copyWith(
-          textTheme: TextTheme(
-            bodyText2: TextStyle(color: Colors.black54),
-          ),
-          accentColor: kMainRedColor,
-          toggleableActiveColor: kMainRedColor,
-          bottomAppBarColor: kBottomAppBarColor,
-          buttonColor: Colors.grey[300],
-          focusColor: Colors.black.withOpacity(0.12),
-          hoverColor: Colors.black.withOpacity(0.04),
-        ),
+        theme: kAppTheme,
         initialRoute: WelcomeScreen.id,
         routes: {
           WelcomeScreen.id: (context) => WelcomeScreen(),
           LoginScreen.id: (context) => LoginScreen(),
           RegistrationScreen.id: (context) => RegistrationScreen(),
           UserTestScreen.id: (context) => UserTestScreen(),
-          VideoScreen.id: (context) => VideoScreen(),
           CameraScreen.id: (context) => CameraScreen(),
           ProfileScreen.id: (context) => ProfileScreen(),
           HardFactsScreen.id: (context) => HardFactsScreen(),

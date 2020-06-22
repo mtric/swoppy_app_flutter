@@ -1,15 +1,15 @@
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/decimalTextInputFormatter.dart';
-import 'package:Swoppy/utilities/constants.dart';
-import 'package:Swoppy/screens/dummyScreen.dart';
+import 'package:Swoppy/components/profileHardFactsCriteria.dart';
+import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/components/userProfile.dart';
+import 'package:Swoppy/utilities/constants.dart';
+
+import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-
-import 'package:Swoppy/components/profileHardFactsCriteria.dart';
 
 class HardFactsScreen extends StatefulWidget {
   static const String id = 'hardFacts_screen';
@@ -22,9 +22,9 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   ValueChanged _onChanged = (val) => _termsAccepted = val;
 
   final _formKey = GlobalKey<FormState>();
-  final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   final _firestore = Firestore.instance;
   final _myLocationCodeController = TextEditingController();
+  final _collection = 'user';
 
   String _trade = '';
   String _locationCode = '';
@@ -41,7 +41,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
     final UserProfile args = ModalRoute.of(context).settings.arguments;
 
     // Add additional option for buyers
-    if (args.userID == 'buyer' && !kEmployeeList.contains(kAdditionalOption)) {
+    if (args.userCategory == 'buyer' &&
+        !kEmployeeList.contains(kAdditionalOption)) {
       kEmployeeList.add(kAdditionalOption);
       kTurnoverList.add(kAdditionalOption);
       kPropertyList.add(kAdditionalOption);
@@ -53,14 +54,6 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
       //backgroundColor: Colors.white,
       appBar: AppBar(
         leading: null,
-//      actions: <Widget>[
-//        IconButton(
-//            icon: Icon(Icons.close),
-//            onPressed: () {
-//              _auth.signOut();
-//              Navigator.pop(context);
-//            }),
-//      ],
         title: Text('Hardfacts'),
       ),
       body: Form(
@@ -70,6 +63,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
           padding: kPaddingProfileForm,
           children: <Widget>[
             Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 FormField(
                   builder: (FormFieldState state) {
@@ -114,7 +109,9 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                           controller: _myLocationCodeController,
                           inputFormatters: [
                             DecimalTextInputFormatter(
-                                decimalRange: 2, activatedNegativeValues: false)
+                                decimalRange: 2,
+                                activatedNegativeValues: false),
+                            LengthLimitingTextInputFormatter(2),
                           ],
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration()),
@@ -271,22 +268,25 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                   },
                 ),
                 FormBuilderSwitch(
-                  label: Text('Ich akzeptiere die AGBs'),
+                  label: Text('Ich akzeptiere die AGBs*'),
                   attribute: "accept_terms_switch",
                   initialValue: false,
                   onChanged: _onChanged,
                 ),
-                SizedBox(width: 25),
-                RaisedButton(
-                  color: Colors.blue,
-                  textColor: Colors.white,
+                SizedBox(
+                  width: 25,
+                ),
+                RoundedButton(
+                  title: 'SPEICHERN',
+                  colour: kMainRedColor,
+                  minWidth: 100,
                   onPressed: () {
                     _locationCode = _myLocationCodeController.text + 'xxx';
                     // Check whether all validators of the fields are valid.
                     if (_formKey.currentState.validate() && _termsAccepted) {
                       // Create firebase entry according to the collection (userID = seller or buyer)
-                      DocumentReference documentReference = Firestore.instance
-                          .collection(args.userID)
+                      DocumentReference documentReference = _firestore
+                          .collection(_collection)
                           .document(args.eMail);
 
                       Map<String, dynamic> user = {
@@ -299,6 +299,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                         'city': args.city,
                         'address': args.address,
                         'abstract': args.abstract,
+                        'category': args.userCategory,
                         'trade': _trade,
                         'locationCode': _locationCode,
                         'employee': _employee,
@@ -308,8 +309,11 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                         'handoverTime': _handoverTime
                       };
 
-                      documentReference.setData(user).whenComplete(
-                          () => showDataSaved((context), args.userID));
+                      documentReference
+                          .setData(user)
+                          .whenComplete(() => showDataSaved(
+                                (context),
+                              ));
 
                       //  Navigator.pushNamed(context, DummyScreen.id);
                     } else {
@@ -317,8 +321,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       showInputNotComplete(context);
                     }
                   },
-                  child: Text('Speichern'),
-                )
+                ),
               ],
             ),
           ],

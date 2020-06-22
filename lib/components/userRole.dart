@@ -1,7 +1,7 @@
 class UserRole {
   UserRole(
-    this.userID,
+    this.userCategory,
   );
 
-  String userID;
+  String userCategory;
 }
