@@ -17,13 +17,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool showSpinner = false;
   String email;
   String password;
+  String warnung = ' ';
 
   @override
   Widget build(BuildContext context) {
-    String warnung = ' ';
     return Scaffold(
       appBar: AppBar(
-        title: Text('ANMELDUNG'),
+        title: Text('REGISTRIERUNG'),
       ),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
@@ -80,12 +80,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               SizedBox(
                 height: 24.0,
+                child: Center(
+                  child: Text(warnung,
+                      style: TextStyle(color: kMainRedColor),
+                      textAlign: TextAlign.center),
+                ),
               ),
-              Text(warnung,
-                  style: TextStyle(color: Colors.red),
-                  textAlign: TextAlign.center),
               RoundedButton(
-                title: 'ANMELDEN',
+                title: 'REGISTRIEREN',
                 colour: kMainRedColor,
                 onPressed: () async {
                   setState(() {
@@ -103,7 +105,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     });
                   } catch (e) {
                     print(e);
-                    warnung = 'Benutzer existiert bereits!';
+                    setState(() {
+                      showSpinner = false;
+                      warnung = 'Benutzer existiert bereits!';
+                    });
                     print(e);
                     print(warnung);
                   }

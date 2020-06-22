@@ -1,11 +1,10 @@
-import 'package:Swoppy/components/userRole.dart';
+import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/utilities/constants.dart';
-import 'package:Swoppy/screens/video_screen.dart';
 import 'package:Swoppy/screens/camera_screen.dart';
 
 class DummyScreen extends StatefulWidget {
@@ -17,7 +16,8 @@ class DummyScreen extends StatefulWidget {
 class _DummyScreenState extends State<DummyScreen> {
   FirebaseUser loggedInUser;
   final _auth = FirebaseAuth.instance;
-  // final _firestore = Firestore.instance;
+  final _collection = 'user';
+  final _firestore = Firestore.instance;
 
   void getCurrentUser() async {
     try {
@@ -30,7 +30,7 @@ class _DummyScreenState extends State<DummyScreen> {
     }
   }
 
-  String userID = '';
+  String userCategory = '';
 
   String title = '';
   String firstName = '';
@@ -52,7 +52,7 @@ class _DummyScreenState extends State<DummyScreen> {
   _readData() {
     setState(() {
       DocumentReference documentReference =
-          Firestore.instance.collection(userID).document(loggedInUser.email);
+          _firestore.collection(_collection).document(loggedInUser.email);
 
       documentReference.get().then((datasnapshot) {
         setState(() {
@@ -65,6 +65,7 @@ class _DummyScreenState extends State<DummyScreen> {
           city = datasnapshot.data['city'];
           address = datasnapshot.data['address'];
           abstract = datasnapshot.data['abstract'];
+          userCategory = datasnapshot.data['category'];
           trade = datasnapshot.data['trade'];
           locationCode = datasnapshot.data['locationCode'];
           employee = datasnapshot.data['employee'];
@@ -85,66 +86,67 @@ class _DummyScreenState extends State<DummyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final UserRole args = ModalRoute.of(context).settings.arguments;
-    userID = args.userID;
-    print(userID);
-
     return Scaffold(
       appBar: AppBar(
         leading: null,
-//        actions: <Widget>[
-//          IconButton(
-//              icon: Icon(Icons.close),
-//              onPressed: () {
-//                _auth.signOut();
-//                Navigator.pop(context);
-//              }),
-//        ],
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {
+                _auth.signOut();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    WelcomeScreen.id, ModalRoute.withName(WelcomeScreen.id));
+              }),
+        ],
         title: Text('*** Test Screen ***'),
       ),
       backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Anrede:  $title'),
-            Text('Vorname:  $firstName'),
-            Text('Nachname:  $lastName'),
-            Text('eMail:  $eMail'),
-            Text('Telefonnummer:  $phone'),
-            Text('PLZ:  $zipCode'),
-            Text('Ort:  $city'),
-            Text('Strasse Hausnummer:  $address'),
-            Text('Kurzbeschreibung:  $abstract'),
-            Text('Branche:  $trade'),
-            Text('Standort:  $locationCode'),
-            Text('Anzahl Mitarbeiter:  $employee'),
-            Text('Umsatz:  $turnover'),
-            Text('eigene Immobilie:  $property'),
-            Text('Preis:  $sellingPrice'),
-            Text('Zeitpunkt:  $handoverTime'),
-            RoundedButton(
-              title: 'Benutzerdaten aufrufen',
-              colour: kMainGreyColor,
-              onPressed: () {
-                _readData();
-              },
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ListBody(
+                  children: [
+                    Text('Anrede:  $title'),
+                    Text('Vorname:  $firstName'),
+                    Text('Nachname:  $lastName'),
+                    Text('eMail:  $eMail'),
+                    Text('Telefonnummer:  $phone'),
+                    Text('PLZ:  $zipCode'),
+                    Text('Ort:  $city'),
+                    Text('Strasse Hausnummer:  $address'),
+                    Text('Kurzbeschreibung:  $abstract'),
+                    Text('Kategorie: $userCategory'),
+                    Text('Branche:  $trade'),
+                    Text('Standort:  $locationCode'),
+                    Text('Anzahl Mitarbeiter:  $employee'),
+                    Text('Umsatz:  $turnover'),
+                    Text('eigene Immobilie:  $property'),
+                    Text('Preis:  $sellingPrice'),
+                    Text('Zeitpunkt:  $handoverTime'),
+                  ],
+                ),
+                RoundedButton(
+                  title: 'Benutzerdaten aufrufen',
+                  colour: kMainGreyColor,
+                  onPressed: () {
+                    _readData();
+                  },
+                ),
+                RoundedButton(
+                  title: 'VIDEO AUFNEHMEN',
+                  colour: kMainRedColor,
+                  onPressed: () {
+                    Navigator.pushNamed(context, CameraScreen.id);
+                  },
+                ),
+              ],
             ),
-            RoundedButton(
-              title: 'VIDEO',
-              colour: kMainRedColor,
-              onPressed: () {
-                Navigator.pushNamed(context, VideoScreen.id);
-              },
-            ),
-            RoundedButton(
-              title: 'CAMERA',
-              colour: kMainRedColor,
-              onPressed: () {
-                Navigator.pushNamed(context, CameraScreen.id);
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

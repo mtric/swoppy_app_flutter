@@ -1,12 +1,19 @@
 import 'package:Swoppy/components/IndustryData.dart';
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/decimalTextInputFormatter.dart';
+<<<<<<< HEAD
+import 'package:Swoppy/components/flex_rounded_button.dart';
+import 'package:Swoppy/components/profileHardFactsCriteria.dart';
+import 'package:Swoppy/components/userProfile.dart';
+import 'package:Swoppy/utilities/constants.dart';
+=======
 import 'package:Swoppy/components/profileHardFactsCriteria.dart';
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/components/userProfile.dart';
 import 'package:Swoppy/utilities/constants.dart';
 
 import 'package:flutter/services.dart';
+>>>>>>> design
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +30,11 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   ValueChanged _onChanged = (val) => _termsAccepted = val;
 
   final _formKey = GlobalKey<FormState>();
+<<<<<<< HEAD
+  final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
+=======
   final _firestore = Firestore.instance;
+>>>>>>> design
   final _myLocationCodeController = TextEditingController();
   final _collection = 'user';
 
@@ -83,19 +94,13 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                   builder: (FormFieldState state) {
                     return InputDecorator(
                       decoration: InputDecoration(
-                        icon: Icon(
-                          Icons.business,
-                          color: Colors.black,
-                        ),
+                        icon: Icon(Icons.business, color: Colors.black),
                         labelText: 'Branche',
                       ),
                       child: DropdownButton<String>(
                         dropdownColor: Colors.white,
                         style: TextStyle(color: Colors.black),
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
+                        icon: Icon(Icons.arrow_drop_down, color: Colors.black),
                         isExpanded: true,
                         items: _industry.map((String dropDownStringItem) {
                           return DropdownMenuItem<String>(
@@ -113,19 +118,13 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                   builder: (FormFieldState state) {
                     return InputDecorator(
                       decoration: InputDecoration(
-                        icon: Icon(
-                          Icons.account_balance,
-                          color: Colors.black,
-                        ),
+                        icon: Icon(null),
                         labelText: 'Branchensparte',
                       ),
                       child: DropdownButton<String>(
                         dropdownColor: Colors.white,
                         style: TextStyle(color: Colors.black),
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
+                        icon: Icon(Icons.arrow_drop_down, color: Colors.black),
                         isExpanded: true,
                         items: _branch.map((String dropDownStringItem) {
                           return DropdownMenuItem<String>(
@@ -141,43 +140,27 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                 ),
                 Row(
                   children: <Widget>[
-                    Icon(
-                      Icons.location_on,
-                      color: Colors.black,
-                    ),
-                    SizedBox(width: 15.0),
+                    SizedBox(width: 40.0),
                     Expanded(
                       flex: 40,
-                      child: Text(
-                        'Standort des Unternehmens',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
+                      child: Text('Standort des Unternehmens'),
                     ),
                     SizedBox(width: 20.0),
                     Expanded(
                       flex: 18,
                       child: TextFormField(
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
+<<<<<<< HEAD
+                        style: TextStyle(color: Colors.black),
                         controller: _myLocationCodeController,
                         inputFormatters: [
                           DecimalTextInputFormatter(
-                            decimalRange: 2,
-                            activatedNegativeValues: false,
-                          ),
-                          LengthLimitingTextInputFormatter(2),
+                              decimalRange: 2, activatedNegativeValues: false),
                         ],
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           suffixText: 'XXX',
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey,
-                            ),
-                          ),
+                              borderSide: BorderSide(color: Colors.grey)),
                         ),
                       ),
                     ),
@@ -185,6 +168,17 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     Expanded(
                       flex: 42,
                       child: Text('die ersten 2 Ziffern der PLZ'),
+=======
+                          controller: _myLocationCodeController,
+                          inputFormatters: [
+                            DecimalTextInputFormatter(
+                                decimalRange: 2,
+                                activatedNegativeValues: false),
+                            LengthLimitingTextInputFormatter(2),
+                          ],
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration()),
+>>>>>>> design
                     ),
                   ],
                 ),
@@ -193,27 +187,17 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     return InputDecorator(
                       decoration: InputDecoration(
                         enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        icon: Icon(
-                          Icons.people,
-                          color: Colors.black,
-                        ),
+                            borderSide: BorderSide(color: Colors.grey)),
+                        icon: Icon(Icons.people, color: Colors.black),
                         labelText: 'Anzahl Mitarbeiter',
                       ),
                       isEmpty: _employee == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                           dropdownColor: Colors.white,
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
+                          style: TextStyle(color: Colors.black),
+                          icon:
+                              Icon(Icons.arrow_drop_down, color: Colors.black),
                           value: _employee,
                           isDense: true,
                           onChanged: (String newValue) {
@@ -235,27 +219,17 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     return InputDecorator(
                       decoration: InputDecoration(
                         enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        icon: Icon(
-                          Icons.trending_up,
-                          color: Colors.black,
-                        ),
+                            borderSide: BorderSide(color: Colors.grey)),
+                        icon: Icon(Icons.trending_up, color: Colors.black),
                         labelText: 'Jahresumsatz',
                       ),
                       isEmpty: _turnover == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                           dropdownColor: Colors.white,
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
+                          style: TextStyle(color: Colors.black),
+                          icon:
+                              Icon(Icons.arrow_drop_down, color: Colors.black),
                           value: _turnover,
                           isDense: true,
                           onChanged: (String newValue) {
@@ -277,27 +251,17 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     return InputDecorator(
                       decoration: InputDecoration(
                         enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        icon: Icon(
-                          Icons.business,
-                          color: Colors.black,
-                        ),
+                            borderSide: BorderSide(color: Colors.grey)),
+                        icon: Icon(Icons.business, color: Colors.black),
                         labelText: 'Eigene Immobilie',
                       ),
                       isEmpty: _property == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                           dropdownColor: Colors.white,
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
+                          style: TextStyle(color: Colors.black),
+                          icon:
+                              Icon(Icons.arrow_drop_down, color: Colors.black),
                           value: _property,
                           isDense: true,
                           onChanged: (String newValue) {
@@ -319,27 +283,17 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     return InputDecorator(
                       decoration: InputDecoration(
                         enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        icon: Icon(
-                          Icons.euro_symbol,
-                          color: Colors.black,
-                        ),
+                            borderSide: BorderSide(color: Colors.grey)),
+                        icon: Icon(Icons.euro_symbol, color: Colors.black),
                         labelText: 'Preis',
                       ),
                       isEmpty: _sellingPrice == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                           dropdownColor: Colors.white,
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
+                          style: TextStyle(color: Colors.black),
+                          icon:
+                              Icon(Icons.arrow_drop_down, color: Colors.black),
                           value: _sellingPrice,
                           isDense: true,
                           onChanged: (String newValue) {
@@ -361,27 +315,17 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     return InputDecorator(
                       decoration: InputDecoration(
                         enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        icon: Icon(
-                          Icons.calendar_today,
-                          color: Colors.black,
-                        ),
+                            borderSide: BorderSide(color: Colors.grey)),
+                        icon: Icon(Icons.calendar_today, color: Colors.black),
                         labelText: 'Übergabe-Zeitpunkt',
                       ),
                       isEmpty: _handoverTime == '',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                           dropdownColor: Colors.white,
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
+                          style: TextStyle(color: Colors.black),
+                          icon:
+                              Icon(Icons.arrow_drop_down, color: Colors.black),
                           value: _handoverTime,
                           isDense: true,
                           onChanged: (String newValue) {
@@ -399,19 +343,25 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                   },
                 ),
                 FormBuilderSwitch(
-                  label: Text(
-                    'Ich akzeptiere die AGBs*',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  activeColor: kSecondGreenColor,
+<<<<<<< HEAD
+                  label: Text('Ich akzeptiere die AGBs',
+                      style: TextStyle(color: Colors.black)),
+                  activeColor: Colors.green,
+=======
+                  label: Text('Ich akzeptiere die AGBs*'),
+>>>>>>> design
                   attribute: "accept_terms_switch",
                   initialValue: false,
                   inactiveThumbColor: kMainGreyColor,
                   inactiveTrackColor: kMainLightGreyColor,
                   onChanged: _onChanged,
                 ),
+<<<<<<< HEAD
+                FlexRoundedButton(
+                  minButtonWidth: 150.0,
+                  title: 'Speichern',
+                  colour: kMainRedColor,
+=======
                 SizedBox(
                   width: 25,
                 ),
@@ -419,6 +369,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                   title: 'SPEICHERN',
                   colour: kMainRedColor,
                   minWidth: 100,
+>>>>>>> design
                   onPressed: () {
                     _locationCode = _myLocationCodeController.text + 'xxx';
                     _selectedBranch != ''
@@ -427,7 +378,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
 
                     // Check whether all validators of the fields are valid.
                     if (_formKey.currentState.validate() && _termsAccepted) {
-                      // Create firebase entry according to the collection 'user'
+                      // Create firebase entry according to the collection (userID = seller or buyer)
                       DocumentReference documentReference = _firestore
                           .collection(_collection)
                           .document(args.eMail);
@@ -464,7 +415,11 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       showInputNotComplete(context);
                     }
                   },
+<<<<<<< HEAD
+                )
+=======
                 ),
+>>>>>>> design
               ],
             ),
           ],

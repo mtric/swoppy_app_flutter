@@ -13,6 +13,51 @@ const kSecondOrangeColor = Color(0xFFE9883E);
 
 const kBottomAppBarColor = Color(0x20000000);
 
+const kAppBarTheme = AppBarTheme(
+  elevation: 0,
+  color: kMainGreyColor,
+);
+
+final kAppTheme = ThemeData(
+  brightness: Brightness.light,
+  primaryColor: kMainGreyColor,
+  accentColor: kMainRedColor,
+  appBarTheme: kAppBarTheme,
+  bottomAppBarColor: kBottomAppBarColor,
+  textSelectionHandleColor: kMainRedColor,
+
+  // Define the default Font Family
+  fontFamily: 'Open Sans',
+
+  // Define the default TextTheme. Use this to specify the default
+  // text styling for headlines, titles, bodies of text, and more.
+  textTheme: TextTheme(
+    headline4: TextStyle(
+      fontSize: 36,
+      fontWeight: FontWeight.bold,
+    ),
+    bodyText2: TextStyle(
+      color: Colors.black54,
+    ),
+
+    //headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+    //title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+    //body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+  ),
+
+  inputDecorationTheme: InputDecorationTheme(
+    labelStyle: TextStyle(color: Colors.black),
+    hintStyle: TextStyle(color: Colors.grey),
+  ),
+  unselectedWidgetColor: Colors.black,
+
+  // Define the default button theme
+  buttonTheme: ButtonThemeData(
+    buttonColor: kMainRedColor,
+    textTheme: ButtonTextTheme.primary,
+  ),
+);
+
 const kSendButtonTextStyle = TextStyle(
   color: kMainLightRedColor,
   fontWeight: FontWeight.bold,

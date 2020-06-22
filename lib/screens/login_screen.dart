@@ -1,4 +1,4 @@
-import 'package:Swoppy/screens/userTest_screen.dart';
+import 'package:Swoppy/screens/dummyScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   String email;
   String password;
+  String warnung = ' ';
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +78,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(
                 height: 24.0,
+                child: Center(
+                  child: Text(warnung,
+                      style: TextStyle(color: kMainRedColor),
+                      textAlign: TextAlign.center),
+                ),
               ),
               RoundedButton(
                 title: 'EINLOGGEN',
@@ -89,15 +95,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     final user = await _auth.signInWithEmailAndPassword(
                         email: email, password: password);
                     if (user != null) {
-                      // TODO: for development with UserTestScreen
-                      Navigator.pushNamed(context, UserTestScreen.id);
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          DummyScreen.id, ModalRoute.withName(DummyScreen.id));
                     }
 
                     setState(() {
                       showSpinner = false;
                     });
                   } catch (e) {
+                    setState(() {
+                      showSpinner = false;
+                      warnung =
+                          'Die E-Mail Adresse oder das Passwort ist inkorrekt!';
+                    });
                     print(e);
+                    print(warnung);
                   }
                 },
               ),
