@@ -45,10 +45,6 @@ final kAppTheme = ThemeData(
     //body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
   ),
 
-  inputDecorationTheme: InputDecorationTheme(
-    labelStyle: TextStyle(color: Colors.black),
-    hintStyle: TextStyle(color: Colors.grey),
-  ),
   unselectedWidgetColor: Colors.black,
 
   // Define the default button theme
