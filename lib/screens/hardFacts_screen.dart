@@ -1,15 +1,14 @@
-import 'package:Swoppy/utilities/IndustryData.dart';
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/decimalTextInputFormatter.dart';
-import 'package:Swoppy/utilities/profileHardFactsCriteria.dart';
 import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/utilities/userProfile.dart';
+import 'package:Swoppy/utilities/IndustryData.dart';
 import 'package:Swoppy/utilities/constants.dart';
-
-import 'package:flutter/services.dart';
+import 'package:Swoppy/utilities/profileHardFactsCriteria.dart';
+import 'package:Swoppy/utilities/userProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class HardFactsScreen extends StatefulWidget {
@@ -64,410 +63,296 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: null,
         title: Text('Hardfacts'),
       ),
-      body: Form(
-        key: _formKey,
-        autovalidate: true,
-        child: ListView(
-          padding: kPaddingProfileForm,
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                FormField(
-                  builder: (FormFieldState state) {
-                    return InputDecorator(
-                      decoration: InputDecoration(
-                        icon: Icon(
-                          Icons.business,
-                          color: Colors.black,
-                        ),
-                        labelText: 'Branche',
-                      ),
-                      child: DropdownButton<String>(
-                        dropdownColor: Colors.white,
-                        style: TextStyle(color: Colors.black),
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                        isExpanded: true,
-                        items: _industry.map((String dropDownStringItem) {
-                          return DropdownMenuItem<String>(
-                            value: dropDownStringItem,
-                            child: Text(dropDownStringItem),
-                          );
-                        }).toList(),
-                        onChanged: (value) => _onSelectedIndustry(value),
-                        value: _selectedIndustry,
-                      ),
-                    );
-                  },
-                ),
-                FormField(
-                  builder: (FormFieldState state) {
-                    return InputDecorator(
-                      decoration: InputDecoration(
-                        icon: Icon(
-                          Icons.account_balance,
-                          color: Colors.black,
-                        ),
-                        labelText: 'Branchensparte',
-                      ),
-                      child: DropdownButton<String>(
-                        dropdownColor: Colors.white,
-                        style: TextStyle(color: Colors.black),
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                        isExpanded: true,
-                        items: _branch.map((String dropDownStringItem) {
-                          return DropdownMenuItem<String>(
-                            value: dropDownStringItem,
-                            child: Text(dropDownStringItem),
-                          );
-                        }).toList(),
-                        onChanged: (value) => _onSelectedBranch(value),
-                        value: _selectedBranch,
-                      ),
-                    );
-                  },
-                ),
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.location_on,
-                      color: Colors.black,
-                    ),
-                    SizedBox(width: 15.0),
-                    Expanded(
-                      flex: 40,
-                      child: Text(
-                        'Standort des Unternehmens',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 20.0),
-                    Expanded(
-                      flex: 18,
-                      child: TextFormField(
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                        controller: _myLocationCodeController,
-                        inputFormatters: [
-                          DecimalTextInputFormatter(
-                            decimalRange: 2,
-                            activatedNegativeValues: false,
-                          ),
-                          LengthLimitingTextInputFormatter(2),
-                        ],
-                        keyboardType: TextInputType.number,
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          autovalidate: true,
+          child: ListView(
+            padding: kPaddingProfileForm,
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  FormField(
+                    builder: (FormFieldState state) {
+                      return InputDecorator(
                         decoration: InputDecoration(
-                          suffixText: 'XXX',
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey,
-                            ),
-                          ),
+                          icon: Icon(Icons.business),
+                          labelText: 'Branche',
                         ),
-                      ),
-                    ),
-                    SizedBox(width: 20.0),
-                    Expanded(
-                      flex: 42,
-                      child: Text('die ersten 2 Ziffern der PLZ'),
-                    ),
-                  ],
-                ),
-                FormField(
-                  builder: (FormFieldState state) {
-                    return InputDecorator(
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        icon: Icon(
-                          Icons.people,
-                          color: Colors.black,
-                        ),
-                        labelText: 'Anzahl Mitarbeiter',
-                      ),
-                      isEmpty: _employee == '',
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          dropdownColor: Colors.white,
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
-                          value: _employee,
-                          isDense: true,
-                          onChanged: (String newValue) {
-                            setState(() => _employee = newValue);
-                          },
-                          items: kEmployeeList.map((String value) {
-                            return DropdownMenuItem(
-                              value: value,
-                              child: Text(value),
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          items: _industry.map((String dropDownStringItem) {
+                            return DropdownMenuItem<String>(
+                              value: dropDownStringItem,
+                              child: Text(dropDownStringItem),
                             );
                           }).toList(),
+                          onChanged: (value) => _onSelectedIndustry(value),
+                          value: _selectedIndustry,
                         ),
-                      ),
-                    );
-                  },
-                ),
-                FormField(
-                  builder: (FormFieldState state) {
-                    return InputDecorator(
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        icon: Icon(
-                          Icons.trending_up,
-                          color: Colors.black,
-                        ),
-                        labelText: 'Jahresumsatz',
-                      ),
-                      isEmpty: _turnover == '',
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          dropdownColor: Colors.white,
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
-                          value: _turnover,
-                          isDense: true,
-                          onChanged: (String newValue) {
-                            setState(() => _turnover = newValue);
-                          },
-                          items: kTurnoverList.map((String value) {
-                            return DropdownMenuItem(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                FormField(
-                  builder: (FormFieldState state) {
-                    return InputDecorator(
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        icon: Icon(
-                          Icons.business,
-                          color: Colors.black,
-                        ),
-                        labelText: 'Eigene Immobilie',
-                      ),
-                      isEmpty: _property == '',
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          dropdownColor: Colors.white,
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
-                          value: _property,
-                          isDense: true,
-                          onChanged: (String newValue) {
-                            setState(() => _property = newValue);
-                          },
-                          items: kPropertyList.map((String value) {
-                            return DropdownMenuItem(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                FormField(
-                  builder: (FormFieldState state) {
-                    return InputDecorator(
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        icon: Icon(
-                          Icons.euro_symbol,
-                          color: Colors.black,
-                        ),
-                        labelText: 'Preis',
-                      ),
-                      isEmpty: _sellingPrice == '',
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          dropdownColor: Colors.white,
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
-                          value: _sellingPrice,
-                          isDense: true,
-                          onChanged: (String newValue) {
-                            setState(() => _sellingPrice = newValue);
-                          },
-                          items: kSellingPriceList.map((String value) {
-                            return DropdownMenuItem(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                FormField(
-                  builder: (FormFieldState state) {
-                    return InputDecorator(
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        icon: Icon(
-                          Icons.calendar_today,
-                          color: Colors.black,
-                        ),
-                        labelText: 'Übergabe-Zeitpunkt',
-                      ),
-                      isEmpty: _handoverTime == '',
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          dropdownColor: Colors.white,
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
-                          value: _handoverTime,
-                          isDense: true,
-                          onChanged: (String newValue) {
-                            setState(() => _handoverTime = newValue);
-                          },
-                          items: kHandoverTimeList.map((String value) {
-                            return DropdownMenuItem(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                FormBuilderSwitch(
-                  label: Text(
-                    'Ich akzeptiere die AGBs*',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
+                      );
+                    },
                   ),
-                  activeColor: kSecondGreenColor,
-                  attribute: "accept_terms_switch",
-                  initialValue: false,
-                  inactiveThumbColor: kMainGreyColor,
-                  inactiveTrackColor: kMainLightGreyColor,
-                  onChanged: _onChanged,
-                ),
-                SizedBox(
-                  width: 25,
-                ),
-                RoundedButton(
-                  title: 'SPEICHERN',
-                  colour: kMainRedColor,
-                  minWidth: 100,
-                  onPressed: () {
-                    _locationCode = _myLocationCodeController.text + 'xxx';
-                    _selectedBranch != ''
-                        ? _trade = _selectedBranch
-                        : _trade = _selectedIndustry;
+                  FormField(
+                    builder: (FormFieldState state) {
+                      return InputDecorator(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.account_balance),
+                          labelText: 'Branchensparte',
+                        ),
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          items: _branch.map((String dropDownStringItem) {
+                            return DropdownMenuItem<String>(
+                              value: dropDownStringItem,
+                              child: Text(dropDownStringItem),
+                            );
+                          }).toList(),
+                          onChanged: (value) => _onSelectedBranch(value),
+                          value: _selectedBranch,
+                        ),
+                      );
+                    },
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Icon(Icons.location_on),
+                      SizedBox(width: 15.0),
+                      Expanded(
+                        flex: 40,
+                        child: Text(
+                          'Standort des Unternehmens',
+                        ),
+                      ),
+                      SizedBox(width: 20.0),
+                      Expanded(
+                        flex: 18,
+                        child: TextFormField(
+                          controller: _myLocationCodeController,
+                          inputFormatters: [
+                            DecimalTextInputFormatter(
+                              decimalRange: 2,
+                              activatedNegativeValues: false,
+                            ),
+                            LengthLimitingTextInputFormatter(2),
+                          ],
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            suffixText: 'XXX',
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20.0),
+                      Expanded(
+                        flex: 42,
+                        child: Text('die ersten 2 Ziffern der PLZ'),
+                      ),
+                    ],
+                  ),
+                  FormField(
+                    builder: (FormFieldState state) {
+                      return InputDecorator(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.people),
+                          labelText: 'Anzahl Mitarbeiter',
+                        ),
+                        isEmpty: _employee == '',
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            value: _employee,
+                            isDense: true,
+                            onChanged: (String newValue) {
+                              setState(() => _employee = newValue);
+                            },
+                            items: kEmployeeList.map((String value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  FormField(
+                    builder: (FormFieldState state) {
+                      return InputDecorator(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.trending_up),
+                          labelText: 'Jahresumsatz',
+                        ),
+                        isEmpty: _turnover == '',
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            value: _turnover,
+                            isDense: true,
+                            onChanged: (String newValue) {
+                              setState(() => _turnover = newValue);
+                            },
+                            items: kTurnoverList.map((String value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  FormField(
+                    builder: (FormFieldState state) {
+                      return InputDecorator(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.business),
+                          labelText: 'Eigene Immobilie',
+                        ),
+                        isEmpty: _property == '',
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            value: _property,
+                            isDense: true,
+                            onChanged: (String newValue) {
+                              setState(() => _property = newValue);
+                            },
+                            items: kPropertyList.map((String value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  FormField(
+                    builder: (FormFieldState state) {
+                      return InputDecorator(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.euro_symbol),
+                          labelText: 'Preis',
+                        ),
+                        isEmpty: _sellingPrice == '',
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            value: _sellingPrice,
+                            isDense: true,
+                            onChanged: (String newValue) {
+                              setState(() => _sellingPrice = newValue);
+                            },
+                            items: kSellingPriceList.map((String value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  FormField(
+                    builder: (FormFieldState state) {
+                      return InputDecorator(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.calendar_today),
+                          labelText: 'Übergabe-Zeitpunkt',
+                        ),
+                        isEmpty: _handoverTime == '',
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            value: _handoverTime,
+                            isDense: true,
+                            onChanged: (String newValue) {
+                              setState(() => _handoverTime = newValue);
+                            },
+                            items: kHandoverTimeList.map((String value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  FormBuilderSwitch(
+                    label: Text(
+                      'Ich akzeptiere die AGBs*',
+                    ),
+                    activeColor: kSecondGreenColor,
+                    attribute: "accept_terms_switch",
+                    initialValue: false,
+                    inactiveThumbColor: kMainGreyColor,
+                    inactiveTrackColor: kMainLightGreyColor,
+                    onChanged: _onChanged,
+                  ),
+                  SizedBox(
+                    width: 25,
+                  ),
+                  RoundedButton(
+                    title: 'SPEICHERN',
+                    colour: kMainRedColor,
+                    minWidth: 100,
+                    onPressed: () {
+                      _locationCode = _myLocationCodeController.text + 'xxx';
+                      _selectedBranch != ''
+                          ? _trade = _selectedBranch
+                          : _trade = _selectedIndustry;
 
-                    // Check whether all validators of the fields are valid.
-                    if (_formKey.currentState.validate() && _termsAccepted) {
-                      // Create firebase entry according to the collection 'user'
-                      DocumentReference documentReference = _firestore
-                          .collection(_collection)
-                          .document(args.eMail);
+                      // Check whether all validators of the fields are valid.
+                      if (_formKey.currentState.validate() && _termsAccepted) {
+                        // Create firebase entry according to the collection 'user'
+                        DocumentReference documentReference = _firestore
+                            .collection(_collection)
+                            .document(args.eMail);
 
-                      Map<String, dynamic> user = {
-                        'title': args.title,
-                        'lastName': args.lastName,
-                        'firstName': args.firstName,
-                        'phone': args.phone,
-                        'eMail': args.eMail,
-                        'zipCode': args.zipCode,
-                        'city': args.city,
-                        'address': args.address,
-                        'abstract': args.abstract,
-                        'category': args.userCategory,
-                        'trade': _trade,
-                        'locationCode': _locationCode,
-                        'employee': _employee,
-                        'turnover': _turnover,
-                        'property': _property,
-                        'sellingPrice': _sellingPrice,
-                        'handoverTime': _handoverTime
-                      };
+                        Map<String, dynamic> user = {
+                          'title': args.title,
+                          'lastName': args.lastName,
+                          'firstName': args.firstName,
+                          'phone': args.phone,
+                          'eMail': args.eMail,
+                          'zipCode': args.zipCode,
+                          'city': args.city,
+                          'address': args.address,
+                          'abstract': args.abstract,
+                          'category': args.userCategory,
+                          'trade': _trade,
+                          'locationCode': _locationCode,
+                          'employee': _employee,
+                          'turnover': _turnover,
+                          'property': _property,
+                          'sellingPrice': _sellingPrice,
+                          'handoverTime': _handoverTime
+                        };
 
-                      documentReference
-                          .setData(user)
-                          .whenComplete(() => showDataSaved(
-                                (context),
-                              ));
+                        documentReference
+                            .setData(user)
+                            .whenComplete(() => showDataSaved(
+                                  (context),
+                                ));
 
-                      //  Navigator.pushNamed(context, DummyScreen.id);
-                    } else {
-                      // Form not complete, missing or incorrect entries.
-                      showInputNotComplete(context);
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
+                        //  Navigator.pushNamed(context, DummyScreen.id);
+                      } else {
+                        // Form not complete, missing or incorrect entries.
+                        showInputNotComplete(context);
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

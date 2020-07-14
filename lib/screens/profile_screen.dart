@@ -1,9 +1,9 @@
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
-import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/utilities/userProfile.dart';
 import 'package:Swoppy/components/decimalTextInputFormatter.dart';
+import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
+import 'package:Swoppy/utilities/userProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -79,75 +79,120 @@ class _ProfileScreenState extends State<ProfileScreen> {
         leading: null,
         title: Text('Benutzerprofil'),
       ),
-      backgroundColor: Colors.white,
-      body: Form(
-        key: _formKey,
-        autovalidate: true,
-        child: ListView(
-          padding: kPaddingProfileForm,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: FormField(
-                    builder: (FormFieldState state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey)),
-                          icon: Icon(null),
-                          labelText: 'Anrede',
-                        ),
-                        isEmpty: _title == '',
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            dropdownColor: Colors.white,
-                            style: TextStyle(color: Colors.black),
-                            icon: Icon(Icons.arrow_drop_down,
-                                color: Colors.black),
-                            value: _title,
-                            isDense: true,
-                            onChanged: (String newValue) {
-                              setState(() {
-                                _title = newValue;
-                                state.didChange(newValue);
-                              });
-                            },
-                            items: _titles.map((String value) {
-                              return DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          autovalidate: true,
+          child: ListView(
+            padding: kPaddingProfileForm,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: FormField(
+                      builder: (FormFieldState state) {
+                        return InputDecorator(
+                          decoration: InputDecoration(
+                            icon: Icon(null),
+                            labelText: 'Anrede',
                           ),
-                        ),
-                      );
-                    },
+                          isEmpty: _title == '',
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              value: _title,
+                              isDense: true,
+                              onChanged: (String newValue) {
+                                setState(() => _title = newValue);
+                              },
+                              items: _titles.map((String value) {
+                                return DropdownMenuItem(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                SizedBox(width: 15.0),
-                Expanded(
-                  child: SizedBox(height: 25.0),
-                ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextFormField(
-                    style: TextStyle(color: Colors.black),
-                    controller: _myFirstNameController,
-                    decoration: InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey)),
-                      icon: Icon(Icons.person, color: Colors.black),
-                      labelText: 'Vorname*',
-                      labelStyle: TextStyle(
-                        color: kMainGreyColor,
+                  SizedBox(width: 15.0),
+                  Expanded(
+                    child: SizedBox(height: 25.0),
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextFormField(
+                      controller: _myFirstNameController,
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.person),
+                        labelText: 'Vorname*',
                       ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return '';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 15.0),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _myLastNameController,
+                      decoration: InputDecoration(
+                        labelText: 'Nachname*',
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return '';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              TextFormField(
+                enabled: false,
+                controller: _myEmailController,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.email),
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              TextFormField(
+                controller: _myPhoneController,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.phone),
+                  labelText: 'Phone',
+                ),
+                keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  WhitelistingTextInputFormatter.digitsOnly,
+                ],
+              ),
+              Row(children: <Widget>[
+                Expanded(
+                  child: TextFormField(
+                    inputFormatters: [
+                      DecimalTextInputFormatter(
+                          decimalRange: 5, activatedNegativeValues: false),
+                      LengthLimitingTextInputFormatter(5),
+                    ],
+                    keyboardType: TextInputType.number,
+                    controller: _myZipCodeController,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.home),
+                      labelText: 'PLZ*',
                     ),
                     validator: (value) {
-                      if (value.isEmpty) {
+                      if (value.isEmpty ||
+                          !value.contains(new RegExp(r'[0-9]')) ||
+                          value.length != 5) {
                         return '';
                       }
                       return null;
@@ -157,13 +202,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(width: 15.0),
                 Expanded(
                   child: TextFormField(
-                    style: TextStyle(color: Colors.black),
-                    controller: _myLastNameController,
+                    controller: _myCityController,
+                    keyboardType: TextInputType.text,
                     decoration: InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey)),
-                      labelStyle: TextStyle(color: Colors.black),
-                      labelText: 'Nachname*',
+                      labelText: 'Ort*',
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
@@ -172,204 +214,100 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       return null;
                     },
                   ),
+                )
+              ]),
+              TextFormField(
+                controller: _myAddressController,
+                decoration: InputDecoration(
+                  icon: Icon(null),
+                  labelText: 'Strasse, Haus-Nr. (optional)',
                 ),
-              ],
-            ),
-            TextFormField(
-              enabled: false,
-              controller: _myEmailController,
-              style: TextStyle(color: Colors.black),
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey)),
-                icon: Icon(Icons.email, color: Colors.black),
+                keyboardType: TextInputType.text,
               ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            TextFormField(
-              controller: _myPhoneController,
-              style: TextStyle(color: Colors.black),
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey)),
-                icon: Icon(Icons.phone, color: Colors.black),
-                labelText: 'Phone',
-                labelStyle: TextStyle(
-                  color: kMainGreyColor,
+              SizedBox(height: 10),
+              RadioButtonGroup(
+                orientation: GroupedButtonsOrientation.HORIZONTAL,
+                activeColor: kMainRedColor,
+                margin: const EdgeInsets.only(left: 32.0),
+                onSelected: (String selected) => setState(() {
+                  _picked = selected;
+                  _picked == 'Käufer*'
+                      ? _userCategory = 'buyer'
+                      : _userCategory = 'seller';
+                }),
+                labels: <String>[
+                  "Käufer*",
+                  "Verkäufer*",
+                ],
+                picked: _picked,
+                itemBuilder: (Radio rb, Text txt, int i) {
+                  return Row(
+                    children: <Widget>[
+                      rb,
+                      txt,
+                    ],
+                  );
+                },
+              ),
+              TextFormField(
+                maxLines: 5,
+                maxLength: 120,
+                controller: _myAbstractController,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.text_fields),
+                  hintText: 'Kurzbeschreibung Unternehmen/Person',
+                  border: OutlineInputBorder(),
                 ),
               ),
-              keyboardType: TextInputType.phone,
-              inputFormatters: [
-                WhitelistingTextInputFormatter.digitsOnly,
-              ],
-            ),
-            Row(children: <Widget>[
-              Expanded(
-                child: TextFormField(
-                  style: TextStyle(color: Colors.black),
-                  inputFormatters: [
-                    DecimalTextInputFormatter(
-                        decimalRange: 5, activatedNegativeValues: false),
-                    LengthLimitingTextInputFormatter(5),
-                  ],
-                  keyboardType: TextInputType.number,
-                  controller: _myZipCodeController,
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
-                    icon: Icon(Icons.home, color: Colors.black),
-                    labelText: 'PLZ*',
-                    labelStyle: TextStyle(
-                      color: kMainGreyColor,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: RoundedButton(
+                      title: 'LÖSCHEN',
+                      colour: kMainGreyColor,
+                      minWidth: 100,
+                      onPressed: () {
+                        // reset() setzt alle Felder wieder auf den Initalwert zurück.
+                        _formKey.currentState.reset();
+                      },
                     ),
                   ),
-                  validator: (value) {
-                    if (value.isEmpty ||
-                        !value.contains(new RegExp(r'[0-9]')) ||
-                        value.length != 5) {
-                      return '';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              SizedBox(width: 15.0),
-              Expanded(
-                child: TextFormField(
-                  style: TextStyle(
-                    color: Colors.black,
+                  SizedBox(
+                    width: 25,
                   ),
-                  controller: _myCityController,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
-                    labelText: 'Ort*',
-                    labelStyle: TextStyle(
-                      color: kMainGreyColor,
+                  Expanded(
+                    child: RoundedButton(
+                      title: 'WEITER',
+                      colour: kMainRedColor,
+                      minWidth: 100,
+                      onPressed: () {
+                        // Check whether all validators of the fields are valid.
+                        if (_formKey.currentState.validate() &&
+                            (_picked != '')) {
+                          Navigator.pushNamed(context, HardFactsScreen.id,
+                              arguments: UserProfile(
+                                  _userCategory,
+                                  _title,
+                                  _myLastNameController.text,
+                                  _myFirstNameController.text,
+                                  _myEmailController.text,
+                                  _myPhoneController.text,
+                                  _myZipCodeController.text,
+                                  _myCityController.text,
+                                  _myAddressController.text,
+                                  _myAbstractController.text));
+                        } else {
+                          // Form not complete, missing or incorrect entries.
+                          showInputNotComplete(context);
+                        }
+                      },
                     ),
                   ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return '';
-                    }
-                    return null;
-                  },
-                ),
-              )
-            ]),
-            TextFormField(
-              style: TextStyle(
-                color: Colors.black,
+                ],
               ),
-              controller: _myAddressController,
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey)),
-                icon: Icon(null),
-                labelText: 'Strasse, Haus-Nr. (optional)',
-                labelStyle: TextStyle(
-                  color: kMainGreyColor,
-                ),
-              ),
-              keyboardType: TextInputType.text,
-            ),
-            SizedBox(height: 10),
-            RadioButtonGroup(
-              orientation: GroupedButtonsOrientation.HORIZONTAL,
-              activeColor: kMainRedColor,
-              margin: const EdgeInsets.only(left: 32.0),
-              labelStyle: TextStyle(
-                color: Colors.black,
-              ),
-              onSelected: (String selected) => setState(() {
-                _picked = selected;
-                _picked == 'Käufer*'
-                    ? _userCategory = 'buyer'
-                    : _userCategory = 'seller';
-              }),
-              labels: <String>[
-                "Käufer*",
-                "Verkäufer*",
-              ],
-              picked: _picked,
-              itemBuilder: (Radio rb, Text txt, int i) {
-                return Row(
-                  children: <Widget>[
-                    rb,
-                    txt,
-                  ],
-                );
-              },
-            ),
-            TextFormField(
-              maxLines: 5,
-              maxLength: 120,
-              style: TextStyle(
-                color: Colors.black,
-                decorationColor: Colors.black,
-              ),
-              controller: _myAbstractController,
-              decoration: InputDecoration(
-                icon: Icon(
-                  Icons.text_fields,
-                  color: Colors.black,
-                ),
-                hintText: 'Kurzbeschreibung Unternehmen/Person',
-                border: OutlineInputBorder(),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                  color: Colors.black,
-                )),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: RoundedButton(
-                    title: 'LÖSCHEN',
-                    colour: kMainGreyColor,
-                    minWidth: 100,
-                    onPressed: () {
-                      // reset() setzt alle Felder wieder auf den Initalwert zurück.
-                      _formKey.currentState.reset();
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 25,
-                ),
-                Expanded(
-                  child: RoundedButton(
-                    title: 'WEITER',
-                    colour: kMainRedColor,
-                    minWidth: 100,
-                    onPressed: () {
-                      // Check whether all validators of the fields are valid.
-                      if (_formKey.currentState.validate() && (_picked != '')) {
-                        Navigator.pushNamed(context, HardFactsScreen.id,
-                            arguments: UserProfile(
-                                _userCategory,
-                                _title,
-                                _myLastNameController.text,
-                                _myFirstNameController.text,
-                                _myEmailController.text,
-                                _myPhoneController.text,
-                                _myZipCodeController.text,
-                                _myCityController.text,
-                                _myAddressController.text,
-                                _myAbstractController.text));
-                      } else {
-                        // Form not complete, missing or incorrect entries.
-                        showInputNotComplete(context);
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
