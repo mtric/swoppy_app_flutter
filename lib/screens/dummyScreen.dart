@@ -1,11 +1,12 @@
+import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/screens/camera_screen.dart';
+import 'package:Swoppy/screens/tutorial_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
+import 'package:Swoppy/utilities/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/utilities/constants.dart';
-import 'package:Swoppy/screens/camera_screen.dart';
 
 class DummyScreen extends StatefulWidget {
   static const String id = 'dummy_screen';
@@ -142,6 +143,13 @@ class _DummyScreenState extends State<DummyScreen> {
                   colour: kMainRedColor,
                   onPressed: () {
                     Navigator.pushNamed(context, CameraScreen.id);
+                  },
+                ),
+                RoundedButton(
+                  title: 'Tutorial',
+                  colour: kSecondGreenColor,
+                  onPressed: () {
+                    Navigator.pushNamed(context, TutorialScreen.id);
                   },
                 ),
               ],

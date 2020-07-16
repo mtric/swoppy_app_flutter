@@ -1,8 +1,8 @@
-import 'package:Swoppy/screens/login_screen.dart';
-import 'package:Swoppy/screens/registration_screen.dart';
-import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/components/sign_in.dart';
+import 'package:Swoppy/screens/login_screen.dart';
+import 'package:Swoppy/screens/profile_screen.dart';
+import 'package:Swoppy/screens/registration_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:flutter/material.dart';
 
