@@ -8,6 +8,7 @@ import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/screens/registration_screen.dart';
 import 'package:Swoppy/screens/tutorial_screen.dart';
 import 'package:Swoppy/screens/userTest_screen.dart';
+import 'package:Swoppy/screens/videoExample_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ Future<void> main() async {
           HardFactsScreen.id: (context) => HardFactsScreen(),
           DummyScreen.id: (context) => DummyScreen(),
           TutorialScreen.id: (context) => TutorialScreen(),
+          VideoExample.id: (context) => VideoExample(),
         },
       ),
     );

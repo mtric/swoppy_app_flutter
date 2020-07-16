@@ -1,6 +1,7 @@
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/screens/camera_screen.dart';
 import 'package:Swoppy/screens/tutorial_screen.dart';
+import 'package:Swoppy/screens/videoExample_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -131,26 +132,41 @@ class _DummyScreenState extends State<DummyScreen> {
                     Text('Zeitpunkt:  $handoverTime'),
                   ],
                 ),
-                RoundedButton(
-                  title: 'Benutzerdaten aufrufen',
-                  colour: kMainGreyColor,
-                  onPressed: () {
-                    _readData();
-                  },
+                Flexible(
+                  child: RoundedButton(
+                    title: 'Benutzerdaten aufrufen',
+                    colour: kMainGreyColor,
+                    onPressed: () {
+                      _readData();
+                    },
+                  ),
                 ),
-                RoundedButton(
-                  title: 'VIDEO AUFNEHMEN',
-                  colour: kMainRedColor,
-                  onPressed: () {
-                    Navigator.pushNamed(context, CameraScreen.id);
-                  },
+                Flexible(
+                  child: RoundedButton(
+                    title: 'VIDEO AUFNEHMEN',
+                    colour: kMainRedColor,
+                    onPressed: () {
+                      Navigator.pushNamed(context, CameraScreen.id);
+                    },
+                  ),
                 ),
-                RoundedButton(
-                  title: 'Tutorial',
-                  colour: kSecondGreenColor,
-                  onPressed: () {
-                    Navigator.pushNamed(context, TutorialScreen.id);
-                  },
+                Flexible(
+                  child: RoundedButton(
+                    title: 'Tutorial',
+                    colour: kSecondGreenColor,
+                    onPressed: () {
+                      Navigator.pushNamed(context, TutorialScreen.id);
+                    },
+                  ),
+                ),
+                Flexible(
+                  child: RoundedButton(
+                    title: 'Tutorial Video',
+                    colour: kSecondBlueColor,
+                    onPressed: () {
+                      Navigator.pushNamed(context, VideoExample.id);
+                    },
+                  ),
                 ),
               ],
             ),

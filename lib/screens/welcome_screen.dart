@@ -115,11 +115,18 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           height: 35.0),
                       Padding(
                         padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          'MIT GOOGLE ANMELDEN',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.grey,
+                        child: Container(
+                          width: 200.0,
+                          height: 42.0,
+                          child: FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              'MIT GOOGLE ANMELDEN',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
                         ),
                       ),
