@@ -10,6 +10,13 @@ class IndustryData {
       .expand((i) => i)
       .toList();
 
+  getWzKeyByIndustry(String wzKey) => _industries
+      .map((map) => IndustryModel.fromJson(map))
+      .where((item) => item.mainIndustry == wzKey)
+      .map((item) => item.wzKey)
+      .toString()
+      .substring(1, 2);
+
   List<String> getIndustries() => _industries
       .map((map) => IndustryModel.fromJson(map))
       .map((item) => item.mainIndustry)

@@ -3,7 +3,7 @@ import 'package:Swoppy/components/decimalTextInputFormatter.dart';
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/utilities/IndustryData.dart';
 import 'package:Swoppy/utilities/constants.dart';
-import 'package:Swoppy/utilities/profileHardFactsCriteria.dart';
+import 'package:Swoppy/utilities/matchingData.dart';
 import 'package:Swoppy/utilities/userProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,9 +30,9 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   List<String> _industry = [''];
   List<String> _branch = [''];
   String _selectedIndustry = '';
+  String _selectedWzKey = '';
   String _selectedBranch = '';
 
-  String _trade = '';
   String _locationCode = '';
   String _employee = '';
   String _turnover = '';
@@ -305,9 +305,6 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     minWidth: 100,
                     onPressed: () {
                       _locationCode = _myLocationCodeController.text + 'xxx';
-                      _selectedBranch != ''
-                          ? _trade = _selectedBranch
-                          : _trade = _selectedIndustry;
 
                       // Check whether all validators of the fields are valid.
                       if (_formKey.currentState.validate() && _termsAccepted) {
@@ -327,7 +324,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                           'address': args.address,
                           'abstract': args.abstract,
                           'category': args.userCategory,
-                          'trade': _trade,
+                          'trade': _selectedWzKey,
                           'locationCode': _locationCode,
                           'employee': _employee,
                           'turnover': _turnover,
@@ -364,10 +361,14 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
       _branch = [''];
       _selectedIndustry = value;
       _branch = List.from(_branch)..addAll(data.getBranchByIndustry(value));
+      _selectedWzKey = data.getWzKeyByIndustry(value);
     });
   }
 
   void _onSelectedBranch(String value) {
-    setState(() => _selectedBranch = value);
+    setState(() => {
+          _selectedBranch = value,
+          _selectedWzKey += _selectedBranch.substring(0, 2),
+        });
   }
 }

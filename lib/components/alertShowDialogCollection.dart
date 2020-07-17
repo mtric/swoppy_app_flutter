@@ -1,8 +1,7 @@
-import 'package:Swoppy/utilities/userRole.dart';
+import 'package:Swoppy/screens/userScreen.dart';
 import 'package:Swoppy/utilities/constants.dart';
+import 'package:Swoppy/utilities/userRolle.dart';
 import 'package:flutter/material.dart';
-
-import 'package:Swoppy/screens/dummyScreen.dart';
 
 showInputNotComplete(BuildContext context) {
   Widget okButton = FlatButton(
@@ -33,7 +32,7 @@ showDataSaved(BuildContext context) {
     color: kMainRedColor,
     child: Text("WEITER"),
     onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-        DummyScreen.id, ModalRoute.withName(DummyScreen.id)),
+        UserScreen.id, ModalRoute.withName(UserScreen.id)),
   );
 
   AlertDialog alert = AlertDialog(
@@ -57,7 +56,7 @@ showDelete(BuildContext context, String userID) {
   Widget okButton = FlatButton(
     color: kMainRedColor,
     child: Text("LÖSCHEN"),
-    onPressed: () => Navigator.pushNamed(context, DummyScreen.id,
+    onPressed: () => Navigator.pushNamed(context, UserScreen.id,
         arguments: UserRole(userID)),
     //      Navigator.pop(context),
   );
