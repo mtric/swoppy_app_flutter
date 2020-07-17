@@ -2,15 +2,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class VideoTimer extends StatefulWidget {
-  const VideoTimer({Key key}) : super(key: key);
+  const VideoTimer({Key key, this.stopCamera}) : super(key: key);
+  final CameraCallback stopCamera;
 
   @override
-  VideoTimerState createState() => VideoTimerState();
+  VideoTimerState createState() => VideoTimerState(stopCamera);
 }
 
 class VideoTimerState extends State<VideoTimer> {
+  VideoTimerState(this.stopCamera);
+  CameraCallback stopCamera;
+
   Timer _timer;
   int start = 60;
+  bool isFinished = false;
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
@@ -19,7 +24,7 @@ class VideoTimerState extends State<VideoTimer> {
       (Timer timer) => setState(
         () {
           if (start < 1) {
-            stopTimer();
+            stopCamera();
           } else {
             start = start - 1;
           }
@@ -82,3 +87,5 @@ class VideoTimerState extends State<VideoTimer> {
     ].map((seg) => seg.remainder(60).toString().padLeft(2, '0')).join(':');
   }
 }
+
+typedef CameraCallback = void Function();

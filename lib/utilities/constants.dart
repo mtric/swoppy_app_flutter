@@ -11,6 +11,7 @@ const kSecondGreenColor = Color(0xFF4B9051);
 const kSecondLightGreenColor = Color(0xFF8Cb84F);
 const kSecondOrangeColor = Color(0xFFE9883E);
 
+const kBackgroundColor = Colors.white;
 const kBottomAppBarColor = Color(0x20000000);
 
 const kAppBarTheme = AppBarTheme(
@@ -25,6 +26,7 @@ final kAppTheme = ThemeData(
   appBarTheme: kAppBarTheme,
   bottomAppBarColor: kBottomAppBarColor,
   textSelectionHandleColor: kMainRedColor,
+  backgroundColor: kBackgroundColor,
 
   // Define the default Font Family
   fontFamily: 'Open Sans',

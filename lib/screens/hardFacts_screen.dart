@@ -316,7 +316,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                             .collection(_collection)
                             .document(args.eMail);
 
-                        Map<String, dynamic> user = {
+                        Map<String, dynamic> userData = {
                           'title': args.title,
                           'lastName': args.lastName,
                           'firstName': args.firstName,
@@ -337,7 +337,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                         };
 
                         documentReference
-                            .setData(user)
+                            .setData(userData)
                             .whenComplete(() => showDataSaved(
                                   (context),
                                 ));

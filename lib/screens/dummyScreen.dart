@@ -19,6 +19,7 @@ class _DummyScreenState extends State<DummyScreen> {
   final _collection = 'user';
   final _firestore = Firestore.instance;
 
+  /// Method to get the current user from Firebase Authentication
   void getCurrentUser() async {
     try {
       final user = await _auth.currentUser();
