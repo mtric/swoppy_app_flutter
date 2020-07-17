@@ -1,21 +1,21 @@
 class IndustryModel {
-  String mainIndustry;
-  String wzKey;
-  List<String> industry;
+  String branch;
+  String branchKey;
+  List<String> trade;
 
-  IndustryModel({this.mainIndustry, this.wzKey, this.industry});
+  IndustryModel({this.branch, this.branchKey, this.trade});
 
   IndustryModel.fromJson(Map<String, dynamic> json) {
-    mainIndustry = json['branch'];
-    wzKey = json['key'];
-    industry = json['trade'].cast<String>();
+    branch = json['branch'];
+    branchKey = json['key'];
+    trade = json['trade'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['branch'] = this.mainIndustry;
-    data['key'] = this.wzKey;
-    data['trade'] = this.industry;
+    data['branch'] = this.branch;
+    data['key'] = this.branchKey;
+    data['trade'] = this.trade;
     return data;
   }
 }

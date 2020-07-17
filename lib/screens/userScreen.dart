@@ -1,19 +1,21 @@
+import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/screens/camera_screen.dart';
+import 'package:Swoppy/screens/matchingScreen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
+import 'package:Swoppy/utilities/constants.dart';
+import 'package:Swoppy/utilities/matchingModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/utilities/constants.dart';
-import 'package:Swoppy/screens/camera_screen.dart';
 
-class DummyScreen extends StatefulWidget {
-  static const String id = 'dummy_screen';
+class UserScreen extends StatefulWidget {
+  static const String id = 'user_screen';
   @override
-  _DummyScreenState createState() => _DummyScreenState();
+  _UserScreenState createState() => _UserScreenState();
 }
 
-class _DummyScreenState extends State<DummyScreen> {
+class _UserScreenState extends State<UserScreen> {
   FirebaseUser loggedInUser;
   final _auth = FirebaseAuth.instance;
   final _collection = 'user';
@@ -24,6 +26,7 @@ class _DummyScreenState extends State<DummyScreen> {
       final user = await _auth.currentUser();
       if (user != null) {
         loggedInUser = user;
+        _readDataFromDB(loggedInUser.email);
       }
     } catch (e) {
       print(e);
@@ -49,10 +52,10 @@ class _DummyScreenState extends State<DummyScreen> {
   String sellingPrice = '';
   String handoverTime = '';
 
-  _readData() {
+  _readDataFromDB(currentUser) {
     setState(() {
       DocumentReference documentReference =
-          _firestore.collection(_collection).document(loggedInUser.email);
+          _firestore.collection(_collection).document(currentUser);
 
       documentReference.get().then((datasnapshot) {
         setState(() {
@@ -80,8 +83,8 @@ class _DummyScreenState extends State<DummyScreen> {
 
   @override
   void initState() {
-    super.initState();
     getCurrentUser();
+    super.initState();
   }
 
   @override
@@ -93,14 +96,14 @@ class _DummyScreenState extends State<DummyScreen> {
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
+                _clearLoggedIntUserData();
                 _auth.signOut();
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     WelcomeScreen.id, ModalRoute.withName(WelcomeScreen.id));
               }),
         ],
-        title: Text('*** Test Screen ***'),
+        title: Text('User Screen'),
       ),
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -121,27 +124,34 @@ class _DummyScreenState extends State<DummyScreen> {
                     Text('Strasse Hausnummer:  $address'),
                     Text('Kurzbeschreibung:  $abstract'),
                     Text('Kategorie: $userCategory'),
-                    Text('Branche:  $trade'),
-                    Text('Standort:  $locationCode'),
-                    Text('Anzahl Mitarbeiter:  $employee'),
-                    Text('Umsatz:  $turnover'),
-                    Text('eigene Immobilie:  $property'),
-                    Text('Preis:  $sellingPrice'),
-                    Text('Zeitpunkt:  $handoverTime'),
                   ],
                 ),
-                RoundedButton(
-                  title: 'Benutzerdaten aufrufen',
-                  colour: kMainGreyColor,
-                  onPressed: () {
-                    _readData();
-                  },
-                ),
+                SizedBox(height: 30.0),
                 RoundedButton(
                   title: 'VIDEO AUFNEHMEN',
                   colour: kMainRedColor,
                   onPressed: () {
                     Navigator.pushNamed(context, CameraScreen.id);
+                  },
+                ),
+                RoundedButton(
+                  title: 'MATCHING',
+                  colour: kMainGreyColor,
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      MatchingScreen.id,
+                      arguments: MatchingModel(
+                        userCategory,
+                        trade,
+                        locationCode,
+                        employee,
+                        turnover,
+                        property,
+                        sellingPrice,
+                        handoverTime,
+                      ),
+                    );
                   },
                 ),
               ],
@@ -150,5 +160,24 @@ class _DummyScreenState extends State<DummyScreen> {
         ),
       ),
     );
+  }
+
+  void _clearLoggedIntUserData() {
+    title = '';
+    firstName = '';
+    lastName = '';
+    eMail = '';
+    phone = '';
+    zipCode = '';
+    city = '';
+    address = '';
+    abstract = '';
+    trade = '';
+    locationCode = '';
+    employee = '';
+    turnover = '';
+    property = '';
+    sellingPrice = '';
+    handoverTime = '';
   }
 }
