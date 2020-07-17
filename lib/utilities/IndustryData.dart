@@ -5,21 +5,21 @@ class IndustryData {
 
   getBranchByIndustry(String branch) => _industries
       .map((map) => IndustryModel.fromJson(map))
-      .where((item) => item.mainIndustry == branch)
-      .map((item) => item.industry)
+      .where((item) => item.branch == branch)
+      .map((item) => item.trade)
       .expand((i) => i)
       .toList();
 
-  getWzKeyByIndustry(String wzKey) => _industries
+  getBranchKeyByIndustry(String branchKey) => _industries
       .map((map) => IndustryModel.fromJson(map))
-      .where((item) => item.mainIndustry == wzKey)
-      .map((item) => item.wzKey)
+      .where((item) => item.branch == branchKey)
+      .map((item) => item.branchKey)
       .toString()
       .substring(1, 2);
 
   List<String> getIndustries() => _industries
       .map((map) => IndustryModel.fromJson(map))
-      .map((item) => item.mainIndustry)
+      .map((item) => item.branch)
       .toList();
 
   List _industries = [

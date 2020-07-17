@@ -30,7 +30,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   List<String> _industry = [''];
   List<String> _branch = [''];
   String _selectedIndustry = '';
-  String _selectedWzKey = '';
+  String _selectedBranchKey = '';
   String _selectedBranch = '';
 
   String _locationCode = '';
@@ -324,7 +324,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                           'address': args.address,
                           'abstract': args.abstract,
                           'category': args.userCategory,
-                          'trade': _selectedWzKey,
+                          'trade': _selectedBranchKey,
                           'locationCode': _locationCode,
                           'employee': _employee,
                           'turnover': _turnover,
@@ -361,14 +361,14 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
       _branch = [''];
       _selectedIndustry = value;
       _branch = List.from(_branch)..addAll(data.getBranchByIndustry(value));
-      _selectedWzKey = data.getWzKeyByIndustry(value);
+      _selectedBranchKey = data.getBranchKeyByIndustry(value);
     });
   }
 
   void _onSelectedBranch(String value) {
     setState(() => {
           _selectedBranch = value,
-          _selectedWzKey += _selectedBranch.substring(0, 2),
+          _selectedBranchKey += _selectedBranch.substring(0, 2),
         });
   }
 }
