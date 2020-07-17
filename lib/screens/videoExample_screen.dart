@@ -10,7 +10,6 @@ class VideoExample extends StatefulWidget {
 class _VideoExampleState extends State<VideoExample> {
   VideoPlayerController playerController;
   VoidCallback listener;
-
   @override
   void initState() {
     super.initState();
@@ -38,9 +37,13 @@ class _VideoExampleState extends State<VideoExample> {
 
   @override
   void deactivate() {
-    playerController.setVolume(0.0);
-    playerController.removeListener(listener);
-    super.deactivate();
+    try {
+      playerController.setVolume(0.0);
+      playerController.removeListener(listener);
+      super.deactivate();
+    } catch (e) {
+      super.deactivate();
+    }
   }
 
   @override
