@@ -1,10 +1,15 @@
-const List<String> kTradeList = <String>[
-  '',
-  'Tourismus',
-  'Industrie',
-  'Handel',
-  'Gesundheitswirtschaft'
+const List<String> kMatchingCriteria = [
+  'Branche',
+  'Standort',
+  'Umsatz',
+  'Mitarbeiter',
+  'Immobilie',
+  'Preis',
+  'Zeitraum',
 ];
+
+const maxCriteriaPoints = 28;
+const kBaseRatingList = [4, 4, 4, 4, 4, 4, 4];
 
 final List<String> kTurnoverList = <String>[
   '',

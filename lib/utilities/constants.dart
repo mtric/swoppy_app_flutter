@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+const kCollection = 'user';
+const kMinHitRate = 10.0;
+
 const kMainRedColor = Color(0xFFD50C2F);
 const kMainGreyColor = Color(0xFF575656);
 const kMainLightRedColor = Color(0xFFEA8597);
