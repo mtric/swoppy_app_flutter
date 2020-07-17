@@ -33,7 +33,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                         Flexible(
                           child: Center(
                             child: RoundedButton(
-                              title: 'Tutorial Video',
+                              title: 'Hier zum Video',
                               colour: kSecondBlueColor,
                               onPressed: () {
                                 Navigator.pushNamed(context, VideoExample.id);
