@@ -44,7 +44,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
   String _wantedUserCategory = '';
 
   int _indexTrade = 0;
-  int _indexLocation = 1;
+  // int _indexLocation = 1;
   int _indexTurnover = 2;
   int _indexEmployee = 3;
   int _indexProperty = 4;
@@ -215,17 +215,18 @@ class _MatchingScreenState extends State<MatchingScreen> {
   Widget build(BuildContext context) {
     // Extract the arguments from the current ModalRoute settings and cast
     // them as ScreenArguments.
-    final MatchingModel args = ModalRoute.of(context).settings.arguments;
+    final MatchingModel matchingModel =
+        ModalRoute.of(context).settings.arguments;
 
     // data from the requesting party
-    _reqUserCategory = args.userCategory;
-    _reqTrade = args.trade;
-    _reqLocationCode = args.locationCode;
-    _reqEmployee = args.employee;
-    _reqTurnover = args.turnover;
-    _reqProperty = args.property;
-    _reqPrice = args.sellingPrice;
-    _reqTime = args.handoverTime;
+    _reqUserCategory = matchingModel.userCategory;
+    _reqTrade = matchingModel.trade;
+    _reqLocationCode = matchingModel.locationCode;
+    _reqEmployee = matchingModel.employee;
+    _reqTurnover = matchingModel.turnover;
+    _reqProperty = matchingModel.property;
+    _reqPrice = matchingModel.sellingPrice;
+    _reqTime = matchingModel.handoverTime;
 
     // --- Radar Chart
 
@@ -282,70 +283,83 @@ class _MatchingScreenState extends State<MatchingScreen> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  RoundedButton(
-                    title: 'START',
-                    colour: kMainRedColor,
-                    minWidth: 5.0,
-                    onPressed: () {
-                      _hitCounter = 0;
-                      _counter = 0;
+                  Expanded(
+                    flex: 2,
+                    child: RoundedButton(
+                      title: 'START',
+                      colour: kMainRedColor,
+                      minWidth: 5.0,
+                      onPressed: () {
+                        _hitCounter = 0;
+                        _counter = 0;
 
-                      resultList = _potentialCandidatesMap.values.toList();
-                      candidateMatchList = resultList[_counter].sublist(0, 7);
+                        resultList = _potentialCandidatesMap.values.toList();
+                        candidateMatchList = resultList[_counter].sublist(0, 7);
 
-                      _hitCounter++;
+                        _hitCounter++;
 
-                      chartData = [kBaseRatingList, candidateMatchList];
-                      setState(() {});
-                    },
+                        chartData = [kBaseRatingList, candidateMatchList];
+                        setState(() {});
+                      },
+                    ),
                   ),
                   SizedBox(width: 1.0),
-                  RoundedButton(
-                    title: '>',
-                    colour: kMainGreyColor,
-                    minWidth: 1.0,
-                    onPressed: () {
-                      if (_counter < resultList.length - 1) {
-                        _counter++;
-                        _hitCounter++;
-                      } else {
-                        _counter = 0;
-                        _hitCounter = 1;
-                      }
+                  Expanded(
+                    flex: 1,
+                    child: RoundedButton(
+                      title: '>',
+                      colour: kMainGreyColor,
+                      minWidth: 1.0,
+                      onPressed: () {
+                        if (_counter < resultList.length - 1) {
+                          _counter++;
+                          _hitCounter++;
+                        } else {
+                          _counter = 0;
+                          _hitCounter = 1;
+                        }
 
-                      resultList = _potentialCandidatesMap.values.toList();
-                      candidateMatchList = resultList[_counter].sublist(0, 7);
-                      chartData = [kBaseRatingList, candidateMatchList];
-                      setState(() {});
-                    },
+                        resultList = _potentialCandidatesMap.values.toList();
+                        candidateMatchList = resultList[_counter].sublist(0, 7);
+                        chartData = [kBaseRatingList, candidateMatchList];
+                        setState(() {});
+                      },
+                    ),
                   ),
-                  //                SizedBox(width: 1.0),
-                  RoundedButton(
-                    title: '<',
-                    colour: kMainGreyColor,
-                    minWidth: 1.0,
-                    onPressed: () {
-                      if (_counter >= 1) {
-                        _counter--;
-                        _hitCounter--;
-                      } else {
-                        _counter = resultList.length - 1;
-                        _hitCounter = resultList.length;
-                      }
+                  SizedBox(width: 1.0),
+                  Expanded(
+                    flex: 1,
+                    child: RoundedButton(
+                      title: '<',
+                      colour: kMainGreyColor,
+                      minWidth: 1.0,
+                      onPressed: () {
+                        if (_counter >= 1) {
+                          _counter--;
+                          _hitCounter--;
+                        } else {
+                          _counter = resultList.length - 1;
+                          _hitCounter = resultList.length;
+                        }
 
-                      resultList = _potentialCandidatesMap.values.toList();
-                      candidateMatchList = resultList[_counter].sublist(0, 7);
-                      chartData = [kBaseRatingList, candidateMatchList];
-                      setState(() {});
-                    },
+                        resultList = _potentialCandidatesMap.values.toList();
+                        candidateMatchList = resultList[_counter].sublist(0, 7);
+                        chartData = [kBaseRatingList, candidateMatchList];
+                        setState(() {});
+                      },
+                    ),
                   ),
-                  SizedBox(width: 2.0),
-                  RoundedButton(
-                      title: 'VIDEO ANSEHEN',
-                      colour: kMainRedColor,
-                      minWidth: 10.0,
-                      onPressed: () {}),
+                  SizedBox(width: 1.0),
+                  Expanded(
+                    flex: 3,
+                    child: RoundedButton(
+                        title: 'VIDEO ANSEHEN',
+                        colour: kMainRedColor,
+                        minWidth: 10.0,
+                        onPressed: () {}),
+                  ),
                 ],
               ),
             ],
