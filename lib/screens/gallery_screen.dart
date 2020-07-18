@@ -33,6 +33,7 @@ class _GalleryState extends State<Gallery> {
     }
   }
 
+  /// Method to initiate the state
   @override
   void initState() {
     getCurrentUser();
@@ -192,7 +193,7 @@ class _GalleryState extends State<Gallery> {
     setState(() {});
   }
 
-  /// asynchronous method to get a list of all media files in a directory
+  /// Asynchronous method to get a list of all media files in a directory
   Future<List<FileSystemEntity>> _getAllImages() async {
     // set the directory
     final Directory extDir = await getApplicationDocumentsDirectory();

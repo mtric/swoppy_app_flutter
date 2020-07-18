@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:Swoppy/screens/gallery.dart';
+import 'package:Swoppy/screens/gallery_screen.dart';
 import 'package:Swoppy/components/video_timer.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:path/path.dart' as path;
@@ -26,12 +26,14 @@ class CameraScreenState extends State<CameraScreen>
   bool _isRecording = false;
   final _timerKey = GlobalKey<VideoTimerState>();
 
+  /// Method to initiate the state
   @override
   void initState() {
     _initCamera();
     super.initState();
   }
 
+  /// Method to initiate the camera controller
   Future<void> _initCamera() async {
     _cameras = await availableCameras();
     _controller = CameraController(_cameras[0], ResolutionPreset.medium);
@@ -43,12 +45,14 @@ class CameraScreenState extends State<CameraScreen>
     });
   }
 
+  /// Method to dispose the widget and camera controller
   @override
   void dispose() {
     _controller?.dispose();
     super.dispose();
   }
 
+  /// Method to build the widget tree
   @override
   Widget build(BuildContext context) {
     super.build(context);

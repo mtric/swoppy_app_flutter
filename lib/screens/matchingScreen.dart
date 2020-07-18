@@ -59,10 +59,16 @@ class _MatchingScreenState extends State<MatchingScreen> {
   List<int> _matchResultList;
   Map<String, List> _potentialCandidatesMap = {};
 
+  @override
   void initState() {
-    super.initState();
     getCurrentUser();
     getCandidatesFromCollection();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void getCurrentUser() async {
