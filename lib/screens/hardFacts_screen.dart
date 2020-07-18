@@ -19,7 +19,9 @@ class HardFactsScreen extends StatefulWidget {
 
 class _HardFactsScreenState extends State<HardFactsScreen> {
   static bool _termsAccepted = false;
-  ValueChanged _onChanged = (val) => _termsAccepted = val;
+  static bool _policyAccepted = false;
+  ValueChanged _onChangedTerms = (val) => _termsAccepted = val;
+  ValueChanged _onChangedPolicy = (val) => _policyAccepted = val;
 
   final _formKey = GlobalKey<FormState>();
   final _firestore = Firestore.instance;
@@ -84,17 +86,23 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                         decoration: InputDecoration(
                           icon: Icon(Icons.business),
                           labelText: 'Branche',
+                          labelStyle: TextStyle(
+                            fontSize: 20.0,
+                          ),
                         ),
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          items: _industry.map((String dropDownStringItem) {
-                            return DropdownMenuItem<String>(
-                              value: dropDownStringItem,
-                              child: Text(dropDownStringItem),
-                            );
-                          }).toList(),
-                          onChanged: (value) => _onSelectedIndustry(value),
-                          value: _selectedIndustry,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            isDense: true,
+                            isExpanded: true,
+                            items: _industry.map((String dropDownStringItem) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownStringItem,
+                                child: Text(dropDownStringItem),
+                              );
+                            }).toList(),
+                            onChanged: (value) => _onSelectedIndustry(value),
+                            value: _selectedIndustry,
+                          ),
                         ),
                       );
                     },
@@ -103,23 +111,29 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     builder: (FormFieldState state) {
                       return InputDecorator(
                         decoration: InputDecoration(
-                          icon: Icon(Icons.account_balance),
-                          labelText: 'Branchensparte',
-                        ),
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          items: _branch.map((String dropDownStringItem) {
-                            return DropdownMenuItem<String>(
-                              value: dropDownStringItem,
-                              child: Text(dropDownStringItem),
-                            );
-                          }).toList(),
-                          onChanged: (value) => _onSelectedBranch(value),
-                          value: _selectedBranch,
+                            icon: Icon(Icons.account_balance),
+                            labelText: 'Branchensparte',
+                            labelStyle: TextStyle(
+                              fontSize: 20.0,
+                            )),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            isDense: true,
+                            isExpanded: true,
+                            items: _branch.map((String dropDownStringItem) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownStringItem,
+                                child: Text(dropDownStringItem),
+                              );
+                            }).toList(),
+                            onChanged: (value) => _onSelectedBranch(value),
+                            value: _selectedBranch,
+                          ),
                         ),
                       );
                     },
                   ),
+                  SizedBox(height: 10.0),
                   Row(
                     children: <Widget>[
                       Icon(Icons.location_on),
@@ -286,18 +300,44 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     },
                   ),
                   FormBuilderSwitch(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.only(bottom: -10.0, top: 0),
+                      suffixIcon: IconButton(
+                        onPressed: () => showTermsAndConditions(context),
+                        icon: Icon(Icons.info_outline),
+                      ),
+                    ),
                     label: Text(
-                      'Ich akzeptiere die AGBs*',
+                      'Ich akzeptiere die Nutzungsbedingungen*',
                     ),
                     activeColor: kSecondGreenColor,
                     attribute: "accept_terms_switch",
                     initialValue: false,
                     inactiveThumbColor: kMainGreyColor,
                     inactiveTrackColor: kMainLightGreyColor,
-                    onChanged: _onChanged,
+                    onChanged: _onChangedTerms,
                   ),
-                  SizedBox(
-                    width: 25,
+                  FormBuilderSwitch(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.only(bottom: 0, top: 0),
+                      suffixIcon: IconButton(
+                        onPressed: () => showPrivacyPolicy(context),
+                        icon: Icon(Icons.info_outline),
+                      ),
+                    ),
+                    label: Text(
+                      'Die Datenschutz-Bestimmungen habe ich gelesen und erteile hiermit meine Einwilligung zur Nutzung*',
+                    ),
+                    activeColor: kSecondGreenColor,
+                    attribute: "accept_policy_switch",
+                    initialValue: false,
+                    inactiveThumbColor: kMainGreyColor,
+                    inactiveTrackColor: kMainLightGreyColor,
+                    onChanged: _onChangedPolicy,
                   ),
                   RoundedButton(
                     title: 'SPEICHERN',
@@ -307,7 +347,9 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       _locationCode = _myLocationCodeController.text + 'xxx';
 
                       // Check whether all validators of the fields are valid.
-                      if (_formKey.currentState.validate() && _termsAccepted) {
+                      if (_formKey.currentState.validate() &&
+                          _termsAccepted &&
+                          _policyAccepted) {
                         // Create firebase entry according to the collection 'user'
                         DocumentReference documentReference = _firestore
                             .collection(_collection)
