@@ -228,8 +228,12 @@ class _MatchingScreenState extends State<MatchingScreen> {
     _reqPrice = matchingModel.sellingPrice;
     _reqTime = matchingModel.handoverTime;
 
-    // --- Radar Chart
+    String _category = '';
+    _reqUserCategory == 'seller'
+        ? _category = 'Verkäufer'
+        : _category = 'Käufer';
 
+    // --- Radar Chart
     var chartData = [kBaseRatingList, candidateMatchList];
 
     return Scaffold(
@@ -255,10 +259,10 @@ class _MatchingScreenState extends State<MatchingScreen> {
               SizedBox(height: 10.0),
               ListBody(
                 children: [
-                  Text('------  M E I N E  D A T E N  ------'),
+                  Text('------  E I G E N E  D A T E N  ------'),
                   Text(''),
-                  Text('Kategorie: $_reqUserCategory'),
-                  Text('Branche:  $_reqTrade'),
+                  Text('Kategorie: $_category'),
+                  Text('Wirtschaftszweig:  $_reqTrade'),
                   Text('Standort:  $_reqLocationCode'),
                   Text('Anzahl Mitarbeiter:  $_reqEmployee'),
                   Text('Umsatz:  $_reqTurnover'),
