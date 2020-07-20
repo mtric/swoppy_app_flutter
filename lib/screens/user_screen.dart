@@ -1,6 +1,6 @@
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/screens/camera_screen.dart';
-import 'package:Swoppy/screens/matchingScreen.dart';
+import 'package:Swoppy/screens/matching_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/matchingModel.dart';
@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+enum settings { user, hardfacts, video }
 
 class UserScreen extends StatefulWidget {
   static const String id = 'user_screen';
@@ -93,10 +95,47 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(
         leading: null,
         actions: <Widget>[
+          PopupMenuButton<settings>(
+            onSelected: (settings _selection) {
+              setState(() {
+                switch (_selection) {
+                  case settings.user:
+                    //ToDo call edit userprofile (change/delete)
+                    break;
+                  case settings.hardfacts:
+                    //ToDo call edit hardfacts (change/delete)
+                    break;
+                  case settings.video:
+                    //ToDo call edit video (change/delete)
+                    break;
+                }
+              });
+            },
+            icon: Icon(Icons.settings),
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<settings>>[
+              const PopupMenuItem<settings>(
+                value: settings.user,
+                child: Text('Benutzerdaten'),
+              ),
+              const PopupMenuItem<settings>(
+                value: settings.hardfacts,
+                child: Text('Unternehmensdaten'),
+              ),
+              const PopupMenuItem<settings>(
+                value: settings.video,
+                child: Text('Image-Video'),
+              ),
+            ],
+          ),
+          IconButton(
+              icon: Icon(Icons.chat),
+              onPressed: () {
+                //ToDo call chat function
+              }),
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
-                _clearLoggedIntUserData();
+                _clearLoggedInUserData();
                 _auth.signOut();
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     WelcomeScreen.id, ModalRoute.withName(WelcomeScreen.id));
@@ -112,20 +151,20 @@ class _UserScreenState extends State<UserScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                ListBody(
-                  children: [
-                    Text('Anrede:  $title'),
-                    Text('Vorname:  $firstName'),
-                    Text('Nachname:  $lastName'),
-                    Text('eMail:  $eMail'),
-                    Text('Telefonnummer:  $phone'),
-                    Text('PLZ:  $zipCode'),
-                    Text('Ort:  $city'),
-                    Text('Strasse Hausnummer:  $address'),
-                    Text('Kurzbeschreibung:  $abstract'),
-                    Text('Kategorie: $userCategory'),
-                  ],
-                ),
+//                ListBody(
+//                  children: [
+//                    Text('Anrede:  $title'),
+//                    Text('Vorname:  $firstName'),
+//                    Text('Nachname:  $lastName'),
+//                    Text('eMail:  $eMail'),
+//                    Text('Telefonnummer:  $phone'),
+//                    Text('PLZ:  $zipCode'),
+//                    Text('Ort:  $city'),
+//                    Text('Strasse Hausnummer:  $address'),
+//                    Text('Kurzbeschreibung:  $abstract'),
+//                    Text('Kategorie: $userCategory'),
+//                  ],
+//                ),
                 SizedBox(height: 30.0),
                 RoundedButton(
                   title: 'VIDEO AUFNEHMEN',
@@ -135,7 +174,7 @@ class _UserScreenState extends State<UserScreen> {
                   },
                 ),
                 RoundedButton(
-                  title: 'MATCHING',
+                  title: 'KANDIDATEN ANZEIGEN',
                   colour: kMainGreyColor,
                   onPressed: () {
                     Navigator.pushNamed(
@@ -162,7 +201,7 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-  void _clearLoggedIntUserData() {
+  void _clearLoggedInUserData() {
     title = '';
     firstName = '';
     lastName = '';

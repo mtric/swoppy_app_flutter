@@ -1,4 +1,4 @@
-import 'package:Swoppy/screens/userScreen.dart';
+import 'package:Swoppy/screens/user_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/userRolle.dart';
 import 'package:flutter/material.dart';

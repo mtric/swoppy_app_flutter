@@ -1,5 +1,5 @@
 import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/screens/userScreen.dart';
+import 'package:Swoppy/screens/user_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
