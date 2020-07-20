@@ -17,6 +17,7 @@ class _VideoPreviewState extends State<VideoPreview>
   AnimationController _animationController;
   VideoPlayerController _controller;
 
+  /// Initialize state and controllers
   @override
   void initState() {
     super.initState();
@@ -32,6 +33,7 @@ class _VideoPreviewState extends State<VideoPreview>
       );
   }
 
+  /// Dispose widget and controllers
   @override
   void dispose() {
     _animationController?.dispose();
@@ -39,6 +41,7 @@ class _VideoPreviewState extends State<VideoPreview>
     super.dispose();
   }
 
+  /// Build the widget tree for the video preview
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

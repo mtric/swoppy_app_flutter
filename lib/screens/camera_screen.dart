@@ -56,11 +56,14 @@ class CameraScreenState extends State<CameraScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    // check if controller is not null
     if (_controller != null) {
+      // check if the controller is not initialized
       if (!_controller.value.isInitialized) {
         return Container();
       }
     } else {
+      // show progress indicator of controller is null
       return const Center(
         child: SizedBox(
           width: 32,
@@ -73,9 +76,11 @@ class CameraScreenState extends State<CameraScreen>
       );
     }
 
+    // check if controller is initialized
     if (!_controller.value.isInitialized) {
       return Container();
     }
+    // return the widget tree for the camera screen
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       key: _scaffoldKey,
