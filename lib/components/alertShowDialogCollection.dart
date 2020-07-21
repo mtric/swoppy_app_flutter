@@ -1,6 +1,5 @@
 import 'package:Swoppy/screens/user_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
-import 'package:Swoppy/utilities/userRolle.dart';
 import 'package:flutter/material.dart';
 
 showInputNotComplete(BuildContext context) {
@@ -11,7 +10,7 @@ showInputNotComplete(BuildContext context) {
   );
 
   AlertDialog alert = AlertDialog(
-    title: Text('FEHLER IN EINGABE'),
+    title: Text('Fehler in der Eingabe'),
     content: Text(
         'Nicht vollständige (* Pflichfelder) oder ungültige Eingaben. Bitte überprüfen Sie ihre Werte.'),
     actions: [
@@ -91,7 +90,7 @@ showUpload(BuildContext context, UploadCallback uploadFile) {
       onPressed: () => Navigator.pop(context));
 
   AlertDialog alert = AlertDialog(
-    title: Text('HOCHLADEN'),
+    title: Text('Auswahl hochladen'),
     content: Text('Wollen Sie diese Datei hochladen?'),
     actions: [
       cancelButton,
