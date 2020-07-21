@@ -14,6 +14,7 @@ class _VideoControlsState extends State<VideoControls>
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
 
+  /// Initialize State and set controllers
   @override
   void initState() {
     _animationController = AnimationController(
@@ -25,6 +26,7 @@ class _VideoControlsState extends State<VideoControls>
     super.initState();
   }
 
+  /// Dispose widget and dispose controllers
   @override
   void dispose() {
     _animationController?.dispose();
@@ -32,12 +34,14 @@ class _VideoControlsState extends State<VideoControls>
     super.dispose();
   }
 
+  /// set the animation controller depending on the video playback mode
   void _videoListener() {
     (widget.videoController.value.isPlaying)
         ? _animationController.forward()
         : _animationController.reverse();
   }
 
+  /// Method to build the widget tree
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -88,6 +92,7 @@ class _VideoControlsState extends State<VideoControls>
     );
   }
 
+  /// Method to format the duration time string of the video
   String timeFormatter(Duration duration) {
     return [
       if (duration.inHours != 0) duration.inHours,
@@ -96,15 +101,18 @@ class _VideoControlsState extends State<VideoControls>
     ].map((seg) => seg.remainder(60).toString().padLeft(2, '0')).join(':');
   }
 
+  /// If video is playing, then pause video on press or else play the video.
   void _handleOnPressed() {
     widget.videoController.value.isPlaying ? _pauseVideo() : _playVideo();
   }
 
+  /// Animates the play button and starts video playback
   void _playVideo() {
     _animationController.forward();
     widget.videoController.play();
   }
 
+  /// Animates the pause button an stops the video playback
   void _pauseVideo() {
     _animationController.reverse();
     widget.videoController.pause();
