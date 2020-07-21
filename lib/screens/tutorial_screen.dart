@@ -19,6 +19,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Scaffold(
+      appBar: AppBar(
+        title: Text('Tutorial'),
+      ),
       body: new Swiper(
         itemBuilder: (BuildContext context, int index) {
           return Stack(
@@ -72,6 +75,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
         pagination: new SwiperPagination(
             builder: new DotSwiperPaginationBuilder(
           activeColor: kSecondGreenColor,
+          color: kMainLightGreyColor,
         )),
         control: new SwiperControl(
           color: kSecondGreenColor,

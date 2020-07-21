@@ -20,7 +20,7 @@ final slideList = [
     url:
         "https://i.pinimg.com/originals/d4/85/9f/d4859f69a68cd854e0aac9465fe0804b.jpg",
     guidance:
-        'Achten Sie auf Ihre Umgebung und ein angemessenes Auftreten (Kleidung, innere Laune) Achten Sie darauf, dass Sie gut erkennbar sind, Kamera auf Augenhöhe nicht zu hoch, nicht zu tief. Passt das Licht?',
+        'Achten Sie auf Ihre Umgebung und ein angemessenes Auftreten (Kleidung, innere Laune). Achten Sie darauf, dass Sie gut erkennbar sind, Kamera auf Augenhöhe nicht zu hoch, nicht zu tief. Passt das Licht?',
   ),
   Slide(
     url:
@@ -32,7 +32,7 @@ final slideList = [
     url:
         "https://www.iphonehacks.com/wp-content/uploads/2019/11/Anamorphic-Pro-Visual-Effects-Mac-Bundle.jpg",
     guidance:
-        'Machen Sie sich vorher ein Paar Gedanken, was Ihnen wichtig ist, was sie sagen möchten. Nennen Sie ruhig Ihren Namen erzählen Sie von Ihrem Unternehmerischen Gedanken, Ihrer Passion.',
+        'Machen Sie sich vorher ein Paar Gedanken, was Ihnen wichtig ist, was sie sagen möchten. Nennen Sie ruhig Ihren Namen erzählen Sie von Ihren unternehmerischen Gedanken, Ihrer Passion.',
   ),
   Slide(
     url: "https://thumbs.gfycat.com/AgileSleepyHanumanmonkey.webp",
