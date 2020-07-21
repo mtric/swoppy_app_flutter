@@ -1,8 +1,8 @@
-import 'package:Swoppy/screens/login_screen.dart';
-import 'package:Swoppy/screens/registration_screen.dart';
-import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/components/sign_in.dart';
+import 'package:Swoppy/screens/login_screen.dart';
+import 'package:Swoppy/screens/profile_screen.dart';
+import 'package:Swoppy/screens/registration_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -115,11 +115,18 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           height: 35.0),
                       Padding(
                         padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          'MIT GOOGLE ANMELDEN',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.grey,
+                        child: Container(
+                          width: 200.0,
+                          height: 42.0,
+                          child: FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              'MIT GOOGLE ANMELDEN',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
                         ),
                       ),

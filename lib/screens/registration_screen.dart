@@ -1,9 +1,10 @@
-import 'package:Swoppy/screens/profile_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
@@ -17,7 +18,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool showSpinner = false;
   String email;
   String password;
-  String warnung = ' ';
+  var warnung = ' ';
 
   @override
   Widget build(BuildContext context) {
@@ -81,9 +82,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               SizedBox(
                 height: 24.0,
                 child: Center(
-                  child: Text(warnung,
-                      style: TextStyle(color: kMainRedColor),
-                      textAlign: TextAlign.center),
+                  child: Text(
+                    warnung,
+                    style: TextStyle(color: kMainRedColor),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
               RoundedButton(
@@ -99,18 +103,38 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     if (newUser != null) {
                       Navigator.pushNamed(context, ProfileScreen.id);
                     }
-
                     setState(() {
                       showSpinner = false;
                     });
                   } catch (e) {
                     print(e);
-                    setState(() {
-                      showSpinner = false;
-                      warnung = 'Benutzer existiert bereits!';
-                    });
-                    print(e);
-                    print(warnung);
+                    if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+                      setState(() {
+                        showSpinner = false;
+                        warnung = 'Benutzer existiert bereits!';
+                      });
+                      print(warnung);
+                    } else if (e.code == 'ERROR_WEAK_PASSWORD') {
+                      setState(() {
+                        showSpinner = false;
+                        warnung =
+                            'Das Passwort muss mindestens 6 Zeichen lang sein.';
+                      });
+                      print(warnung);
+                    } else if (e.code == 'ERROR_INVALID_EMAIL') {
+                      setState(() {
+                        showSpinner = false;
+                        warnung =
+                            'Bitte geben Sie eine gültige Emailadresse ein.';
+                      });
+                      print(warnung);
+                    } else {
+                      setState(() {
+                        showSpinner = false;
+                        warnung = e.code;
+                      });
+                      print(warnung);
+                    }
                   }
                 },
               ),
