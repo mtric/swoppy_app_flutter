@@ -47,7 +47,6 @@ flutter:
 
   assets:
     - images/
-    - videos/
 
   fonts:
     - family: Open Sans

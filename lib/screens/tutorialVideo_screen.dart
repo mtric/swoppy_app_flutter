@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-class VideoExample extends StatefulWidget {
-  static const String id = 'videoExample_screen';
+class TutorialVideoScreen extends StatefulWidget {
+  static const String id = 'tutorialVideo_screen';
   @override
-  _VideoExampleState createState() => _VideoExampleState();
+  _TutorialVideoScreenState createState() => _TutorialVideoScreenState();
 }
 
-class _VideoExampleState extends State<VideoExample> {
+class _TutorialVideoScreenState extends State<TutorialVideoScreen> {
   VideoPlayerController playerController;
   VoidCallback listener;
   @override
@@ -20,7 +20,8 @@ class _VideoExampleState extends State<VideoExample> {
 
   void createVideo() {
     if (playerController == null) {
-      playerController = VideoPlayerController.asset("videos/KobeTestVideo.mp4")
+      playerController = VideoPlayerController.network(
+          "https://firebasestorage.googleapis.com/v0/b/core-verbena-279211.appspot.com/o/Tutorial_Video%2FKobeTestVideo.mp4?alt=media&token=b08258c0-b5ed-4049-ac72-df0ba9c909a4")
         ..addListener(listener)
         ..setVolume(1.0)
         ..initialize()
@@ -36,21 +37,16 @@ class _VideoExampleState extends State<VideoExample> {
   }
 
   @override
-  void deactivate() {
-    try {
-      playerController.setVolume(0.0);
-      playerController.removeListener(listener);
-      super.deactivate();
-    } catch (e) {
-      super.deactivate();
-    }
+  void dispose() {
+    playerController?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Video Example'),
+        title: Text('Tutorialvideo'),
       ),
       body: Center(
           child: AspectRatio(

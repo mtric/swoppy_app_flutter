@@ -1,8 +1,8 @@
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/screens/camera_screen.dart';
 import 'package:Swoppy/screens/matching_screen.dart';
+import 'package:Swoppy/screens/tutorialVideo_screen.dart';
 import 'package:Swoppy/screens/tutorial_screen.dart';
-import 'package:Swoppy/screens/videoExample_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/matchingModel.dart';
@@ -169,46 +169,54 @@ class _UserScreenState extends State<UserScreen> {
 //                  ],
 //                ),
                 SizedBox(height: 30.0),
-                RoundedButton(
-                  title: 'VIDEO AUFNEHMEN',
-                  colour: kMainRedColor,
-                  onPressed: () {
-                    Navigator.pushNamed(context, CameraScreen.id);
-                  },
+                Expanded(
+                  child: RoundedButton(
+                    title: 'VIDEO AUFNEHMEN',
+                    colour: kMainRedColor,
+                    onPressed: () {
+                      Navigator.pushNamed(context, CameraScreen.id);
+                    },
+                  ),
                 ),
-                RoundedButton(
-                  title: 'KANDIDATEN ANZEIGEN',
-                  colour: kMainGreyColor,
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      MatchingScreen.id,
-                      arguments: MatchingModel(
-                        userCategory,
-                        trade,
-                        locationCode,
-                        employee,
-                        turnover,
-                        property,
-                        sellingPrice,
-                        handoverTime,
-                      ),
-                    );
-                  },
+                Expanded(
+                  child: RoundedButton(
+                    title: 'KANDIDATEN ANZEIGEN',
+                    colour: kMainGreyColor,
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        MatchingScreen.id,
+                        arguments: MatchingModel(
+                          userCategory,
+                          trade,
+                          locationCode,
+                          employee,
+                          turnover,
+                          property,
+                          sellingPrice,
+                          handoverTime,
+                        ),
+                      );
+                    },
+                  ),
                 ),
-                RoundedButton(
-                  title: 'Tutorial',
-                  colour: kSecondGreenColor,
-                  onPressed: () {
-                    Navigator.pushNamed(context, TutorialScreen.id);
-                  },
+                Expanded(
+                  child: RoundedButton(
+                    title: 'Tutorial',
+                    colour: kSecondGreenColor,
+                    onPressed: () {
+                      Navigator.pushNamed(context, TutorialScreen.id);
+                    },
+                  ),
                 ),
-                RoundedButton(
-                  title: 'Tutorial Video',
-                  colour: kSecondBlueColor,
-                  onPressed: () {
-                    Navigator.pushNamed(context, VideoExample.id);
-                  },
+                Expanded(
+                  child: RoundedButton(
+                    title: 'Tutorial Video',
+                    colour: kSecondBlueColor,
+                    onPressed: () {
+                      Navigator.pushNamed(context, TutorialVideoScreen.id);
+                    },
+                  ),
                 ),
               ],
             ),

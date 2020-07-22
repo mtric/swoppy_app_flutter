@@ -37,8 +37,7 @@ final slideList = [
   Slide(
     url: "https://thumbs.gfycat.com/AgileSleepyHanumanmonkey.webp",
     guidance:
-        'Als Nachfolgeinteressierte/r: Was motiviert Sie für eine Unternehmensübernahme?'
-        'Als zukünftig Abgebende/r: Was ist das Besondere an Ihrem Unternehmen, was bieten Sie mit Ihrem Unternehmen der potentiellen Nachfolge?',
+        'Als Nachfolgeinteressierte/r: Was motiviert Sie für eine Unternehmensübernahme? Als zukünftig Abgebende/r: Was ist das Besondere an Ihrem Unternehmen, was bieten Sie mit Ihrem Unternehmen der potentiellen Nachfolge?',
   ),
   Slide(
       url: "https://media2.giphy.com/media/hhqP18gMiwkY8/giphy.gif",
