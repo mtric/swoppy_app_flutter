@@ -28,6 +28,12 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   final _myLocationCodeController = TextEditingController();
   final _collection = 'user';
 
+  bool _dataInitialized = false;
+  bool _updateMode = false;
+
+  String _rightButtonTitle = 'SPEICHERN';
+  String _leftButtonTitle = 'ABBRECHEN';
+
   IndustryData data = IndustryData();
   List<String> _industry = [''];
   List<String> _branch = [''];
@@ -48,11 +54,48 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
     super.initState();
   }
 
+  void _onSelectedIndustry(String value) {
+    setState(() {
+      _selectedBranch = '';
+      _branch = [''];
+      _selectedIndustry = value;
+      _branch = List.from(_branch)..addAll(data.getBranchByIndustry(value));
+      _selectedBranchKey = data.getBranchKeyByIndustry(value);
+    });
+  }
+
+  void _onSelectedBranch(String value) {
+    setState(() => {
+          _selectedBranch = value,
+          _selectedBranchKey += _selectedBranch.substring(0, 2),
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Extract the arguments from the current ModalRoute settings and cast
     // them as ScreenArguments.
     final UserProfile args = ModalRoute.of(context).settings.arguments;
+
+    String str;
+
+    if (args.firstName == null) {
+      _updateMode = true;
+      _termsAccepted = false;
+      _policyAccepted = false;
+      _rightButtonTitle = 'AKTUALISIEREN';
+
+      if (!_dataInitialized) {
+        _dataInitialized = true;
+        str = data.getIndustryByBranchKey((args.trade).substring(0, 1));
+        _selectedIndustry = str.substring(1, str.length - 1);
+        _employee = args.employee;
+        _turnover = args.turnover;
+        _property = args.property;
+        _sellingPrice = args.sellingPrice;
+        _handoverTime = args.handoverTime;
+      }
+    }
 
     // Add additional option for buyers
     if (args.userCategory == 'buyer' &&
@@ -62,6 +105,15 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
       kPropertyList.add(kAdditionalOption);
       kSellingPriceList.add(kAdditionalOption);
       kHandoverTimeList.add(kAdditionalOption);
+    }
+
+    if (args.userCategory == 'seller' &&
+        kEmployeeList.contains(kAdditionalOption)) {
+      kEmployeeList.remove(kAdditionalOption);
+      kTurnoverList.remove(kAdditionalOption);
+      kPropertyList.remove(kAdditionalOption);
+      kSellingPriceList.remove(kAdditionalOption);
+      kHandoverTimeList.remove(kAdditionalOption);
     }
 
     return Scaffold(
@@ -278,7 +330,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       return InputDecorator(
                         decoration: InputDecoration(
                           icon: Icon(Icons.calendar_today),
-                          labelText: 'Übergabe-Zeitpunkt',
+                          labelText: 'Zeitpunkt der Übergabe',
                         ),
                         isEmpty: _handoverTime == '',
                         child: DropdownButtonHideUnderline(
@@ -339,54 +391,100 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     inactiveTrackColor: kMainLightGreyColor,
                     onChanged: _onChangedPolicy,
                   ),
-                  RoundedButton(
-                    title: 'SPEICHERN',
-                    colour: kMainRedColor,
-                    minWidth: 100,
-                    onPressed: () {
-                      _locationCode = _myLocationCodeController.text + 'xxx';
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: RoundedButton(
+                          title: _leftButtonTitle,
+                          colour: kMainGreyColor,
+                          minWidth: 100,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        width: 25,
+                      ),
+                      Expanded(
+                        child: RoundedButton(
+                          title: _rightButtonTitle,
+                          colour: kMainRedColor,
+                          minWidth: 100,
+                          onPressed: () {
+                            _locationCode =
+                                _myLocationCodeController.text + 'xxx';
 
-                      // Check whether all validators of the fields are valid.
-                      if (_formKey.currentState.validate() &&
-                          _termsAccepted &&
-                          _policyAccepted) {
-                        // Create firebase entry according to the collection 'user'
-                        DocumentReference documentReference = _firestore
-                            .collection(_collection)
-                            .document(args.eMail);
+                            // Check whether all validators of the fields are valid.
+                            if (_formKey.currentState.validate() &&
+                                _termsAccepted &&
+                                _policyAccepted) {
+                              if (_updateMode) {
+                                final _firestore = Firestore.instance;
+                                // update firebase entry according to the collection 'user'
+                                DocumentReference documentReference = _firestore
+                                    .collection('user')
+                                    .document(args.eMail);
 
-                        Map<String, dynamic> userData = {
-                          'title': args.title,
-                          'lastName': args.lastName,
-                          'firstName': args.firstName,
-                          'phone': args.phone,
-                          'eMail': args.eMail,
-                          'zipCode': args.zipCode,
-                          'city': args.city,
-                          'address': args.address,
-                          'abstract': args.abstract,
-                          'category': args.userCategory,
-                          'trade': _selectedBranchKey,
-                          'locationCode': _locationCode,
-                          'employee': _employee,
-                          'turnover': _turnover,
-                          'property': _property,
-                          'sellingPrice': _sellingPrice,
-                          'handoverTime': _handoverTime
-                        };
+                                print(args.eMail);
+                                Map<String, dynamic> updatedData = {
+                                  //                              'trade': _selectedBranchKey,
+                                  //                             'locationCode': _locationCode,
+                                  'employee': _employee,
+                                  'turnover': _turnover,
+                                  'property': _property,
+                                  'sellingPrice': _sellingPrice,
+                                  'handoverTime': _handoverTime
+                                };
 
-                        documentReference
-                            .setData(userData)
-                            .whenComplete(() => showDataSaved(
-                                  (context),
-                                ));
+                                documentReference
+                                    .updateData(updatedData)
+                                    .whenComplete(() => showDataSaved(
+                                          (context),
+                                        ));
+                              } else {
+                                // Create firebase entry according to the collection 'user'
+                                DocumentReference documentReference = _firestore
+                                    .collection(_collection)
+                                    .document(args.eMail);
 
-                        //  Navigator.pushNamed(context, DummyScreen.id);
-                      } else {
-                        // Form not complete, missing or incorrect entries.
-                        showInputNotComplete(context);
-                      }
-                    },
+                                Map<String, dynamic> userData = {
+                                  'title': args.title,
+                                  'lastName': args.lastName,
+                                  'firstName': args.firstName,
+                                  'phone': args.phone,
+                                  'eMail': args.eMail,
+                                  'zipCode': args.zipCode,
+                                  'city': args.city,
+                                  'address': args.address,
+                                  'abstract': args.abstract,
+                                  'category': args.userCategory,
+                                  'trade': _selectedBranchKey,
+                                  'locationCode': _locationCode,
+                                  'employee': _employee,
+                                  'turnover': _turnover,
+                                  'property': _property,
+                                  'sellingPrice': _sellingPrice,
+                                  'handoverTime': _handoverTime
+                                };
+
+                                documentReference
+                                    .setData(userData)
+                                    .whenComplete(() => showDataSaved(
+                                          (context),
+                                        ));
+
+                                //  Navigator.pushNamed(context, DummyScreen.id);
+                              }
+                            } else {
+                              // Form not complete, missing or incorrect entries.
+                              showInputNotComplete(context);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -395,22 +493,5 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
         ),
       ),
     );
-  }
-
-  void _onSelectedIndustry(String value) {
-    setState(() {
-      _selectedBranch = '';
-      _branch = [''];
-      _selectedIndustry = value;
-      _branch = List.from(_branch)..addAll(data.getBranchByIndustry(value));
-      _selectedBranchKey = data.getBranchKeyByIndustry(value);
-    });
-  }
-
-  void _onSelectedBranch(String value) {
-    setState(() => {
-          _selectedBranch = value,
-          _selectedBranchKey += _selectedBranch.substring(0, 2),
-        });
   }
 }

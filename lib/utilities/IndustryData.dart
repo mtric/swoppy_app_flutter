@@ -17,6 +17,20 @@ class IndustryData {
       .toString()
       .substring(1, 2);
 
+  // used by the update function
+  getIndustryByBranchKey(String branchKey) => _industries
+      .map((map) => IndustryModel.fromJson(map))
+      .where((item) => item.branchKey == branchKey)
+      .map((item) => item.branch)
+      .toString();
+
+  // used by the update function
+  getBranchListByBranchKey(String branchKey) => _industries
+      .map((map) => IndustryModel.fromJson(map))
+      .where((item) => item.branchKey == branchKey)
+      .map((item) => item.trade)
+      .toList();
+
   List<String> getIndustries() => _industries
       .map((map) => IndustryModel.fromJson(map))
       .map((item) => item.branch)
