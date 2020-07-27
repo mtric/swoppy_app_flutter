@@ -1,5 +1,8 @@
 import 'package:Swoppy/screens/user_screen.dart';
+import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 showInputNotComplete(BuildContext context) {
@@ -149,6 +152,41 @@ showTermsAndConditions(BuildContext context) {
     content: Text(
         '•	Ich versichere dass ich persönlich ein Unternehmen suche oder Inhaber eines Unternehmens bin, das ich verkaufen möchte und nicht für andere tätig bin.'),
     actions: [
+      okButton,
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
+showDeleteUserAccount(
+    BuildContext context, FirebaseUser user, DocumentReference userDocRef) {
+  Widget okButton = FlatButton(
+      color: kMainRedColor,
+      child: Text('LÖSCHEN'),
+      onPressed: () => {
+            userDocRef.delete(),
+            user.delete(),
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                WelcomeScreen.id, ModalRoute.withName(WelcomeScreen.id))
+          });
+
+  Widget cancelButton = FlatButton(
+      color: kMainGreyColor,
+      child: Text('ABBRECHEN'),
+      onPressed: () => Navigator.pop(context));
+
+  AlertDialog alert = AlertDialog(
+    title: Text('Benutzerkonto löschen'),
+    content: Text(
+        'ACHTUNG !!\n\nIhre Daten gehen unwiderruflich verloren. Wollen Sie das Konto wirklich löschen?'),
+    actions: [
+      cancelButton,
       okButton,
     ],
   );

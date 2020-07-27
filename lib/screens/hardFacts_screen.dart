@@ -67,7 +67,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   void _onSelectedBranch(String value) {
     setState(() => {
           _selectedBranch = value,
-          _selectedBranchKey += _selectedBranch.substring(0, 2),
+          _selectedBranchKey = _selectedBranchKey.substring(0, 1) +
+              _selectedBranch.substring(0, 2),
         });
   }
 
@@ -77,7 +78,9 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
     // them as ScreenArguments.
     final UserProfile args = ModalRoute.of(context).settings.arguments;
 
-    String str;
+    String _onTrade;
+    String _onBranch;
+    int index;
 
     if (args.firstName == null) {
       _updateMode = true;
@@ -87,8 +90,18 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
 
       if (!_dataInitialized) {
         _dataInitialized = true;
-        str = data.getIndustryByBranchKey((args.trade).substring(0, 1));
-        _selectedIndustry = str.substring(1, str.length - 1);
+        _selectedBranchKey = args.trade;
+        _onBranch = _selectedBranchKey.substring(0, 1);
+        _onTrade = _selectedBranchKey.substring(1, 3);
+
+        _selectedIndustry =
+            (data.getIndustryByBranchKey(_onBranch)).elementAt(0);
+
+        _branch = List.from(_branch)
+          ..addAll(data.getBranchByIndustry(_selectedIndustry));
+        index = _branch.indexWhere((e) => e.startsWith(_onTrade));
+        _selectedBranch = _branch.elementAt(index);
+
         _employee = args.employee;
         _turnover = args.turnover;
         _property = args.property;
@@ -427,10 +440,9 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                                     .collection('user')
                                     .document(args.eMail);
 
-                                print(args.eMail);
                                 Map<String, dynamic> updatedData = {
-                                  //                              'trade': _selectedBranchKey,
-                                  //                             'locationCode': _locationCode,
+                                  'trade': _selectedBranchKey,
+                                  // 'locationCode': _locationCode,
                                   'employee': _employee,
                                   'turnover': _turnover,
                                   'property': _property,
