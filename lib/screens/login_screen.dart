@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   });
                   try {
                     final user = await _auth.signInWithEmailAndPassword(
-                        email: email, password: password);
+                        email: email.trim(), password: password.trim());
                     if (user != null) {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           UserScreen.id, ModalRoute.withName(UserScreen.id));
