@@ -71,7 +71,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                               Flexible(
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Image.network(
+                                  child: Image.asset(
                                     slideList[index].url,
                                   ),
                                 ),
