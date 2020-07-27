@@ -1,17 +1,20 @@
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/screens/camera_screen.dart';
+import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/screens/matching_screen.dart';
+import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/screens/tutorial_screen.dart';
 import 'package:Swoppy/screens/videoExample_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/matchingModel.dart';
+import 'package:Swoppy/utilities/userProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-enum settings { user, hardfacts, video }
+enum settings { user, hardfacts, video, delete }
 
 class UserScreen extends StatefulWidget {
   static const String id = 'user_screen';
@@ -103,13 +106,62 @@ class _UserScreenState extends State<UserScreen> {
               setState(() {
                 switch (_selection) {
                   case settings.user:
-                    //ToDo call edit userprofile (change/delete)
+                    {
+                      Navigator.pushNamed(
+                        context,
+                        ProfileScreen.id,
+                        arguments: UserProfile(
+                            userCategory,
+                            title,
+                            lastName,
+                            firstName,
+                            eMail,
+                            phone,
+                            zipCode,
+                            city,
+                            address,
+                            abstract,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null),
+                      );
+                    }
                     break;
                   case settings.hardfacts:
-                    //ToDo call edit hardfacts (change/delete)
+                    {
+                      Navigator.pushNamed(
+                        context,
+                        HardFactsScreen.id,
+                        arguments: UserProfile(
+                            userCategory,
+                            null,
+                            null,
+                            null,
+                            eMail,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            trade,
+                            locationCode,
+                            employee,
+                            turnover,
+                            property,
+                            sellingPrice,
+                            handoverTime),
+                      );
+                    }
                     break;
                   case settings.video:
                     //ToDo call edit video (change/delete)
+                    break;
+                  case settings.delete:
+                    //ToDo call delete account)
                     break;
                 }
               });
@@ -118,15 +170,22 @@ class _UserScreenState extends State<UserScreen> {
             itemBuilder: (BuildContext context) => <PopupMenuEntry<settings>>[
               const PopupMenuItem<settings>(
                 value: settings.user,
-                child: Text('Benutzerdaten'),
+                child: Text('Benutzerprofil'),
               ),
               const PopupMenuItem<settings>(
                 value: settings.hardfacts,
-                child: Text('Unternehmensdaten'),
+                child: Text('Hardfacts'),
               ),
               const PopupMenuItem<settings>(
                 value: settings.video,
                 child: Text('Image-Video'),
+              ),
+              const PopupMenuItem<settings>(
+                value: settings.delete,
+                child: Text(
+                  'Konto löschen',
+                  style: TextStyle(color: kMainRedColor),
+                ),
               ),
             ],
           ),
@@ -154,20 +213,6 @@ class _UserScreenState extends State<UserScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-//                ListBody(
-//                  children: [
-//                    Text('Anrede:  $title'),
-//                    Text('Vorname:  $firstName'),
-//                    Text('Nachname:  $lastName'),
-//                    Text('eMail:  $eMail'),
-//                    Text('Telefonnummer:  $phone'),
-//                    Text('PLZ:  $zipCode'),
-//                    Text('Ort:  $city'),
-//                    Text('Strasse Hausnummer:  $address'),
-//                    Text('Kurzbeschreibung:  $abstract'),
-//                    Text('Kategorie: $userCategory'),
-//                  ],
-//                ),
                 SizedBox(height: 30.0),
                 RoundedButton(
                   title: 'VIDEO AUFNEHMEN',

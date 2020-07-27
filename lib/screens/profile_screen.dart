@@ -4,6 +4,7 @@ import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/userProfile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,10 +22,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
 
+  bool _dataInitialized = false;
+  bool _updateMode = false;
+
   String _title = '';
   String _email = '';
   String _picked = '';
   String _userCategory = '';
+  String _rightButtonTitle = 'WEITER';
+  String _leftButtonTitle = 'LÖSCHEN';
 
   List<String> _titles = <String>['', 'Frau', 'Herr', 'Frau Dr.', 'Herr Dr.'];
 
@@ -72,7 +78,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Extract the arguments from the current ModalRoute settings and cast
+    // them as ScreenArguments.
+    final UserProfile args = ModalRoute.of(context).settings.arguments;
+
     _myEmailController.text = _email;
+
+    // ----
+    if (args != null) {
+      _updateMode = true;
+      _rightButtonTitle = 'AKTUALISIEREN';
+      _leftButtonTitle = 'ABBRECHEN';
+
+      if (!_dataInitialized) {
+        _dataInitialized = true;
+        _title = args.title;
+        _myFirstNameController.text = args.firstName;
+        _myLastNameController.text = args.lastName;
+        _myPhoneController.text = args.phone;
+        _myZipCodeController.text = args.zipCode;
+        _myCityController.text = args.city;
+        _myAddressController.text = args.address;
+        _myAbstractController.text = args.abstract;
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -264,12 +293,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: <Widget>[
                   Expanded(
                     child: RoundedButton(
-                      title: 'LÖSCHEN',
+                      title: _leftButtonTitle,
                       colour: kMainGreyColor,
                       minWidth: 100,
                       onPressed: () {
-                        // reset() setzt alle Felder wieder auf den Initalwert zurück.
-                        _formKey.currentState.reset();
+                        if (_updateMode) {
+                          Navigator.pop(context);
+                        } else {
+                          // resets all fields to the initial value.
+                          _formKey.currentState.reset();
+                        }
                       },
                     ),
                   ),
@@ -278,14 +311,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Expanded(
                     child: RoundedButton(
-                      title: 'WEITER',
+                      title: _rightButtonTitle,
                       colour: kMainRedColor,
                       minWidth: 100,
                       onPressed: () {
-                        // Check whether all validators of the fields are valid.
                         if (_formKey.currentState.validate() &&
                             (_picked != '')) {
-                          Navigator.pushNamed(context, HardFactsScreen.id,
+                          if (_updateMode) {
+                            final _firestore = Firestore.instance;
+                            // update firebase entry according to the collection 'user'
+                            DocumentReference documentReference = _firestore
+                                .collection('user')
+                                .document(args.eMail);
+
+                            Map<String, dynamic> updatedData = {
+                              'title': _title,
+                              'lastName': _myLastNameController.text,
+                              'firstName': _myFirstNameController.text,
+                              'phone': _myPhoneController.text,
+                              'zipCode': _myZipCodeController.text,
+                              'city': _myCityController.text,
+                              'address': _myAddressController.text,
+                              'category': _userCategory,
+                              'abstract': _myAbstractController.text,
+                            };
+
+                            documentReference
+                                .updateData(updatedData)
+                                .whenComplete(() => showDataSaved(
+                                      (context),
+                                    ));
+                          }
+                          // Check whether all validators of the fields are valid.
+                          else {
+                            Navigator.pushNamed(
+                              context,
+                              HardFactsScreen.id,
                               arguments: UserProfile(
                                   _userCategory,
                                   _title,
@@ -296,7 +357,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   _myZipCodeController.text,
                                   _myCityController.text,
                                   _myAddressController.text,
-                                  _myAbstractController.text));
+                                  _myAbstractController.text,
+                                  null,
+                                  null,
+                                  null,
+                                  null,
+                                  null,
+                                  null,
+                                  null),
+                            );
+                          }
                         } else {
                           // Form not complete, missing or incorrect entries.
                           showInputNotComplete(context);

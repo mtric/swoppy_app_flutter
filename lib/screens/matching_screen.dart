@@ -37,6 +37,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
   var ticks = [0, 1, 2, 3, 4];
   var candidateMatchList = [0, 0, 0, 0, 0, 0, 0];
   var resultList;
+  var categoriesList;
 
   String _compTrade = '';
   String _compEMail = '';
@@ -50,14 +51,23 @@ class _MatchingScreenState extends State<MatchingScreen> {
   int _indexProperty = 4;
   int _indexPrice = 5;
   int _indexTime = 6;
-  int _indexHitRate = 7;
+
+  String _candidateTradeTxt;
+  String _candidatePropertyTxt;
+  String _candidateTurnoverTxt;
+  String _candidateEmployeeTxt;
+  String _candidatePriceTxt;
+  String _candidateTimeTxt;
 
   int _counter = 0;
   int _hitRate = 0;
   int _hitCounter = 0;
   int _numberOfMatches = 0;
+
   List<int> _matchResultList;
+  List<String> _matchCategoriesList;
   Map<String, List> _potentialCandidatesMap = {};
+  Map<String, List> _potentialCandidatesCatMap = {};
 
   @override
   void initState() {
@@ -96,6 +106,8 @@ class _MatchingScreenState extends State<MatchingScreen> {
     return result;
   }
 
+  // function to calculate the score of the matches within the categories
+  // based on the underlying matching table
   int getMatchResult(
       String compCategory, String reqCategory, List referenceList) {
     // Matching table categories turnover, employee, sellingPrice, handoverTime
@@ -120,17 +132,25 @@ class _MatchingScreenState extends State<MatchingScreen> {
     return _catPoints;
   }
 
+  // function to check whether the candidate is above the defined minimum percentage
+  // of matches in all categories (kMinHitRate)
   bool isValidCandidate() {
     bool result;
-
     int sum = 0;
-    _matchResultList.forEach((e) => sum += e);
-    _hitRate = roundDouble(((sum / maxCriteriaPoints) * 100), 0).toInt();
-    _hitRate >= kMinHitRate ? result = true : result = false;
 
+    if (_matchResultList.elementAt(_indexTrade) != 0) {
+      _matchResultList.forEach((e) => sum += e);
+      _hitRate = roundDouble(((sum / maxCriteriaPoints) * 100), 0).toInt();
+      _hitRate >= kMinHitRate ? result = true : result = false;
+    } else {
+      //industry does not match
+      result = false;
+    }
     return result;
   }
 
+  // function to check all potential candidates from the database and
+  // store them in two independent result lists (hits and email addresses separated)
   void getCandidatesFromCollection() {
     _reqUserCategory == 'seller'
         ? _wantedUserCategory = 'buyer'
@@ -143,10 +163,14 @@ class _MatchingScreenState extends State<MatchingScreen> {
           (data) => {
             for (int i = 0; i <= data.documents.length - 1; i++)
               {
-                _matchResultList = [0, 0, 0, 0, 0, 0, 0, 0],
+                _matchResultList = [0, 0, 0, 0, 0, 0, 0],
+                _matchCategoriesList = ['', '', '', '', '', '', ''],
+
                 _compEMail = data.documents[i]['eMail'],
                 _compTrade = (data.documents[i]['trade']),
                 _compProperty = (data.documents[i]['property']),
+                _matchCategoriesList[_indexTrade] = _compTrade,
+                _matchCategoriesList[_indexProperty] = _compProperty,
 
                 // exclude own entries
                 if (data.documents[i]['eMail'] != loggedInUser.email)
@@ -171,10 +195,15 @@ class _MatchingScreenState extends State<MatchingScreen> {
                         data.documents[i]['turnover'],
                         _reqTurnover,
                         kTurnoverList),
+                    _matchCategoriesList[_indexTurnover] =
+                        data.documents[i]['turnover'],
+
                     _matchResultList[_indexEmployee] = getMatchResult(
                         data.documents[i]['employee'],
                         _reqEmployee,
                         kEmployeeList),
+                    _matchCategoriesList[_indexEmployee] =
+                        data.documents[i]['employee'],
 
                     //ToDo remove this != 0 query after test phase -> no more empty entries in db
                     if (_reqProperty.length != 0 && _compProperty.length != 0)
@@ -187,8 +216,8 @@ class _MatchingScreenState extends State<MatchingScreen> {
                           {
                             _matchResultList[_indexProperty] = 4,
                           }
-                        else if (_compProperty.substring(0, 2) ==
-                            _reqProperty.substring(0, 2))
+                        else if (_compProperty.substring(0, 2).toUpperCase() ==
+                            _reqProperty.substring(0, 2).toUpperCase())
                           {
                             _matchResultList[_indexProperty] = 3,
                           },
@@ -198,23 +227,40 @@ class _MatchingScreenState extends State<MatchingScreen> {
                         data.documents[i]['sellingPrice'],
                         _reqPrice,
                         kSellingPriceList),
+                    _matchCategoriesList[_indexPrice] =
+                        data.documents[i]['sellingPrice'],
+
                     _matchResultList[_indexTime] = getMatchResult(
                         data.documents[i]['handoverTime'],
                         _reqTime,
                         kHandoverTimeList),
+                    _matchCategoriesList[_indexTime] =
+                        data.documents[i]['handoverTime'],
 
                     // only candidates who are above the specified hit rate
                     // will be considered
                     if (isValidCandidate() == true)
                       {
-                        _matchResultList[_indexHitRate] = _hitRate,
                         _potentialCandidatesMap[_compEMail] = _matchResultList,
+                        _potentialCandidatesCatMap[_compEMail] =
+                            _matchCategoriesList,
                       },
                   },
               },
             _numberOfMatches = _potentialCandidatesMap.length,
+            resultList = _potentialCandidatesMap.values.toList(),
+            categoriesList = _potentialCandidatesCatMap.values.toList(),
           },
         );
+  }
+
+  void showCandidateEntries(int id) {
+    _candidateTradeTxt = categoriesList[id].elementAt(_indexTrade);
+    _candidateEmployeeTxt = categoriesList[id].elementAt(_indexEmployee);
+    _candidateTurnoverTxt = categoriesList[id].elementAt(_indexTurnover);
+    _candidatePriceTxt = categoriesList[id].elementAt(_indexPrice);
+    _candidatePropertyTxt = categoriesList[id].elementAt(_indexProperty);
+    _candidateTimeTxt = categoriesList[id].elementAt(_indexTime);
   }
 
   @override
@@ -234,10 +280,16 @@ class _MatchingScreenState extends State<MatchingScreen> {
     _reqPrice = matchingModel.sellingPrice;
     _reqTime = matchingModel.handoverTime;
 
-    String _category = '';
-    _reqUserCategory == 'seller'
-        ? _category = 'Verkäufer'
-        : _category = 'Käufer';
+    String _userCategoryTxt;
+    String _wantedCategoryTxt;
+
+    if (_reqUserCategory == 'seller') {
+      _userCategoryTxt = 'Verkäufer';
+      _wantedCategoryTxt = 'Käufer';
+    } else {
+      _userCategoryTxt = 'Käufer';
+      _wantedCategoryTxt = 'Verkäufer';
+    }
 
     // --- Radar Chart
     var chartData = [kBaseRatingList, candidateMatchList];
@@ -259,24 +311,163 @@ class _MatchingScreenState extends State<MatchingScreen> {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               SizedBox(height: 10.0),
-              ListBody(
-                children: [
-                  Text('------  E I G E N E  D A T E N  ------'),
-                  Text(''),
-                  Text('Kategorie: $_category'),
-                  Text('Wirtschaftszweig:  $_reqTrade'),
-                  Text('Standort:  $_reqLocationCode'),
-                  Text('Anzahl Mitarbeiter:  $_reqEmployee'),
-                  Text('Umsatz:  $_reqTurnover'),
-                  Text('eigene Immobilie:  $_reqProperty'),
-                  Text('Preis:  $_reqPrice'),
-                  Text('Zeitpunkt:  $_reqTime'),
-                ],
-              ),
+              Table(
+                  border: TableBorder.all(color: kMainGreyColor),
+                  columnWidths: {
+                    0: FlexColumnWidth(2),
+                    1: FlexColumnWidth(8),
+                    2: FlexColumnWidth(8),
+                  },
+                  children: [
+                    TableRow(children: [
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon((null)),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          '$_userCategoryTxt',
+                          style: TextStyle(
+                              color: Colors.green, fontWeight: FontWeight.bold),
+                        ),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          '$_wantedCategoryTxt',
+                          style: TextStyle(
+                              color: Colors.blue, fontWeight: FontWeight.bold),
+                        ),
+                      )),
+                    ]),
+                    TableRow(children: [
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon((Icons.business)),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_reqTrade'),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_candidateTradeTxt'),
+                      )),
+                    ]),
+                    TableRow(children: [
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(Icons.account_balance),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_reqLocationCode'),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(''),
+                      )),
+                    ]),
+                    TableRow(children: [
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(Icons.trending_up),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_reqTurnover'),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_candidateTurnoverTxt'),
+                      )),
+                    ]),
+                    TableRow(children: [
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(Icons.people),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_reqEmployee'),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_candidateEmployeeTxt'),
+                      )),
+                    ]),
+                    TableRow(children: [
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(Icons.business),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_reqProperty'),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_candidatePropertyTxt'),
+                      )),
+                    ]),
+                    TableRow(children: [
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(Icons.euro_symbol),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_reqPrice'),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_candidatePriceTxt'),
+                      )),
+                    ]),
+                    TableRow(children: [
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(Icons.calendar_today),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_reqTime'),
+                      )),
+                      TableCell(
+                          child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('$_candidateTimeTxt'),
+                      )),
+                    ]),
+                  ]),
               SizedBox(height: 10.0),
               Expanded(
                 child: RadarChart.light(
@@ -296,6 +487,29 @@ class _MatchingScreenState extends State<MatchingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
+                    flex: 1,
+                    child: RoundedButton(
+                      title: '<',
+                      colour: kMainGreyColor,
+                      minWidth: 1.0,
+                      onPressed: () {
+                        if (_counter >= 1) {
+                          _counter--;
+                          _hitCounter--;
+                        } else {
+                          _counter = resultList.length - 1;
+                          _hitCounter = resultList.length;
+                        }
+
+                        candidateMatchList = resultList[_counter];
+                        showCandidateEntries(_counter);
+                        chartData = [kBaseRatingList, candidateMatchList];
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 1.0),
+                  Expanded(
                     flex: 2,
                     child: RoundedButton(
                       title: 'START',
@@ -305,11 +519,9 @@ class _MatchingScreenState extends State<MatchingScreen> {
                         _hitCounter = 0;
                         _counter = 0;
 
-                        resultList = _potentialCandidatesMap.values.toList();
-                        candidateMatchList = resultList[_counter].sublist(0, 7);
-
+                        candidateMatchList = resultList[_counter];
                         _hitCounter++;
-
+                        showCandidateEntries(_counter);
                         chartData = [kBaseRatingList, candidateMatchList];
                         setState(() {});
                       },
@@ -331,37 +543,14 @@ class _MatchingScreenState extends State<MatchingScreen> {
                           _hitCounter = 1;
                         }
 
-                        resultList = _potentialCandidatesMap.values.toList();
-                        candidateMatchList = resultList[_counter].sublist(0, 7);
+                        candidateMatchList = resultList[_counter];
+                        showCandidateEntries(_counter);
                         chartData = [kBaseRatingList, candidateMatchList];
                         setState(() {});
                       },
                     ),
                   ),
-                  SizedBox(width: 1.0),
-                  Expanded(
-                    flex: 1,
-                    child: RoundedButton(
-                      title: '<',
-                      colour: kMainGreyColor,
-                      minWidth: 1.0,
-                      onPressed: () {
-                        if (_counter >= 1) {
-                          _counter--;
-                          _hitCounter--;
-                        } else {
-                          _counter = resultList.length - 1;
-                          _hitCounter = resultList.length;
-                        }
-
-                        resultList = _potentialCandidatesMap.values.toList();
-                        candidateMatchList = resultList[_counter].sublist(0, 7);
-                        chartData = [kBaseRatingList, candidateMatchList];
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 1.0),
+                  SizedBox(width: 15.0),
                   Expanded(
                     flex: 3,
                     child: RoundedButton(
