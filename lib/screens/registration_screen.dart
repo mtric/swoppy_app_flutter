@@ -1,5 +1,5 @@
 import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/screens/profile_screen.dart';
+import 'package:Swoppy/screens/registrationPhone_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -99,9 +99,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   });
                   try {
                     final newUser = await _auth.createUserWithEmailAndPassword(
-                        email: email, password: password);
+                        email: email.trim(), password: password.trim());
                     if (newUser != null) {
-                      Navigator.pushNamed(context, ProfileScreen.id);
+                      Navigator.pushNamed(context, RegistrationPhoneScreen.id);
                     }
                     setState(() {
                       showSpinner = false;

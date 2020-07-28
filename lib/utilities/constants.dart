@@ -65,6 +65,27 @@ const kSendButtonTextStyle = TextStyle(
   fontSize: 18.0,
 );
 
+const kFlatButtonStyle = TextStyle(
+  color: kMainGreyColor,
+  fontWeight: FontWeight.bold,
+  fontFamily: 'OpenSans-Regular',
+  fontSize: 14.0,
+);
+
+const kTutorialGuidanceTextStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'OpenSans-Regular',
+  fontSize: 18.0,
+  height: 1.8,
+);
+const kTutorialTitleTextStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'OpenSans-Regular',
+  fontSize: 18.0,
+  height: 1.8,
+  fontWeight: FontWeight.bold,
+);
+
 const kMessageTextFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
   hintText: 'Type your message here...',

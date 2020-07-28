@@ -3,8 +3,8 @@ import 'package:Swoppy/screens/camera_screen.dart';
 import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/screens/matching_screen.dart';
 import 'package:Swoppy/screens/profile_screen.dart';
+import 'package:Swoppy/screens/tutorialVideo_screen.dart';
 import 'package:Swoppy/screens/tutorial_screen.dart';
-import 'package:Swoppy/screens/videoExample_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/matchingModel.dart';
@@ -252,7 +252,7 @@ class _UserScreenState extends State<UserScreen> {
                   title: 'Tutorial Video',
                   colour: kSecondBlueColor,
                   onPressed: () {
-                    Navigator.pushNamed(context, VideoExample.id);
+                    Navigator.pushNamed(context, TutorialVideoScreen.id);
                   },
                 ),
               ],

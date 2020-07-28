@@ -1,4 +1,5 @@
 import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/screens/resetPassword_screen.dart';
 import 'package:Swoppy/screens/user_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -93,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   });
                   try {
                     final user = await _auth.signInWithEmailAndPassword(
-                        email: email, password: password);
+                        email: email.trim(), password: password.trim());
                     if (user != null) {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           UserScreen.id, ModalRoute.withName(UserScreen.id));
@@ -103,16 +104,49 @@ class _LoginScreenState extends State<LoginScreen> {
                       showSpinner = false;
                     });
                   } catch (e) {
-                    setState(() {
-                      showSpinner = false;
-                      warnung =
-                          'Die E-Mail Adresse oder das Passwort ist inkorrekt!';
-                    });
                     print(e);
-                    print(warnung);
+                    if (e.code == 'ERROR_INVALID_EMAIL') {
+                      setState(() {
+                        showSpinner = false;
+                        warnung = 'Bitte überprüfen Sie ihre Emailadresse!';
+                      });
+                      print(warnung);
+                    } else if (e.code == 'ERROR_USER_NOT_FOUND') {
+                      setState(() {
+                        showSpinner = false;
+                        warnung = 'Benutzer existiert nicht!';
+                      });
+                      print(warnung);
+                    } else if (e.code == 'ERROR_WRONG_PASSWORD') {
+                      setState(() {
+                        showSpinner = false;
+                        warnung = 'Bitte überprüfen Sie ihr Passwort!';
+                      });
+                      print(warnung);
+                    } else {
+                      setState(() {
+                        showSpinner = false;
+                        warnung = e.code;
+                      });
+                      print(warnung);
+                    }
                   }
                 },
               ),
+              SizedBox(
+                height: 2.0,
+              ),
+              FlatButton(
+                child: Text(
+                  'Passwort vergessen?',
+                  style: kFlatButtonStyle,
+                ),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pushNamed(context, ResetPasswordScreen.id);
+                  });
+                },
+              )
             ],
           ),
         ),
