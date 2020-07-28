@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/screens/videoExample_screen.dart';
+import 'package:Swoppy/screens/tutorialVideo_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/matchingData.dart';
@@ -595,7 +595,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                         colour: kMainRedColor,
                         minWidth: 10.0,
                         onPressed: () {
-                          Navigator.pushNamed(context, VideoExample.id);
+                          Navigator.pushNamed(context, TutorialVideoScreen.id);
                         }),
                   ),
                 ],
