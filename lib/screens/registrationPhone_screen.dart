@@ -1,5 +1,5 @@
 import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/screens/user_screen.dart';
+import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -76,7 +76,7 @@ class _RegistrationPhoneScreenState extends State<RegistrationPhoneScreen> {
                 ),
               ),
               RoundedButton(
-                title: 'SMS senden',
+                title: 'SMS SENDEN',
                 colour: kMainGreyColor,
                 onPressed: () async {
                   setState(() {
@@ -84,7 +84,7 @@ class _RegistrationPhoneScreenState extends State<RegistrationPhoneScreen> {
                     showSpinner = true;
                   });
                   try {
-                    Navigator.pushNamed(context, UserScreen.id);
+                    Navigator.pushNamed(context, ProfileScreen.id);
                     setState(() {
                       showSpinner = false;
                     });

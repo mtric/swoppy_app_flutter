@@ -52,12 +52,12 @@ class _MatchingScreenState extends State<MatchingScreen> {
   int _indexPrice = 5;
   int _indexTime = 6;
 
-  String _candidateTradeTxt;
-  String _candidatePropertyTxt;
-  String _candidateTurnoverTxt;
-  String _candidateEmployeeTxt;
-  String _candidatePriceTxt;
-  String _candidateTimeTxt;
+  String _candidateTradeTxt = '';
+  String _candidatePropertyTxt = '';
+  String _candidateTurnoverTxt = '';
+  String _candidateEmployeeTxt = '';
+  String _candidatePriceTxt = '';
+  String _candidateTimeTxt = '';
 
   int _counter = 0;
   int _hitRate = 0;
@@ -335,7 +335,8 @@ class _MatchingScreenState extends State<MatchingScreen> {
                         child: Text(
                           '$_userCategoryTxt',
                           style: TextStyle(
-                              color: Colors.green, fontWeight: FontWeight.bold),
+                              color: kSecondGreenColor,
+                              fontWeight: FontWeight.bold),
                         ),
                       )),
                       TableCell(
@@ -344,7 +345,8 @@ class _MatchingScreenState extends State<MatchingScreen> {
                         child: Text(
                           '$_wantedCategoryTxt',
                           style: TextStyle(
-                              color: Colors.blue, fontWeight: FontWeight.bold),
+                              color: kSecondBlueColor,
+                              fontWeight: FontWeight.bold),
                         ),
                       )),
                     ]),
