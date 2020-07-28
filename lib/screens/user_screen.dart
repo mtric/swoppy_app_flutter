@@ -1,3 +1,4 @@
+import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/screens/camera_screen.dart';
 import 'package:Swoppy/screens/hardFacts_screen.dart';
@@ -24,6 +25,8 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   FirebaseUser loggedInUser;
+  DocumentReference documentReference;
+
   final _auth = FirebaseAuth.instance;
   final _collection = 'user';
   final _firestore = Firestore.instance;
@@ -34,7 +37,7 @@ class _UserScreenState extends State<UserScreen> {
       final user = await _auth.currentUser();
       if (user != null) {
         loggedInUser = user;
-        _readDataFromDB(loggedInUser.email);
+        _readDataFromDataBase(loggedInUser.email);
       }
     } catch (e) {
       print(e);
@@ -60,9 +63,9 @@ class _UserScreenState extends State<UserScreen> {
   String sellingPrice = '';
   String handoverTime = '';
 
-  _readDataFromDB(currentUser) {
+  _readDataFromDataBase(currentUser) {
     setState(() {
-      DocumentReference documentReference =
+      documentReference =
           _firestore.collection(_collection).document(currentUser);
 
       documentReference.get().then((datasnapshot) {
@@ -161,7 +164,8 @@ class _UserScreenState extends State<UserScreen> {
                     //ToDo call edit video (change/delete)
                     break;
                   case settings.delete:
-                    //ToDo call delete account)
+                    showDeleteUserAccount(
+                        context, loggedInUser, documentReference);
                     break;
                 }
               });
@@ -184,7 +188,8 @@ class _UserScreenState extends State<UserScreen> {
                 value: settings.delete,
                 child: Text(
                   'Konto löschen',
-                  style: TextStyle(color: kMainRedColor),
+                  style: TextStyle(
+                      color: kMainRedColor, fontWeight: FontWeight.bold),
                 ),
               ),
             ],

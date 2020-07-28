@@ -326,6 +326,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                             Map<String, dynamic> updatedData = {
                               'title': _title,
+                              'category': _userCategory,
                               'lastName': _myLastNameController.text,
                               'firstName': _myFirstNameController.text,
                               'phone': _myPhoneController.text,
