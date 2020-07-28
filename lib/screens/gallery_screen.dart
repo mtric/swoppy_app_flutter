@@ -12,7 +12,6 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 class Gallery extends StatefulWidget {
-  static const String id = 'gallery_screen';
   @override
   _GalleryState createState() => _GalleryState();
 }
