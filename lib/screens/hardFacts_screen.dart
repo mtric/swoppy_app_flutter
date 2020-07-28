@@ -92,15 +92,22 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
         _dataInitialized = true;
         _selectedBranchKey = args.trade;
         _onBranch = _selectedBranchKey.substring(0, 1);
-        _onTrade = _selectedBranchKey.substring(1, 3);
+
+        _selectedBranchKey.length > 1
+            ? _onTrade = _selectedBranchKey.substring(1, 3)
+            : _onTrade = null;
 
         _selectedIndustry =
             (data.getIndustryByBranchKey(_onBranch)).elementAt(0);
 
-        _branch = List.from(_branch)
-          ..addAll(data.getBranchByIndustry(_selectedIndustry));
-        index = _branch.indexWhere((e) => e.startsWith(_onTrade));
-        _selectedBranch = _branch.elementAt(index);
+        if (_onTrade != null) {
+          _branch = List.from(_branch)
+            ..addAll(data.getBranchByIndustry(_selectedIndustry));
+          index = _branch.indexWhere((e) => e.startsWith(_onTrade));
+          _selectedBranch = _branch.elementAt(index);
+        } else {
+          _selectedBranch = '';
+        }
 
         _employee = args.employee;
         _turnover = args.turnover;

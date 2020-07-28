@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/screens/videoExample_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/matchingData.dart';
@@ -22,53 +24,62 @@ class _MatchingScreenState extends State<MatchingScreen> {
 
   final _firestore = Firestore.instance;
 
-  String _reqUserCategory = '';
-  String _reqTrade = '';
-  String _reqLocationCode = '';
-  String _reqEmployee = '';
-  String _reqTurnover = '';
-  String _reqProperty = '';
-  String _reqPrice = '';
-  String _reqTime = '';
+  String _userCategory = '';
+  String _userTrade = '';
+  String _userLocationCode = '';
+  String _userEmployee = '';
+  String _userTurnover = '';
+  String _userProperty = '';
+  String _userSellingPrice = '';
+  String _userHandoverTime = '';
 
-  var firestoreProvider;
-
-  // radar Chart
+  // variables for radar chart (ticks = scaling)
   var ticks = [0, 1, 2, 3, 4];
+  var chartData = [
+    kBaseRatingList,
+    [0, 0, 0, 0, 0, 0, 0]
+  ];
+
+  // variables for matching method
   var candidateMatchList = [0, 0, 0, 0, 0, 0, 0];
   var resultList;
   var categoriesList;
 
-  String _compTrade = '';
-  String _compEMail = '';
-  String _compProperty = '';
-  String _wantedUserCategory = '';
-
-  int _indexTrade = 0;
-  // int _indexLocation = 1;
-  int _indexTurnover = 2;
-  int _indexEmployee = 3;
-  int _indexProperty = 4;
-  int _indexPrice = 5;
-  int _indexTime = 6;
-
-  String _candidateTradeTxt;
-  String _candidatePropertyTxt;
-  String _candidateTurnoverTxt;
-  String _candidateEmployeeTxt;
-  String _candidatePriceTxt;
-  String _candidateTimeTxt;
+  // variables for different uses
+  String _candidateTrade = '';
+  String _candidateEmail = '';
+  String _candidateProperty = '';
+  String _searchedCategory = '';
 
   int _counter = 0;
   int _hitRate = 0;
   int _hitCounter = 0;
   int _numberOfMatches = 0;
 
-  List<int> _matchResultList;
-  List<String> _matchCategoriesList;
-  Map<String, List> _potentialCandidatesMap = {};
-  Map<String, List> _potentialCandidatesCatMap = {};
+  // indexes of the results table
+  int _indexTrade = 0;
+  int _indexLocation = 1;
+  int _indexTurnover = 2;
+  int _indexEmployee = 3;
+  int _indexProperty = 4;
+  int _indexPrice = 5;
+  int _indexTime = 6;
 
+  // variables for Table Widget
+  String _candidateTradeTxt = '';
+  String _candidatePropertyTxt = '';
+  String _candidateTurnoverTxt = '';
+  String _candidateEmployeeTxt = '';
+  String _candidatePriceTxt = '';
+  String _candidateTimeTxt = '';
+
+  // lists and maps used in matching method
+  List<int> _matchingResultList;
+  List<String> _matchingCategoryList;
+  Map<String, List> _candidatesMatchingMap = {};
+  Map<String, List> _candidatesCategoryMap = {};
+
+  /// Method to initiate the state
   @override
   void initState() {
     getCurrentUser();
@@ -76,11 +87,13 @@ class _MatchingScreenState extends State<MatchingScreen> {
     super.initState();
   }
 
+  /// Method to dispose the widget
   @override
   void dispose() {
     super.dispose();
   }
 
+  /// Method to get the current user from Firebase Authentication
   void getCurrentUser() async {
     try {
       final user = await _auth.currentUser();
@@ -93,11 +106,13 @@ class _MatchingScreenState extends State<MatchingScreen> {
     }
   }
 
+  /// Method to round a number
   double roundDouble(double value, int places) {
     double mod = pow(10.0, places);
     return ((value * mod).round().toDouble() / mod);
   }
 
+  /// Method to check whether an entry is "don't know yet ...")
   bool isNotSpecified(String str1, String str2) {
     bool result = false;
     if (str1 == kAdditionalOption || str2 == kAdditionalOption) {
@@ -106,11 +121,11 @@ class _MatchingScreenState extends State<MatchingScreen> {
     return result;
   }
 
-  // function to calculate the score of the matches within the categories
-  // based on the underlying matching table
-  int getMatchResult(
+  /// Method to calculate the score of the matches within the categories
+  /// based on the underlying matching map
+  int getMatchingResult(
       String compCategory, String reqCategory, List referenceList) {
-    // Matching table categories turnover, employee, sellingPrice, handoverTime
+    // Matching map for categories [turnover, employee, sellingPrice, handoverTime]
     const Map<int, int> matchingTable = {0: 4, 1: 3, 2: 2, 3: 1, 4: 0};
 
     int _catPoints = 0;
@@ -118,13 +133,13 @@ class _MatchingScreenState extends State<MatchingScreen> {
 
     if (compCategory != '' && reqCategory != '') {
       if (isNotSpecified(compCategory, reqCategory) == true) {
-        _catPoints = 2;
+        _catPoints = 2; // always 2 points if one entry isNotSpecified
       } else {
         _catDifference = (referenceList.indexOf(compCategory) -
                 referenceList.indexOf(reqCategory))
             .abs();
-        // max. possible difference (= 4) between categories
-        _catDifference > 4
+
+        _catDifference > 4 // highest possible difference
             ? _catPoints = 0
             : _catPoints = matchingTable[_catDifference];
       }
@@ -132,129 +147,150 @@ class _MatchingScreenState extends State<MatchingScreen> {
     return _catPoints;
   }
 
-  // function to check whether the candidate is above the defined minimum percentage
-  // of matches in all categories (kMinHitRate)
+  /// Method to check whether the candidate is valid
   bool isValidCandidate() {
     bool result;
     int sum = 0;
 
-    if (_matchResultList.elementAt(_indexTrade) != 0) {
-      _matchResultList.forEach((e) => sum += e);
+    // Are both industries similar?
+    if (_matchingResultList.elementAt(_indexTrade) != 0) {
+      _matchingResultList.forEach((e) => sum += e);
       _hitRate = roundDouble(((sum / maxCriteriaPoints) * 100), 0).toInt();
       _hitRate >= kMinHitRate ? result = true : result = false;
     } else {
-      //industry does not match
       result = false;
     }
     return result;
   }
 
-  // function to check all potential candidates from the database and
-  // store them in two independent result lists (hits and email addresses separated)
+  /// Method to get all potential candidates (buyer or seller) from database,
+  /// to create the matching list for each candidate and to check whether it
+  /// is a valid candidate
   void getCandidatesFromCollection() {
-    _reqUserCategory == 'seller'
-        ? _wantedUserCategory = 'buyer'
-        : _wantedUserCategory = 'seller';
+    _userCategory == 'seller'
+        ? _searchedCategory = 'buyer'
+        : _searchedCategory = 'seller';
+
     _firestore
         .collection(kCollection)
-        .where('category', isEqualTo: _wantedUserCategory)
+        .where('category', isEqualTo: _searchedCategory)
         .snapshots()
         .listen(
           (data) => {
             for (int i = 0; i <= data.documents.length - 1; i++)
               {
-                _matchResultList = [0, 0, 0, 0, 0, 0, 0],
-                _matchCategoriesList = ['', '', '', '', '', '', ''],
+                _matchingResultList = [0, 0, 0, 0, 0, 0, 0],
+                _matchingCategoryList = ['', '', '', '', '', '', ''],
 
-                _compEMail = data.documents[i]['eMail'],
-                _compTrade = (data.documents[i]['trade']),
-                _compProperty = (data.documents[i]['property']),
-                _matchCategoriesList[_indexTrade] = _compTrade,
-                _matchCategoriesList[_indexProperty] = _compProperty,
+                _candidateEmail = data.documents[i]['eMail'],
+                _candidateTrade = data.documents[i]['trade'],
+                _candidateProperty = data.documents[i]['property'],
+
+                _matchingCategoryList[_indexTrade] = _candidateTrade,
+                _matchingCategoryList[_indexProperty] = _candidateProperty,
 
                 // exclude own entries
                 if (data.documents[i]['eMail'] != loggedInUser.email)
                   {
-                    //ToDo remove this != 0 query after test phase -> no more empty entries in db
-                    if (_reqTrade.length != 0 && _compTrade.length != 0)
+                    // ToDo remove this != 0 query after test phase
+                    // ToDo -> no more empty entries should be in database
+                    if (_userTrade.length != 0 && _candidateTrade.length != 0)
                       {
-                        if (_compTrade == _reqTrade)
+                        if (_candidateTrade == _userTrade)
                           {
                             // first level match
-                            _matchResultList[_indexTrade] = 4,
+                            _matchingResultList[_indexTrade] = 4,
                           }
-                        else if (_compTrade.substring(0, 1) ==
-                            _reqTrade.substring(0, 1))
+                        else if (_candidateTrade.substring(0, 1) ==
+                            _userTrade.substring(0, 1))
                           {
                             // second level match
-                            _matchResultList[_indexTrade] = 2,
+                            _matchingResultList[_indexTrade] = 2,
                           },
+                        // no match -> nothing to do because initial value = 0
                       },
 
-                    _matchResultList[_indexTurnover] = getMatchResult(
+                    _matchingResultList[_indexTurnover] = getMatchingResult(
                         data.documents[i]['turnover'],
-                        _reqTurnover,
+                        _userTurnover,
                         kTurnoverList),
-                    _matchCategoriesList[_indexTurnover] =
+                    _matchingCategoryList[_indexTurnover] =
                         data.documents[i]['turnover'],
 
-                    _matchResultList[_indexEmployee] = getMatchResult(
+                    _matchingResultList[_indexEmployee] = getMatchingResult(
                         data.documents[i]['employee'],
-                        _reqEmployee,
+                        _userEmployee,
                         kEmployeeList),
-                    _matchCategoriesList[_indexEmployee] =
+                    _matchingCategoryList[_indexEmployee] =
                         data.documents[i]['employee'],
 
-                    //ToDo remove this != 0 query after test phase -> no more empty entries in db
-                    if (_reqProperty.length != 0 && _compProperty.length != 0)
+                    // ToDo remove this != 0 query after test phase
+                    // ToDo-> no more empty entries should be in database
+                    if (_userProperty.length != 0 &&
+                        _candidateProperty.length != 0)
                       {
-                        if (isNotSpecified(_reqProperty, _compProperty) == true)
+                        if (isNotSpecified(_userProperty, _candidateProperty) ==
+                            true)
                           {
-                            _matchResultList[_indexProperty] = 2,
+                            _matchingResultList[_indexProperty] = 2,
                           }
-                        else if (_compProperty == _reqProperty)
+                        else if (_candidateProperty == _userProperty)
                           {
-                            _matchResultList[_indexProperty] = 4,
+                            _matchingResultList[_indexProperty] = 4,
                           }
-                        else if (_compProperty.substring(0, 2).toUpperCase() ==
-                            _reqProperty.substring(0, 2).toUpperCase())
+                        else if (_candidateProperty
+                                .substring(0, 2)
+                                .toUpperCase() ==
+                            _userProperty.substring(0, 2).toUpperCase())
                           {
-                            _matchResultList[_indexProperty] = 3,
+                            _matchingResultList[_indexProperty] = 3,
                           },
                       },
 
-                    _matchResultList[_indexPrice] = getMatchResult(
+                    _matchingResultList[_indexPrice] = getMatchingResult(
                         data.documents[i]['sellingPrice'],
-                        _reqPrice,
+                        _userSellingPrice,
                         kSellingPriceList),
-                    _matchCategoriesList[_indexPrice] =
+                    _matchingCategoryList[_indexPrice] =
                         data.documents[i]['sellingPrice'],
 
-                    _matchResultList[_indexTime] = getMatchResult(
+                    _matchingResultList[_indexTime] = getMatchingResult(
                         data.documents[i]['handoverTime'],
-                        _reqTime,
+                        _userHandoverTime,
                         kHandoverTimeList),
-                    _matchCategoriesList[_indexTime] =
+                    _matchingCategoryList[_indexTime] =
                         data.documents[i]['handoverTime'],
 
-                    // only candidates who are above the specified hit rate
-                    // will be considered
                     if (isValidCandidate() == true)
                       {
-                        _potentialCandidatesMap[_compEMail] = _matchResultList,
-                        _potentialCandidatesCatMap[_compEMail] =
-                            _matchCategoriesList,
+                        // save data from potential candidates for later use
+                        // in two separate maps (key = email, value = list)
+                        _candidatesMatchingMap[_candidateEmail] =
+                            _matchingResultList,
+                        _candidatesCategoryMap[_candidateEmail] =
+                            _matchingCategoryList,
                       },
                   },
               },
-            _numberOfMatches = _potentialCandidatesMap.length,
-            resultList = _potentialCandidatesMap.values.toList(),
-            categoriesList = _potentialCandidatesCatMap.values.toList(),
+            _numberOfMatches = _candidatesMatchingMap.length,
+            resultList = _candidatesMatchingMap.values.toList(),
+            categoriesList = _candidatesCategoryMap.values.toList(),
+
+            // check whether a candidate has been found
+            !resultList.isEmpty
+                ? setState(() {
+                    _hitCounter++;
+                    candidateMatchList = resultList[_counter];
+                    showSelectedCandidate(_counter);
+                    chartData = [kBaseRatingList, candidateMatchList];
+                  })
+                : showNoCandidateFound(context),
           },
         );
   }
 
-  void showCandidateEntries(int id) {
+  /// Method to show selected candidate entry
+  void showSelectedCandidate(int id) {
     _candidateTradeTxt = categoriesList[id].elementAt(_indexTrade);
     _candidateEmployeeTxt = categoriesList[id].elementAt(_indexEmployee);
     _candidateTurnoverTxt = categoriesList[id].elementAt(_indexTurnover);
@@ -263,6 +299,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
     _candidateTimeTxt = categoriesList[id].elementAt(_indexTime);
   }
 
+  /// Method to build the widget tree
   @override
   Widget build(BuildContext context) {
     // Extract the arguments from the current ModalRoute settings and cast
@@ -270,30 +307,28 @@ class _MatchingScreenState extends State<MatchingScreen> {
     final MatchingModel matchingModel =
         ModalRoute.of(context).settings.arguments;
 
-    // data from the requesting party
-    _reqUserCategory = matchingModel.userCategory;
-    _reqTrade = matchingModel.trade;
-    _reqLocationCode = matchingModel.locationCode;
-    _reqEmployee = matchingModel.employee;
-    _reqTurnover = matchingModel.turnover;
-    _reqProperty = matchingModel.property;
-    _reqPrice = matchingModel.sellingPrice;
-    _reqTime = matchingModel.handoverTime;
-
+    // local variables
     String _userCategoryTxt;
-    String _wantedCategoryTxt;
+    String _searchedCategoryTxt;
 
-    if (_reqUserCategory == 'seller') {
+    // data from current user
+    _userCategory = matchingModel.userCategory;
+    _userTrade = matchingModel.trade;
+    _userLocationCode = matchingModel.locationCode;
+    _userEmployee = matchingModel.employee;
+    _userTurnover = matchingModel.turnover;
+    _userProperty = matchingModel.property;
+    _userSellingPrice = matchingModel.sellingPrice;
+    _userHandoverTime = matchingModel.handoverTime;
+
+    if (_userCategory == 'seller') {
       _userCategoryTxt = 'Verkäufer';
-      _wantedCategoryTxt = 'Käufer';
+      _searchedCategoryTxt = 'Käufer';
     } else {
       _userCategoryTxt = 'Käufer';
-      _wantedCategoryTxt = 'Verkäufer';
+      _searchedCategoryTxt = 'Verkäufer';
     }
-
-    // --- Radar Chart
-    var chartData = [kBaseRatingList, candidateMatchList];
-
+    // return the widget tree for the matching screen
     return Scaffold(
       appBar: AppBar(
         title: Text('Matching Screen'),
@@ -335,16 +370,18 @@ class _MatchingScreenState extends State<MatchingScreen> {
                         child: Text(
                           '$_userCategoryTxt',
                           style: TextStyle(
-                              color: Colors.green, fontWeight: FontWeight.bold),
+                              color: kSecondGreenColor,
+                              fontWeight: FontWeight.bold),
                         ),
                       )),
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Text(
-                          '$_wantedCategoryTxt',
+                          '$_searchedCategoryTxt',
                           style: TextStyle(
-                              color: Colors.blue, fontWeight: FontWeight.bold),
+                              color: kSecondBlueColor,
+                              fontWeight: FontWeight.bold),
                         ),
                       )),
                     ]),
@@ -357,7 +394,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_reqTrade'),
+                        child: Text('$_userTrade'),
                       )),
                       TableCell(
                           child: Padding(
@@ -374,7 +411,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_reqLocationCode'),
+                        child: Text('$_userLocationCode'),
                       )),
                       TableCell(
                           child: Padding(
@@ -391,7 +428,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_reqTurnover'),
+                        child: Text('$_userTurnover'),
                       )),
                       TableCell(
                           child: Padding(
@@ -408,7 +445,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_reqEmployee'),
+                        child: Text('$_userEmployee'),
                       )),
                       TableCell(
                           child: Padding(
@@ -425,7 +462,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_reqProperty'),
+                        child: Text('$_userProperty'),
                       )),
                       TableCell(
                           child: Padding(
@@ -442,7 +479,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_reqPrice'),
+                        child: Text('$_userSellingPrice'),
                       )),
                       TableCell(
                           child: Padding(
@@ -459,7 +496,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_reqTime'),
+                        child: Text('$_userHandoverTime'),
                       )),
                       TableCell(
                           child: Padding(
@@ -500,11 +537,11 @@ class _MatchingScreenState extends State<MatchingScreen> {
                           _counter = resultList.length - 1;
                           _hitCounter = resultList.length;
                         }
-
-                        candidateMatchList = resultList[_counter];
-                        showCandidateEntries(_counter);
-                        chartData = [kBaseRatingList, candidateMatchList];
-                        setState(() {});
+                        setState(() {
+                          candidateMatchList = resultList[_counter];
+                          showSelectedCandidate(_counter);
+                          chartData = [kBaseRatingList, candidateMatchList];
+                        });
                       },
                     ),
                   ),
@@ -518,12 +555,12 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       onPressed: () {
                         _hitCounter = 0;
                         _counter = 0;
-
-                        candidateMatchList = resultList[_counter];
-                        _hitCounter++;
-                        showCandidateEntries(_counter);
-                        chartData = [kBaseRatingList, candidateMatchList];
-                        setState(() {});
+                        setState(() {
+                          candidateMatchList = resultList[_counter];
+                          _hitCounter++;
+                          showSelectedCandidate(_counter);
+                          chartData = [kBaseRatingList, candidateMatchList];
+                        });
                       },
                     ),
                   ),
@@ -542,11 +579,11 @@ class _MatchingScreenState extends State<MatchingScreen> {
                           _counter = 0;
                           _hitCounter = 1;
                         }
-
-                        candidateMatchList = resultList[_counter];
-                        showCandidateEntries(_counter);
-                        chartData = [kBaseRatingList, candidateMatchList];
-                        setState(() {});
+                        setState(() {
+                          candidateMatchList = resultList[_counter];
+                          showSelectedCandidate(_counter);
+                          chartData = [kBaseRatingList, candidateMatchList];
+                        });
                       },
                     ),
                   ),
@@ -557,7 +594,9 @@ class _MatchingScreenState extends State<MatchingScreen> {
                         title: 'VIDEO ANSEHEN',
                         colour: kMainRedColor,
                         minWidth: 10.0,
-                        onPressed: () {}),
+                        onPressed: () {
+                          Navigator.pushNamed(context, VideoExample.id);
+                        }),
                   ),
                 ],
               ),

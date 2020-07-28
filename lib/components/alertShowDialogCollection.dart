@@ -198,3 +198,27 @@ showDeleteUserAccount(
     },
   );
 }
+
+showNoCandidateFound(BuildContext context) {
+  Widget okButton = FlatButton(
+    color: kMainRedColor,
+    child: Text('OK'),
+    onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+        UserScreen.id, ModalRoute.withName(UserScreen.id)),
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text('ACHTUNG'),
+    content: Text('Es wurde kein geeigneter Kandidat gefunden.'),
+    actions: [
+      okButton,
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
