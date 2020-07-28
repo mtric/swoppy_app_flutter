@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+/// Shows an alert dialog when mandatory fields are not filled
 showInputNotComplete(BuildContext context) {
   Widget okButton = FlatButton(
     color: kMainRedColor,
@@ -29,6 +30,7 @@ showInputNotComplete(BuildContext context) {
   );
 }
 
+/// Shows an alert dialog when data is successfully saved to database
 showDataSaved(BuildContext context) {
   Widget okButton = FlatButton(
     color: kMainRedColor,
@@ -53,6 +55,7 @@ showDataSaved(BuildContext context) {
   );
 }
 
+/// Shows an alert dialog when user wants to delete a video file
 showDelete(BuildContext context, DeleteCallback deleteFile) {
   Widget okButton = FlatButton(
       color: kMainRedColor,
@@ -81,6 +84,7 @@ showDelete(BuildContext context, DeleteCallback deleteFile) {
   );
 }
 
+/// Shows an alert dialog when the user wants to upload a file to the database
 showUpload(BuildContext context, UploadCallback uploadFile) {
   Widget okButton = FlatButton(
       color: kMainRedColor,
@@ -113,6 +117,7 @@ typedef DeleteCallback = void Function(BuildContext context);
 typedef UploadCallback = void Function();
 
 //ToDo Privacey Policy - clarify legally
+/// Shows an alert dialog with legal information
 showPrivacyPolicy(BuildContext context) {
   Widget okButton = FlatButton(
     color: kMainRedColor,
@@ -140,6 +145,7 @@ showPrivacyPolicy(BuildContext context) {
 }
 
 //ToDo terms & conditions - clarify legally
+/// Shows an alert dialog with the terms and conditions
 showTermsAndConditions(BuildContext context) {
   Widget okButton = FlatButton(
     color: kMainRedColor,
@@ -164,6 +170,7 @@ showTermsAndConditions(BuildContext context) {
   );
 }
 
+/// Shows an alert dialog when user wants to delete the account
 showDeleteUserAccount(
     BuildContext context, FirebaseUser user, DocumentReference userDocRef) {
   Widget okButton = FlatButton(
@@ -199,6 +206,7 @@ showDeleteUserAccount(
   );
 }
 
+/// Shows an alert dialog when new match was found
 showNoCandidateFound(BuildContext context) {
   Widget okButton = FlatButton(
     color: kMainRedColor,
