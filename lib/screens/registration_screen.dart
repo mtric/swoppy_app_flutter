@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
@@ -24,7 +25,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('REGISTRIERUNG'),
+        title: Text(AppLocalizations.of(context).translate('registration')),
       ),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
@@ -62,7 +63,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   email = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Geben Sie ihre E-Mail Adresse ein'),
+                    hintText:
+                        AppLocalizations.of(context).translate('enter e-mail')),
                 style: TextStyle(color: Colors.black),
               ),
               SizedBox(
@@ -76,7 +78,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   password = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Geben Sie ihr Passwort ein'),
+                    hintText: AppLocalizations.of(context)
+                        .translate('enter password')),
                 style: TextStyle(color: Colors.black),
               ),
               SizedBox(
@@ -91,7 +94,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
               ),
               RoundedButton(
-                title: 'REGISTRIEREN',
+                title: AppLocalizations.of(context).translate('register'),
                 colour: kMainRedColor,
                 onPressed: () async {
                   setState(() {

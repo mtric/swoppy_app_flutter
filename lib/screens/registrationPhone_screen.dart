@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 class RegistrationPhoneScreen extends StatefulWidget {
   static const String id = 'registrationPhone_screen';
@@ -27,7 +28,7 @@ class _RegistrationPhoneScreenState extends State<RegistrationPhoneScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Verifizierung'),
+        title: Text(AppLocalizations.of(context).translate('verification')),
       ),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
@@ -64,7 +65,8 @@ class _RegistrationPhoneScreenState extends State<RegistrationPhoneScreen> {
                   this.phoneNbr = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Geben Sie ihre Handynummer ein'),
+                    hintText:
+                        AppLocalizations.of(context).translate('enter phone')),
                 style: TextStyle(color: Colors.black),
               ),
               SizedBox(
@@ -76,7 +78,7 @@ class _RegistrationPhoneScreenState extends State<RegistrationPhoneScreen> {
                 ),
               ),
               RoundedButton(
-                title: 'SMS SENDEN',
+                title: AppLocalizations.of(context).translate('send sms'),
                 colour: kMainGreyColor,
                 onPressed: () async {
                   setState(() {

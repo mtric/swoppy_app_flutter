@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'profile_screen';
