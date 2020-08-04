@@ -7,13 +7,13 @@
   "enter e-mail": "Geben Sie ihre E-Mailadresse ein",
   "enter password": "Geben Sie ihr Passwort ein",
   "forgot password": "Passwort vergessen?",
-  "registration": "REGISTRIERUNG",
   "verification": "VERIFIZIERUNG",
   "enter phone": "Geben Sie ihre Handynummer ein",
   "send sms": "SMS senden",
   "delete": "LÖSCHEN",
   "next": "WEITER",
   "Mr.": "Herr",
-  "Mrs.": "Frau"
+  "Mrs.": "Frau",
+  "branch_a": "Land- und Forstwirtschaft, Fischerei"
 
 }

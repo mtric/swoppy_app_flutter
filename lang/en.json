@@ -7,10 +7,14 @@
   "enter e-mail": "Enter your e-mail address",
   "enter password": "Enter your password",
   "forgot password": "Forgot password?",
-  "registration": "REGISTRATION",
   "verification": "VERIFICATION",
   "enter phone": "Enter your phone number",
-  "send sms": "Send SMS"
+  "send sms": "SEND SMS",
+  "delete": "DELETE",
+  "next": "CONTINUE",
+  "Mr.": "Mr.",
+  "Mrs.": "Mrs.",
+  "branch_a": "Agriculture, forestry, fishing"
 
 
 }

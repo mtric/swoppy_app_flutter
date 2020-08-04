@@ -33,7 +33,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _rightButtonTitle = 'WEITER';
   String _leftButtonTitle = 'LÖSCHEN';
 
-  List<String> _titles = <String>['', 'Frau', 'Herr', 'Frau Dr.', 'Herr Dr.'];
+  //List<String> _titles = <String>['', 'Frau', 'Herr', 'Frau Dr.', 'Herr Dr.'];
+  List<String> _titles;
 
   void getCurrentUser() async {
     try {
@@ -51,6 +52,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     getCurrentUser();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _titles = [
+      '',
+      AppLocalizations.of(context).translate('Mr.'),
+      AppLocalizations.of(context).translate('Mrs.')
+    ];
+    super.didChangeDependencies();
   }
 
   // Text controller to retrieve the current value of the TextField.
