@@ -211,8 +211,10 @@ showNoCandidateFound(BuildContext context) {
   Widget okButton = FlatButton(
     color: kMainRedColor,
     child: Text('OK'),
-    onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-        UserScreen.id, ModalRoute.withName(UserScreen.id)),
+//    onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+//        UserScreen.id, ModalRoute.withName(UserScreen.id)),
+    onPressed: () =>
+        Navigator.of(context).popUntil(ModalRoute.withName(UserScreen.id)),
   );
 
   AlertDialog alert = AlertDialog(
