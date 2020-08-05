@@ -333,7 +333,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               'zipCode': _myZipCodeController.text,
                               'city': _myCityController.text,
                               'address': _myAddressController.text,
-                              'category': _userCategory,
                               'abstract': _myAbstractController.text,
                             };
 

@@ -10,6 +10,7 @@ const List<String> kMatchingCriteria = [
 
 const maxCriteriaPoints = 28;
 const kBaseRatingList = [4, 4, 4, 4, 4, 4, 4];
+const kZeroRatingList = [0, 0, 0, 0, 0, 0, 0];
 
 final List<String> kTurnoverList = <String>[
   '',

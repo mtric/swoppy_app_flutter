@@ -37,6 +37,7 @@ dependencies:
   flutter_swiper: ^1.1.6
   flutter_page_indicator:
   auto_size_text: ^2.1.0
+  csv: ^4.0.3
 
 dev_dependencies:
   flutter_test:
@@ -47,6 +48,7 @@ flutter:
 
   assets:
     - images/
+    - assets/res/plz.csv
 
   fonts:
     - family: Open Sans
