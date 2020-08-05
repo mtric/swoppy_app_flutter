@@ -41,7 +41,6 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   String _selectedBranchKey = '';
   String _selectedBranch = '';
 
-  String _locationCode = '';
   String _employee = '';
   String _turnover = '';
   String _property = '';
@@ -109,6 +108,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
           _selectedBranch = '';
         }
 
+        _myLocationCodeController.text = args.locationCode;
         _employee = args.employee;
         _turnover = args.turnover;
         _property = args.property;
@@ -211,33 +211,25 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       Icon(Icons.location_on),
                       SizedBox(width: 15.0),
                       Expanded(
-                        flex: 40,
+                        flex: 70,
                         child: Text(
                           'Standort des Unternehmens',
                         ),
                       ),
                       SizedBox(width: 20.0),
                       Expanded(
-                        flex: 18,
+                        flex: 30,
                         child: TextFormField(
                           controller: _myLocationCodeController,
                           inputFormatters: [
                             DecimalTextInputFormatter(
-                              decimalRange: 2,
+                              decimalRange: 5,
                               activatedNegativeValues: false,
                             ),
-                            LengthLimitingTextInputFormatter(2),
+                            LengthLimitingTextInputFormatter(5),
                           ],
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            suffixText: 'XXX',
-                          ),
                         ),
-                      ),
-                      SizedBox(width: 20.0),
-                      Expanded(
-                        flex: 42,
-                        child: Text('die ersten 2 Ziffern der PLZ'),
                       ),
                     ],
                   ),
@@ -433,9 +425,6 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                           colour: kMainRedColor,
                           minWidth: 100,
                           onPressed: () {
-                            _locationCode =
-                                _myLocationCodeController.text + 'xxx';
-
                             // Check whether all validators of the fields are valid.
                             if (_formKey.currentState.validate() &&
                                 _termsAccepted &&
@@ -449,7 +438,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
 
                                 Map<String, dynamic> updatedData = {
                                   'trade': _selectedBranchKey,
-                                  // 'locationCode': _locationCode,
+                                  'locationCode':
+                                      _myLocationCodeController.text,
                                   'employee': _employee,
                                   'turnover': _turnover,
                                   'property': _property,
@@ -480,7 +470,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                                   'abstract': args.abstract,
                                   'category': args.userCategory,
                                   'trade': _selectedBranchKey,
-                                  'locationCode': _locationCode,
+                                  'locationCode':
+                                      _myLocationCodeController.text,
                                   'employee': _employee,
                                   'turnover': _turnover,
                                   'property': _property,
@@ -493,8 +484,6 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                                     .whenComplete(() => showDataSaved(
                                           (context),
                                         ));
-
-                                //  Navigator.pushNamed(context, DummyScreen.id);
                               }
                             } else {
                               // Form not complete, missing or incorrect entries.

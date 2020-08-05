@@ -206,7 +206,7 @@ showDeleteUserAccount(
   );
 }
 
-/// Shows an alert dialog when new match was found
+/// Shows an alert dialog when no match was found
 showNoCandidateFound(BuildContext context) {
   Widget okButton = FlatButton(
     color: kMainRedColor,

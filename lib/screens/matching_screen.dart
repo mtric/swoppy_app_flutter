@@ -8,8 +8,10 @@ import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/matchingData.dart';
 import 'package:Swoppy/utilities/matchingModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csv/csv.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_radar_chart/flutter_radar_chart.dart';
 
 class MatchingScreen extends StatefulWidget {
@@ -35,13 +37,10 @@ class _MatchingScreenState extends State<MatchingScreen> {
 
   // variables for radar chart (ticks = scaling)
   var ticks = [0, 1, 2, 3, 4];
-  var chartData = [
-    kBaseRatingList,
-    [0, 0, 0, 0, 0, 0, 0]
-  ];
+  var chartData = [kBaseRatingList, kZeroRatingList];
 
   // variables for matching method
-  var candidateMatchList = [0, 0, 0, 0, 0, 0, 0];
+  var candidateMatchList;
   var resultList;
   var categoriesList;
 
@@ -52,9 +51,10 @@ class _MatchingScreenState extends State<MatchingScreen> {
   String _searchedCategory = '';
 
   int _counter = 0;
-  int _hitRate = 0;
   int _hitCounter = 0;
   int _numberOfMatches = 0;
+  int _locationCatPoints = 0;
+  double distance;
 
   // indexes of the results table
   int _indexTrade = 0;
@@ -65,8 +65,8 @@ class _MatchingScreenState extends State<MatchingScreen> {
   int _indexPrice = 5;
   int _indexTime = 6;
 
-  // variables for Table Widget
   String _candidateTradeTxt = '';
+  String _candidateLocationTxt = '';
   String _candidatePropertyTxt = '';
   String _candidateTurnoverTxt = '';
   String _candidateEmployeeTxt = '';
@@ -76,6 +76,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
   // lists and maps used in matching method
   List<int> _matchingResultList;
   List<String> _matchingCategoryList;
+  List<List<dynamic>> zipCodeGeoData;
   Map<String, List> _candidatesMatchingMap = {};
   Map<String, List> _candidatesCategoryMap = {};
 
@@ -99,17 +100,10 @@ class _MatchingScreenState extends State<MatchingScreen> {
       final user = await _auth.currentUser();
       if (user != null) {
         loggedInUser = user;
-        print(loggedInUser.email);
       }
     } catch (e) {
       print(e);
     }
-  }
-
-  /// Method to round a number
-  double roundDouble(double value, int places) {
-    double mod = pow(10.0, places);
-    return ((value * mod).round().toDouble() / mod);
   }
 
   /// Method to check whether an entry is "don't know yet ...")
@@ -147,26 +141,82 @@ class _MatchingScreenState extends State<MatchingScreen> {
     return _catPoints;
   }
 
+  /// Method to calculate the distance between two locations
+  /// - using geolocation
+  Future<int> getDistance(String zipCode1, String zipCode2) async {
+    var lat, lat1, lat2;
+    var lon1, lon2;
+    var dx, dy;
+
+    final myData = await rootBundle.loadString("assets/res/plz.csv");
+    List<List<dynamic>> csvTable = CsvToListConverter().convert(myData);
+    zipCodeGeoData = csvTable;
+
+    zipCodeGeoData.forEach((e) => e.forEach((plz) {
+          if (plz == zipCode1) {
+            lat1 = double.parse(e[3]);
+            lon1 = double.parse(e[2]);
+          } else if (plz == zipCode2) {
+            lat2 = double.parse(e[3]);
+            lon2 = double.parse(e[2]);
+          }
+        }));
+
+    lat = (lat1 + lat2) / (2 * 0.01745);
+    dx = 111.3 * cos(lat) * (lon1 - lon2);
+    dy = 111.3 * (lat1 - lat2);
+    distance = sqrt(dx * dx + dy * dy);
+
+    return distance.toInt();
+  }
+
+  /// Location matching method
+  getLocationMatching(String location1, String location2) async {
+    var distance = await getDistance(location1, location2);
+    _locationCatPoints = getLocationPoints(distance);
+  }
+
+  /// Method to provide the location category points
+  int getLocationPoints(int d) {
+    if (d <= 0) {
+      _locationCatPoints = 4;
+    } else if (d > 20 && d <= 50) {
+      _locationCatPoints = 3;
+    } else if (d > 50 && d <= 100) {
+      _locationCatPoints = 2;
+    } else if (d > 100 && d <= 200) {
+      _locationCatPoints = 1;
+    } else if (d > 200) {
+      _locationCatPoints = 0;
+    }
+    return _locationCatPoints;
+  }
+
   /// Method to check whether the candidate is valid
   bool isValidCandidate() {
-    bool result;
-    int sum = 0;
+    bool _result = false;
+    int _hitRate = 0;
+    int _sum = 0;
 
-    // Are both industries similar?
+    // Check if both industries similar
     if (_matchingResultList.elementAt(_indexTrade) != 0) {
-      _matchingResultList.forEach((e) => sum += e);
-      _hitRate = roundDouble(((sum / maxCriteriaPoints) * 100), 0).toInt();
-      _hitRate >= kMinHitRate ? result = true : result = false;
-    } else {
-      result = false;
+      _matchingResultList.forEach((e) => _sum += e);
+      if (_sum != 0) {
+        _hitRate = ((_sum / maxCriteriaPoints) * 100).toInt();
+        if (_hitRate >= kMinHitRate) {
+          _result = true;
+        }
+      }
     }
-    return result;
+    return _result;
   }
 
   /// Method to get all potential candidates (buyer or seller) from database,
   /// to create the matching list for each candidate and to check whether it
   /// is a valid candidate
   void getCandidatesFromCollection() {
+    bool _skipCheck = false;
+
     _userCategory == 'seller'
         ? _searchedCategory = 'buyer'
         : _searchedCategory = 'seller';
@@ -176,7 +226,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
         .where('category', isEqualTo: _searchedCategory)
         .snapshots()
         .listen(
-          (data) => {
+          (data) async => {
             for (int i = 0; i <= data.documents.length - 1; i++)
               {
                 _matchingResultList = [0, 0, 0, 0, 0, 0, 0],
@@ -206,70 +256,96 @@ class _MatchingScreenState extends State<MatchingScreen> {
                           {
                             // second level match
                             _matchingResultList[_indexTrade] = 2,
-                          },
-                        // no match -> nothing to do because initial value = 0
-                      },
-
-                    _matchingResultList[_indexTurnover] = getMatchingResult(
-                        data.documents[i]['turnover'],
-                        _userTurnover,
-                        kTurnoverList),
-                    _matchingCategoryList[_indexTurnover] =
-                        data.documents[i]['turnover'],
-
-                    _matchingResultList[_indexEmployee] = getMatchingResult(
-                        data.documents[i]['employee'],
-                        _userEmployee,
-                        kEmployeeList),
-                    _matchingCategoryList[_indexEmployee] =
-                        data.documents[i]['employee'],
-
-                    // ToDo remove this != 0 query after test phase
-                    // ToDo-> no more empty entries should be in database
-                    if (_userProperty.length != 0 &&
-                        _candidateProperty.length != 0)
-                      {
-                        if (isNotSpecified(_userProperty, _candidateProperty) ==
-                            true)
-                          {
-                            _matchingResultList[_indexProperty] = 2,
                           }
-                        else if (_candidateProperty == _userProperty)
+                        else
                           {
-                            _matchingResultList[_indexProperty] = 4,
-                          }
-                        else if (_candidateProperty
-                                .substring(0, 2)
-                                .toUpperCase() ==
-                            _userProperty.substring(0, 2).toUpperCase())
-                          {
-                            _matchingResultList[_indexProperty] = 3,
+                            // no valid candidate
+                            _skipCheck = true,
                           },
                       },
-
-                    _matchingResultList[_indexPrice] = getMatchingResult(
-                        data.documents[i]['sellingPrice'],
-                        _userSellingPrice,
-                        kSellingPriceList),
-                    _matchingCategoryList[_indexPrice] =
-                        data.documents[i]['sellingPrice'],
-
-                    _matchingResultList[_indexTime] = getMatchingResult(
-                        data.documents[i]['handoverTime'],
-                        _userHandoverTime,
-                        kHandoverTimeList),
-                    _matchingCategoryList[_indexTime] =
-                        data.documents[i]['handoverTime'],
-
-                    if (isValidCandidate() == true)
+                    if (!_skipCheck)
                       {
-                        // save data from potential candidates for later use
-                        // in two separate maps (key = email, value = list)
-                        _candidatesMatchingMap[_candidateEmail] =
-                            _matchingResultList,
-                        _candidatesCategoryMap[_candidateEmail] =
-                            _matchingCategoryList,
+                        if (!data.documents[i]['locationCode'].contains('x') &&
+                            !_userLocationCode.contains('x') &&
+                            data.documents[i]['locationCode'] != '' &&
+                            _userLocationCode != '')
+                          {
+                            await getLocationMatching(
+                                data.documents[i]['locationCode'],
+                                _userLocationCode),
+                            _matchingResultList[_indexLocation] =
+                                _locationCatPoints,
+                          }
+                        else
+                          {
+                            _matchingResultList[_indexLocation] = 0,
+                          },
+                        _matchingCategoryList[_indexLocation] =
+                            data.documents[i]['locationCode'],
+
+                        _matchingResultList[_indexTurnover] = getMatchingResult(
+                            data.documents[i]['turnover'],
+                            _userTurnover,
+                            kTurnoverList),
+                        _matchingCategoryList[_indexTurnover] =
+                            data.documents[i]['turnover'],
+
+                        _matchingResultList[_indexEmployee] = getMatchingResult(
+                            data.documents[i]['employee'],
+                            _userEmployee,
+                            kEmployeeList),
+                        _matchingCategoryList[_indexEmployee] =
+                            data.documents[i]['employee'],
+
+                        // ToDo remove this != 0 query after test phase
+                        // ToDo-> no more empty entries should be in database
+                        if (_userProperty.length != 0 &&
+                            _candidateProperty.length != 0)
+                          {
+                            if (isNotSpecified(
+                                    _userProperty, _candidateProperty) ==
+                                true)
+                              {
+                                _matchingResultList[_indexProperty] = 2,
+                              }
+                            else if (_candidateProperty == _userProperty)
+                              {
+                                _matchingResultList[_indexProperty] = 4,
+                              }
+                            else if (_candidateProperty
+                                    .substring(0, 2)
+                                    .toUpperCase() ==
+                                _userProperty.substring(0, 2).toUpperCase())
+                              {
+                                _matchingResultList[_indexProperty] = 3,
+                              },
+                          },
+
+                        _matchingResultList[_indexPrice] = getMatchingResult(
+                            data.documents[i]['sellingPrice'],
+                            _userSellingPrice,
+                            kSellingPriceList),
+                        _matchingCategoryList[_indexPrice] =
+                            data.documents[i]['sellingPrice'],
+
+                        _matchingResultList[_indexTime] = getMatchingResult(
+                            data.documents[i]['handoverTime'],
+                            _userHandoverTime,
+                            kHandoverTimeList),
+                        _matchingCategoryList[_indexTime] =
+                            data.documents[i]['handoverTime'],
+
+                        if (isValidCandidate() == true)
+                          {
+                            // save data from potential candidates for later use
+                            // in two separate maps (key = email, value = list)
+                            _candidatesMatchingMap[_candidateEmail] =
+                                _matchingResultList,
+                            _candidatesCategoryMap[_candidateEmail] =
+                                _matchingCategoryList,
+                          },
                       },
+                    _skipCheck = false,
                   },
               },
             _numberOfMatches = _candidatesMatchingMap.length,
@@ -292,6 +368,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
   /// Method to show selected candidate entry
   void showSelectedCandidate(int id) {
     _candidateTradeTxt = categoriesList[id].elementAt(_indexTrade);
+    _candidateLocationTxt = categoriesList[id].elementAt(_indexLocation);
     _candidateEmployeeTxt = categoriesList[id].elementAt(_indexEmployee);
     _candidateTurnoverTxt = categoriesList[id].elementAt(_indexTurnover);
     _candidatePriceTxt = categoriesList[id].elementAt(_indexPrice);
@@ -394,7 +471,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_userTrade'),
+                        child: Text('${matchingModel.trade}'),
                       )),
                       TableCell(
                           child: Padding(
@@ -411,12 +488,12 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_userLocationCode'),
+                        child: Text('${matchingModel.locationCode}'),
                       )),
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text(''),
+                        child: Text('$_candidateLocationTxt'),
                       )),
                     ]),
                     TableRow(children: [
@@ -428,7 +505,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_userTurnover'),
+                        child: Text('${matchingModel.turnover}'),
                       )),
                       TableCell(
                           child: Padding(
@@ -445,7 +522,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_userEmployee'),
+                        child: Text('${matchingModel.employee}'),
                       )),
                       TableCell(
                           child: Padding(
@@ -462,7 +539,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_userProperty'),
+                        child: Text('${matchingModel.property}'),
                       )),
                       TableCell(
                           child: Padding(
@@ -479,7 +556,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_userSellingPrice'),
+                        child: Text('${matchingModel.sellingPrice}'),
                       )),
                       TableCell(
                           child: Padding(
@@ -496,7 +573,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       TableCell(
                           child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text('$_userHandoverTime'),
+                        child: Text('${matchingModel.handoverTime}'),
                       )),
                       TableCell(
                           child: Padding(
@@ -553,11 +630,10 @@ class _MatchingScreenState extends State<MatchingScreen> {
                       colour: kMainRedColor,
                       minWidth: 5.0,
                       onPressed: () {
-                        _hitCounter = 0;
+                        _hitCounter = 1;
                         _counter = 0;
                         setState(() {
                           candidateMatchList = resultList[_counter];
-                          _hitCounter++;
                           showSelectedCandidate(_counter);
                           chartData = [kBaseRatingList, candidateMatchList];
                         });
