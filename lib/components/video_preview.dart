@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:Swoppy/components/video_controls.dart';
 import 'package:video_player/video_player.dart';
+import 'package:Swoppy/utilities/constants.dart';
 
 class VideoPreview extends StatefulWidget {
-  const VideoPreview({this.videoPath});
+  const VideoPreview({this.videoPath, this.isAsset = false});
   final String videoPath;
+  final bool isAsset;
 
   @override
   _VideoPreviewState createState() => _VideoPreviewState();
@@ -25,12 +27,22 @@ class _VideoPreviewState extends State<VideoPreview>
       vsync: this,
       duration: Duration(milliseconds: 300),
     );
-    _controller = VideoPlayerController.file(File(widget.videoPath))
-      ..initialize().then(
-        (_) {
-          setState(() {});
-        },
-      );
+    if (widget.isAsset) {
+      _controller = VideoPlayerController.asset(widget.videoPath)
+        ..setVolume(1.0)
+        ..initialize().then(
+          (_) {
+            setState(() {});
+          },
+        );
+    } else {
+      _controller = VideoPlayerController.file(File(widget.videoPath))
+        ..initialize().then(
+          (_) {
+            setState(() {});
+          },
+        );
+    }
   }
 
   /// Dispose widget and controllers
@@ -70,6 +82,17 @@ class _VideoPreviewState extends State<VideoPreview>
             ),
           ),
         ],
+      );
+    } else if (!_controller.value.initialized && widget.isAsset) {
+      return Center(
+        child: SizedBox(
+          width: 32,
+          height: 32,
+          child: CircularProgressIndicator(
+            backgroundColor: kMainGreyColor,
+            valueColor: AlwaysStoppedAnimation<Color>(kMainRedColor),
+          ),
+        ),
       );
     } else {
       return Container();

@@ -22,7 +22,9 @@ class _VideoControlsState extends State<VideoControls>
       duration: Duration(milliseconds: 300),
     );
     widget.videoController.addListener(_videoListener);
-    widget.videoController.setLooping(true);
+
+    // Replays the video automatically when finished
+    // widget.videoController.setLooping(true);
     super.initState();
   }
 

@@ -239,6 +239,7 @@ class CameraScreenState extends State<CameraScreen>
   }
 
   /// Method returns the most recently added file from a directory as a thumbnail
+  // ignore: missing_return
   Future<FileSystemEntity> getLastImage() async {
     final Directory extDir = await getApplicationDocumentsDirectory();
     final String dirPath = '${extDir.path}/media';
