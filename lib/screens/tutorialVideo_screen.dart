@@ -26,6 +26,32 @@ class _TutorialVideoScreenState extends State<TutorialVideoScreen> {
     };
   }
 
+  @override
+  void dispose() {
+    playerController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+      ),
+      body: PageView.builder(
+        itemCount: 1,
+        itemBuilder: (context, index) {
+          return VideoPreview(
+            videoPath: videoPath,
+            isAsset: true,
+          );
+        },
+      ),
+    );
+  }
+}
+
 //  void createVideo() {
 //    if (playerController == null) {
 //      playerController = VideoPlayerController.network(videoURL)
@@ -42,12 +68,6 @@ class _TutorialVideoScreenState extends State<TutorialVideoScreen> {
 //      }
 //    }
 //  }
-
-  @override
-  void dispose() {
-    playerController?.dispose();
-    super.dispose();
-  }
 
 //  @override
 //  Widget build(BuildContext context) {
@@ -74,23 +94,3 @@ class _TutorialVideoScreenState extends State<TutorialVideoScreen> {
 //      ),
 //    );
 //  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-      ),
-      body: PageView.builder(
-        itemCount: 1,
-        itemBuilder: (context, index) {
-          return VideoPreview(
-            videoPath: videoPath,
-            isAsset: true,
-          );
-        },
-      ),
-    );
-  }
-}
