@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/screens/tutorialVideo_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/matchingData.dart';
@@ -13,6 +12,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_radar_chart/flutter_radar_chart.dart';
+
+import 'matchingRequest_screen.dart';
 
 class MatchingScreen extends StatefulWidget {
   static const String id = 'matchingTest_screen';
@@ -42,7 +43,8 @@ class _MatchingScreenState extends State<MatchingScreen> {
   // variables for matching method
   var candidateMatchList;
   var resultList;
-  var categoriesList;
+  var categoryList;
+  var contactList;
 
   // variables for different uses
   String _candidateTrade = '';
@@ -54,7 +56,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
   int _hitCounter = 0;
   int _numberOfMatches = 0;
   int _locationCatPoints = 0;
-  double distance;
+  int distance;
 
   // indexes of the results table
   int _indexTrade = 0;
@@ -72,6 +74,8 @@ class _MatchingScreenState extends State<MatchingScreen> {
   String _candidateEmployeeTxt = '';
   String _candidatePriceTxt = '';
   String _candidateTimeTxt = '';
+
+  String candidateAbstractTxt;
 
   // lists and maps used in matching method
   List<int> _matchingResultList;
@@ -143,53 +147,55 @@ class _MatchingScreenState extends State<MatchingScreen> {
 
   /// Method to calculate the distance between two locations
   /// - using geolocation
-  Future<int> getDistance(String zipCode1, String zipCode2) async {
+  getLocationMatching(String zipCode1, String zipCode2) async {
+    bool zipCode1valid = false;
+    bool zipCode2valid = false;
     var lat, lat1, lat2;
     var lon1, lon2;
     var dx, dy;
 
-    final myData = await rootBundle.loadString("assets/res/plz.csv");
-    List<List<dynamic>> csvTable = CsvToListConverter().convert(myData);
-    zipCodeGeoData = csvTable;
+    try {
+      final myData = await rootBundle.loadString("assets/res/plz.csv");
+      List<List<dynamic>> csvTable = CsvToListConverter().convert(myData);
+      zipCodeGeoData = csvTable;
+    } catch (e) {
+      print('Reading \"plz.csv\" file caught error: $e');
+    }
 
     zipCodeGeoData.forEach((e) => e.forEach((plz) {
-          if (plz == zipCode1) {
-            lat1 = double.parse(e[3]);
-            lon1 = double.parse(e[2]);
-          } else if (plz == zipCode2) {
-            lat2 = double.parse(e[3]);
-            lon2 = double.parse(e[2]);
+          if (zipCode1 == plz) {
+            lat1 = num.tryParse(e[3])?.toDouble();
+            lon1 = num.tryParse(e[2])?.toDouble();
+            zipCode1valid = true;
+          }
+          if (zipCode2 == plz) {
+            lat2 = num.tryParse(e[3])?.toDouble();
+            lon2 = num.tryParse(e[2])?.toDouble();
+            zipCode2valid = true;
           }
         }));
 
-    lat = (lat1 + lat2) / (2 * 0.01745);
-    dx = 111.3 * cos(lat) * (lon1 - lon2);
-    dy = 111.3 * (lat1 - lat2);
-    distance = sqrt(dx * dx + dy * dy);
+    if (zipCode1valid && zipCode2valid) {
+      lat = (lat1 + lat2) / (2 * 0.01745);
+      dx = 111.3 * cos(lat) * (lon1 - lon2);
+      dy = 111.3 * (lat1 - lat2);
+      distance = (sqrt(dx * dx + dy * dy)).toInt();
 
-    return distance.toInt();
-  }
-
-  /// Location matching method
-  getLocationMatching(String location1, String location2) async {
-    var distance = await getDistance(location1, location2);
-    _locationCatPoints = getLocationPoints(distance);
-  }
-
-  /// Method to provide the location category points
-  int getLocationPoints(int d) {
-    if (d <= 0) {
-      _locationCatPoints = 4;
-    } else if (d > 20 && d <= 50) {
-      _locationCatPoints = 3;
-    } else if (d > 50 && d <= 100) {
-      _locationCatPoints = 2;
-    } else if (d > 100 && d <= 200) {
-      _locationCatPoints = 1;
-    } else if (d > 200) {
+      if (distance <= 0) {
+        _locationCatPoints = 4;
+      } else if (distance > 20 && distance <= 50) {
+        _locationCatPoints = 3;
+      } else if (distance > 50 && distance <= 100) {
+        _locationCatPoints = 2;
+      } else if (distance > 100 && distance <= 200) {
+        _locationCatPoints = 1;
+      } else if (distance > 200) {
+        _locationCatPoints = 0;
+      }
+    } else {
+      // at least one zipCode is invalid
       _locationCatPoints = 0;
     }
-    return _locationCatPoints;
   }
 
   /// Method to check whether the candidate is valid
@@ -350,7 +356,8 @@ class _MatchingScreenState extends State<MatchingScreen> {
               },
             _numberOfMatches = _candidatesMatchingMap.length,
             resultList = _candidatesMatchingMap.values.toList(),
-            categoriesList = _candidatesCategoryMap.values.toList(),
+            categoryList = _candidatesCategoryMap.values.toList(),
+            contactList = _candidatesMatchingMap.keys.toList(),
 
             // check whether a candidate has been found
             !resultList.isEmpty
@@ -367,13 +374,31 @@ class _MatchingScreenState extends State<MatchingScreen> {
 
   /// Method to show selected candidate entry
   void showSelectedCandidate(int id) {
-    _candidateTradeTxt = categoriesList[id].elementAt(_indexTrade);
-    _candidateLocationTxt = categoriesList[id].elementAt(_indexLocation);
-    _candidateEmployeeTxt = categoriesList[id].elementAt(_indexEmployee);
-    _candidateTurnoverTxt = categoriesList[id].elementAt(_indexTurnover);
-    _candidatePriceTxt = categoriesList[id].elementAt(_indexPrice);
-    _candidatePropertyTxt = categoriesList[id].elementAt(_indexProperty);
-    _candidateTimeTxt = categoriesList[id].elementAt(_indexTime);
+    _candidateTradeTxt = categoryList[id].elementAt(_indexTrade);
+    _candidateLocationTxt = categoryList[id].elementAt(_indexLocation);
+    _candidateEmployeeTxt = categoryList[id].elementAt(_indexEmployee);
+    _candidateTurnoverTxt = categoryList[id].elementAt(_indexTurnover);
+    _candidatePriceTxt = categoryList[id].elementAt(_indexPrice);
+    _candidatePropertyTxt = categoryList[id].elementAt(_indexProperty);
+    _candidateTimeTxt = categoryList[id].elementAt(_indexTime);
+  }
+
+  /// Method to read the candidate abstract from database
+  _getAbstractFromDataBase(String candidate) {
+    var documentReference =
+        _firestore.collection(kCollection).document(candidate);
+
+    try {
+      documentReference.get().then((datasnapshot) {
+        candidateAbstractTxt = datasnapshot.data['abstract'];
+      });
+    } catch (e) {
+      print('_getAbstractFromDataBase caught error: $e');
+    }
+  }
+
+  String getCandidateAbstract() {
+    return candidateAbstractTxt;
   }
 
   /// Method to build the widget tree
@@ -667,12 +692,26 @@ class _MatchingScreenState extends State<MatchingScreen> {
                   Expanded(
                     flex: 3,
                     child: RoundedButton(
-                        title: 'VIDEO ANSEHEN',
-                        colour: kMainRedColor,
-                        minWidth: 10.0,
-                        onPressed: () {
-                          Navigator.pushNamed(context, TutorialVideoScreen.id);
-                        }),
+                      title: 'DETAILS',
+                      colour: kMainRedColor,
+                      minWidth: 10.0,
+                      onPressed: () {
+                        _getAbstractFromDataBase(contactList[_counter]);
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          setState(() {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MatchingRequestScreen(
+                                  abstract: getCandidateAbstract(),
+                                  eMail: '${contactList[_counter]}',
+                                ),
+                              ),
+                            );
+                          });
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
