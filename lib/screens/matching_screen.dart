@@ -704,7 +704,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                               MaterialPageRoute(
                                 builder: (context) => MatchingRequestScreen(
                                   abstract: getCandidateAbstract(),
-                                  eMail: '${contactList[_counter]}',
+                                  candidateEMail: '${contactList[_counter]}',
                                 ),
                               ),
                             );
