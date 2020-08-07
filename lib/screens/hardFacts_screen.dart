@@ -109,17 +109,36 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
         }
 
         _myLocationCodeController.text = args.locationCode;
-        _employee = args.employee;
-        _turnover = args.turnover;
-        _property = args.property;
-        _sellingPrice = args.sellingPrice;
-        _handoverTime = args.handoverTime;
+        _employee = (args.userCategory == 'seller' &&
+                args.employee == kAdditionalOption)
+            ? ''
+            : args.employee;
+        _turnover = (args.userCategory == 'seller' &&
+                args.turnover == kAdditionalOption)
+            ? ''
+            : args.turnover;
+        _property = (args.userCategory == 'seller' &&
+                args.property == kAdditionalOption)
+            ? ''
+            : args.property;
+        _sellingPrice = (args.userCategory == 'seller' &&
+                args.sellingPrice == kAdditionalOption)
+            ? ''
+            : args.sellingPrice;
+        _handoverTime = (args.userCategory == 'seller' &&
+                args.handoverTime == kAdditionalOption)
+            ? ''
+            : args.handoverTime;
       }
     }
 
     // Add additional option for buyers
     if (args.userCategory == 'buyer' &&
-        !kEmployeeList.contains(kAdditionalOption)) {
+        (!kEmployeeList.contains(kAdditionalOption) ||
+            !kTurnoverList.contains(kAdditionalOption) ||
+            !kPropertyList.contains(kAdditionalOption) ||
+            !kSellingPriceList.contains(kAdditionalOption) ||
+            !kHandoverTimeList.contains(kAdditionalOption))) {
       kEmployeeList.add(kAdditionalOption);
       kTurnoverList.add(kAdditionalOption);
       kPropertyList.add(kAdditionalOption);
@@ -128,7 +147,11 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
     }
 
     if (args.userCategory == 'seller' &&
-        kEmployeeList.contains(kAdditionalOption)) {
+        (kEmployeeList.contains(kAdditionalOption) ||
+            kTurnoverList.contains(kAdditionalOption) ||
+            kPropertyList.contains(kAdditionalOption) ||
+            kSellingPriceList.contains(kAdditionalOption) ||
+            kHandoverTimeList.contains(kAdditionalOption))) {
       kEmployeeList.remove(kAdditionalOption);
       kTurnoverList.remove(kAdditionalOption);
       kPropertyList.remove(kAdditionalOption);

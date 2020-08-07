@@ -36,7 +36,6 @@ Future<void> main() async {
           UserScreen.id: (context) => UserScreen(),
           MatchingScreen.id: (context) => MatchingScreen(),
           TutorialScreen.id: (context) => TutorialScreen(),
-//          TutorialVideoScreen.id: (context) => TutorialVideoScreen(),
           ResetPasswordScreen.id: (context) => ResetPasswordScreen(),
           RegistrationPhoneScreen.id: (context) => RegistrationPhoneScreen(),
           VerificationPhoneScreen.id: (context) => VerificationPhoneScreen(),

@@ -233,7 +233,7 @@ showNoCandidateFound(BuildContext context) {
   );
 }
 
-/// Shows an alert dialog when no match was found
+/// Shows an alert dialog when no video was found
 showNoVideoFound(BuildContext context) {
   Widget okButton = FlatButton(
     color: kMainRedColor,

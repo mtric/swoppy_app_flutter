@@ -247,14 +247,14 @@ class _UserScreenState extends State<UserScreen> {
                   },
                 ),
                 RoundedButton(
-                  title: 'Tutorial',
+                  title: 'TUTORIAL',
                   colour: kSecondGreenColor,
                   onPressed: () {
                     Navigator.pushNamed(context, TutorialScreen.id);
                   },
                 ),
                 RoundedButton(
-                  title: 'Tutorial Video',
+                  title: 'TUTORIAL VIDEO',
                   colour: kSecondBlueColor,
                   onPressed: () {
                     Navigator.push(
