@@ -162,7 +162,7 @@ class _UserScreenState extends State<UserScreen> {
                     }
                     break;
                   case settings.video:
-                    //ToDo call edit video (change/delete)
+                    showDeleteUserVideo(context, loggedInUser);
                     break;
                   case settings.delete:
                     showDeleteUserAccount(
@@ -183,7 +183,10 @@ class _UserScreenState extends State<UserScreen> {
               ),
               const PopupMenuItem<settings>(
                 value: settings.video,
-                child: Text('Image-Video'),
+                child: Text(
+                  'Image-Video löschen',
+                  style: TextStyle(color: kMainRedColor),
+                ),
               ),
               const PopupMenuItem<settings>(
                 value: settings.delete,

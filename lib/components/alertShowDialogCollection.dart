@@ -3,6 +3,8 @@ import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 
 /// Shows an alert dialog when mandatory fields are not filled
@@ -245,6 +247,55 @@ showNoVideoFound(BuildContext context) {
     title: Text('ACHTUNG'),
     content: Text('Es ist kein Image-Video vorhanden.'),
     actions: [
+      okButton,
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
+void deleteVideo(FirebaseUser user) async {
+  try {
+    StorageReference ref = FirebaseStorage.instance
+        .ref()
+        .child('${user.email}/${user.email}_profileVideo.mp4');
+    ref.delete().then((_) => {
+          print('Successfully deleted storage item'),
+          Fluttertoast.showToast(
+              msg: "Video erfolgreich gelöscht!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0)
+        });
+  } catch (e) {}
+}
+
+/// Shows an alert dialog when user wants to delete the image video
+showDeleteUserVideo(BuildContext context, FirebaseUser user) {
+  Widget okButton = FlatButton(
+      color: kMainRedColor,
+      child: Text('LÖSCHEN'),
+      onPressed: () => {deleteVideo(user), Navigator.pop(context)});
+
+  Widget cancelButton = FlatButton(
+      color: kMainGreyColor,
+      child: Text('ABBRECHEN'),
+      onPressed: () => Navigator.pop(context));
+
+  AlertDialog alert = AlertDialog(
+    title: Text('Image-Video löschen'),
+    content: Text(
+        'ACHTUNG !!\n\nIhre Daten gehen unwiderruflich verloren. Wollen Sie ihr Video wirklich löschen?'),
+    actions: [
+      cancelButton,
       okButton,
     ],
   );

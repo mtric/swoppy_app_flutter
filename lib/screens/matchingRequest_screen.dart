@@ -1,5 +1,6 @@
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/screens/chat_screen.dart';
 import 'package:Swoppy/screens/video_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -85,7 +86,7 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
                 title: 'KONTAKTANFRAGE SENDEN',
                 colour: kMainRedColor,
                 onPressed: () {
-                  // ToDo call chat function and sent request
+                  Navigator.pushNamed(context, ChatScreen.id);
                 },
               ),
               RoundedButton(

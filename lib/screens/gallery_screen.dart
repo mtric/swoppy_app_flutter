@@ -127,7 +127,6 @@ class _GalleryState extends State<Gallery> {
               IconButton(
                 icon: Icon(
                   Icons.check_circle_outline,
-                  color: kMainRedColor,
                   size: 33.0,
                 ),
                 onPressed: () => showUpload(context, _uploadFile),
