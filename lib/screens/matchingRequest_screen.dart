@@ -1,4 +1,6 @@
+import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/screens/video_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,13 +18,17 @@ class MatchingRequestScreen extends StatefulWidget {
 }
 
 class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
-  String videoURL;
+  String videoURL = '';
+  bool videoExists = true;
   getVideoUrl() async {
-    StorageReference ref = FirebaseStorage.instance
-        .ref()
-        .child('${'volker@online.de'}/${'volker@online.de'}_profileVideo.mp4');
-    String url = (await ref.getDownloadURL()).toString();
-    videoURL = url;
+    try {
+      StorageReference ref = FirebaseStorage.instance.ref().child(
+          '${widget.candidateEMail}/${widget.candidateEMail}_profileVideo.mp4');
+      String url = (await ref.getDownloadURL()).toString();
+      videoURL = url;
+    } catch (e) {
+      videoExists = false;
+    }
   }
 
   @override
@@ -56,10 +62,22 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
                 title: 'IMAGE-VIDEO ANSEHEN',
                 colour: kMainRedColor,
                 onPressed: () {
-                  // ToDo load and play image-video from firestore
                   getVideoUrl();
-                  Future.delayed(const Duration(milliseconds: 500), () {
-                    print('URL = $videoURL');
+                  Future.delayed(const Duration(milliseconds: 1000), () {
+                    if (videoExists) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VideoScreen(
+                            videoPath: videoURL,
+                            isAsset: false,
+                            isNetwork: true,
+                          ),
+                        ),
+                      );
+                    } else {
+                      showNoVideoFound(context);
+                    }
                   });
                 },
               ),

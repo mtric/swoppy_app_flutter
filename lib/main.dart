@@ -8,7 +8,6 @@ import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/screens/registrationPhone_screen.dart';
 import 'package:Swoppy/screens/registration_screen.dart';
 import 'package:Swoppy/screens/resetPassword_screen.dart';
-import 'package:Swoppy/screens/tutorialVideo_screen.dart';
 import 'package:Swoppy/screens/tutorial_screen.dart';
 import 'package:Swoppy/screens/user_screen.dart';
 import 'package:Swoppy/screens/verificationPhone_screen.dart';
@@ -37,7 +36,7 @@ Future<void> main() async {
           UserScreen.id: (context) => UserScreen(),
           MatchingScreen.id: (context) => MatchingScreen(),
           TutorialScreen.id: (context) => TutorialScreen(),
-          TutorialVideoScreen.id: (context) => TutorialVideoScreen(),
+//          TutorialVideoScreen.id: (context) => TutorialVideoScreen(),
           ResetPasswordScreen.id: (context) => ResetPasswordScreen(),
           RegistrationPhoneScreen.id: (context) => RegistrationPhoneScreen(),
           VerificationPhoneScreen.id: (context) => VerificationPhoneScreen(),
