@@ -12,7 +12,7 @@ const maxCriteriaPoints = 28;
 const kBaseRatingList = [4, 4, 4, 4, 4, 4, 4];
 const kZeroRatingList = [0, 0, 0, 0, 0, 0, 0];
 
-final List<String> kTurnoverList = <String>[
+List<String> kTurnoverList = <String>[
   '',
   'bis 100.000 €',
   'bis 250.000 €',
@@ -23,7 +23,7 @@ final List<String> kTurnoverList = <String>[
   'mehr als 5 Mio. €'
 ];
 
-final List<String> kEmployeeList = <String>[
+List<String> kEmployeeList = <String>[
   '',
   'keine Mitarbeiter',
   'bis 5 Mitarbeiter',
@@ -34,14 +34,14 @@ final List<String> kEmployeeList = <String>[
   'mehr als 100 Mitarbeiter'
 ];
 
-final List<String> kPropertyList = <String>[
+List<String> kPropertyList = <String>[
   '',
   'ja, im Betriebsvermögen',
   'ja, im Privatbesitz',
   'Nein',
 ];
 
-final List<String> kSellingPriceList = <String>[
+List<String> kSellingPriceList = <String>[
   '',
   'bis 100.000 €',
   'bis 250.000 €',
@@ -52,7 +52,7 @@ final List<String> kSellingPriceList = <String>[
   'mehr als 5 Mio. €'
 ];
 
-final List<String> kHandoverTimeList = <String>[
+List<String> kHandoverTimeList = <String>[
   '',
   'schnellstmöglich',
   'bis 6 Monate',

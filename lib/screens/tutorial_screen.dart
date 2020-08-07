@@ -1,6 +1,6 @@
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/components/slides.dart';
-import 'package:Swoppy/screens/tutorialVideo_screen.dart';
+import 'package:Swoppy/screens/video_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,8 +38,16 @@ class _TutorialScreenState extends State<TutorialScreen> {
                           title: 'Hier zum Video',
                           colour: kSecondBlueColor,
                           onPressed: () {
-                            Navigator.pushNamed(
-                                context, TutorialVideoScreen.id);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VideoScreen(
+                                  videoPath: ktutorialVideoPath,
+                                  isAsset: true,
+                                  isNetwork: false,
+                                ),
+                              ),
+                            );
                           },
                         ),
                       )

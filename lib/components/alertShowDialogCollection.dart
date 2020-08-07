@@ -232,3 +232,27 @@ showNoCandidateFound(BuildContext context) {
     },
   );
 }
+
+/// Shows an alert dialog when no video was found
+showNoVideoFound(BuildContext context) {
+  Widget okButton = FlatButton(
+    color: kMainRedColor,
+    child: Text('OK'),
+    onPressed: () => Navigator.pop(context),
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text('ACHTUNG'),
+    content: Text('Es ist kein Image-Video vorhanden.'),
+    actions: [
+      okButton,
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}

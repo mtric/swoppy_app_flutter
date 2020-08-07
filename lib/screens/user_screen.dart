@@ -4,8 +4,8 @@ import 'package:Swoppy/screens/camera_screen.dart';
 import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/screens/matching_screen.dart';
 import 'package:Swoppy/screens/profile_screen.dart';
-import 'package:Swoppy/screens/tutorialVideo_screen.dart';
 import 'package:Swoppy/screens/tutorial_screen.dart';
+import 'package:Swoppy/screens/video_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/matchingModel.dart';
@@ -247,17 +247,26 @@ class _UserScreenState extends State<UserScreen> {
                   },
                 ),
                 RoundedButton(
-                  title: 'Tutorial',
+                  title: 'TUTORIAL',
                   colour: kSecondGreenColor,
                   onPressed: () {
                     Navigator.pushNamed(context, TutorialScreen.id);
                   },
                 ),
                 RoundedButton(
-                  title: 'Tutorial Video',
+                  title: 'TUTORIAL VIDEO',
                   colour: kSecondBlueColor,
                   onPressed: () {
-                    Navigator.pushNamed(context, TutorialVideoScreen.id);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VideoScreen(
+                          videoPath: ktutorialVideoPath,
+                          isAsset: true,
+                          isNetwork: false,
+                        ),
+                      ),
+                    );
                   },
                 ),
               ],
