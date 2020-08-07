@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:Swoppy/screens/camera_screen.dart';
+import 'package:Swoppy/screens/chat_screen.dart';
 import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/screens/login_screen.dart';
 import 'package:Swoppy/screens/matching_screen.dart';
@@ -39,6 +40,7 @@ Future<void> main() async {
           ResetPasswordScreen.id: (context) => ResetPasswordScreen(),
           RegistrationPhoneScreen.id: (context) => RegistrationPhoneScreen(),
           VerificationPhoneScreen.id: (context) => VerificationPhoneScreen(),
+          ChatScreen.id: (context) => ChatScreen(),
         },
       ),
     );

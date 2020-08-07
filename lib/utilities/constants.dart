@@ -89,7 +89,7 @@ const kTutorialTitleTextStyle = TextStyle(
 
 const kMessageTextFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-  hintText: 'Type your message here...',
+  hintText: 'Hier ihre Nachricht eingeben...',
   border: InputBorder.none,
 );
 
