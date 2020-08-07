@@ -384,13 +384,13 @@ class _MatchingScreenState extends State<MatchingScreen> {
   }
 
   /// Method to read the candidate abstract from database
-  _getAbstractFromDataBase(String candidate) {
+  _getAbstractFromDataBase(String candidate) async {
     var documentReference =
         _firestore.collection(kCollection).document(candidate);
 
     try {
-      documentReference.get().then((datasnapshot) {
-        candidateAbstractTxt = datasnapshot.data['abstract'];
+      documentReference.get().then((datasnapshot) async {
+        candidateAbstractTxt = await datasnapshot.data['abstract'];
       });
     } catch (e) {
       print('_getAbstractFromDataBase caught error: $e');

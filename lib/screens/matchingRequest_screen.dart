@@ -4,15 +4,19 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class MatchingRequestScreen extends StatelessWidget {
+class MatchingRequestScreen extends StatefulWidget {
   MatchingRequestScreen(
       {@required this.abstract, @required this.candidateEMail});
 
   final String abstract;
   final String candidateEMail;
 
-  String videoURL;
+  @override
+  _MatchingRequestScreenState createState() => _MatchingRequestScreenState();
+}
 
+class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
+  String videoURL;
   getVideoUrl() async {
     StorageReference ref = FirebaseStorage.instance
         .ref()
@@ -42,7 +46,7 @@ class MatchingRequestScreen extends StatelessWidget {
                 maxLines: 5,
                 maxLength: 120,
                 enabled: false,
-                initialValue: abstract,
+                initialValue: widget.abstract,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),
