@@ -1,11 +1,12 @@
+import 'package:Swoppy/screens/login_screen.dart';
 import 'package:Swoppy/screens/user_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 /// Shows an alert dialog when mandatory fields are not filled
 showInputNotComplete(BuildContext context) {
@@ -246,6 +247,56 @@ showNoVideoFound(BuildContext context) {
   AlertDialog alert = AlertDialog(
     title: Text('ACHTUNG'),
     content: Text('Es ist kein Image-Video vorhanden.'),
+    actions: [
+      okButton,
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
+/// Shows an alert dialog when eMail is not verified
+showRegistrationHint(BuildContext context) {
+  Widget okButton = FlatButton(
+    color: kMainRedColor,
+    child: Text('OK'),
+    onPressed: () => Navigator.pushNamed(context, LoginScreen.id),
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text('HINWEIS'),
+    content: Text(
+        'Sie erhalten in Kürze per eMail einen Link zum Abschluss der Registrierung. Eine Anmeldung ist erst nach Bestätigung der angegebenen E-Mail-Adresse möglich.'),
+    actions: [
+      okButton,
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
+/// Shows an alert dialog when eMail is not verified
+showEmailNotVerified(BuildContext context) {
+  Widget okButton = FlatButton(
+    color: kMainRedColor,
+    child: Text('OK'),
+    onPressed: () => Navigator.pop(context),
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text('HINWEIS'),
+    content: Text(
+        'Sie haben Ihre E-Mail-Adresse noch nicht über den von uns übermittelten Link bestätigt. Bitte Überprüfen Sie Ihr Eingangs-Postfach und/oder SPAM-Ordner.'),
     actions: [
       okButton,
     ],
