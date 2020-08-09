@@ -66,8 +66,10 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   void _onSelectedBranch(String value) {
     setState(() => {
           _selectedBranch = value,
-          _selectedBranchKey = _selectedBranchKey.substring(0, 1) +
-              _selectedBranch.substring(0, 2),
+          _selectedBranch != ''
+              ? _selectedBranchKey = _selectedBranchKey.substring(0, 1) +
+                  _selectedBranch.substring(0, 2)
+              : _selectedBranchKey = _selectedBranchKey.substring(0, 1)
         });
   }
 
@@ -175,58 +177,42 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  FormField(
-                    builder: (FormFieldState state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.business),
-                          labelText: 'Branche',
-                          labelStyle: TextStyle(
-                            fontSize: 20.0,
-                          ),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            isDense: true,
-                            isExpanded: true,
-                            items: _industry.map((String dropDownStringItem) {
-                              return DropdownMenuItem<String>(
-                                value: dropDownStringItem,
-                                child: Text(dropDownStringItem),
-                              );
-                            }).toList(),
-                            onChanged: (value) => _onSelectedIndustry(value),
-                            value: _selectedIndustry,
-                          ),
-                        ),
+                  SizedBox(height: 10.0),
+                  DropdownButtonFormField<String>(
+                    isDense: true,
+                    isExpanded: true,
+                    items: _industry.map((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
                       );
-                    },
+                    }).toList(),
+                    onChanged: (value) => _onSelectedIndustry(value),
+                    value: _selectedIndustry,
+                    validator: (value) =>
+                        value == '' ? 'Angabe erforderlich' : null,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      icon: Icon(Icons.business),
+                      labelText: 'Branche',
+                    ),
                   ),
-                  FormField(
-                    builder: (FormFieldState state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                            icon: Icon(Icons.account_balance),
-                            labelText: 'Branchensparte',
-                            labelStyle: TextStyle(
-                              fontSize: 20.0,
-                            )),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            isDense: true,
-                            isExpanded: true,
-                            items: _branch.map((String dropDownStringItem) {
-                              return DropdownMenuItem<String>(
-                                value: dropDownStringItem,
-                                child: Text(dropDownStringItem),
-                              );
-                            }).toList(),
-                            onChanged: (value) => _onSelectedBranch(value),
-                            value: _selectedBranch,
-                          ),
-                        ),
+                  DropdownButtonFormField<String>(
+                    isDense: true,
+                    isExpanded: true,
+                    items: _branch.map((String dropDownStringItem) {
+                      return DropdownMenuItem<String>(
+                        value: dropDownStringItem,
+                        child: Text(dropDownStringItem),
                       );
-                    },
+                    }).toList(),
+                    onChanged: (value) => _onSelectedBranch(value),
+                    value: _selectedBranch,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      icon: Icon(Icons.account_balance),
+                      labelText: 'Branchensparte',
+                    ),
                   ),
                   SizedBox(height: 10.0),
                   Row(
@@ -252,145 +238,114 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                             LengthLimitingTextInputFormatter(5),
                           ],
                           keyboardType: TextInputType.number,
+                          validator: (value) =>
+                              (value.isEmpty || value.length != 5)
+                                  ? 'Eingabe üngültig'
+                                  : null,
                         ),
                       ),
                     ],
                   ),
-                  FormField(
-                    builder: (FormFieldState state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.people),
-                          labelText: 'Anzahl Mitarbeiter',
-                        ),
-                        isEmpty: _employee == '',
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: _employee,
-                            isDense: true,
-                            onChanged: (String newValue) {
-                              setState(() => _employee = newValue);
-                            },
-                            items: kEmployeeList.map((String value) {
-                              return DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
+                  DropdownButtonFormField<String>(
+                    items: kEmployeeList.map((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
                       );
+                    }).toList(),
+                    onChanged: (String newValue) {
+                      setState(() => _employee = newValue);
                     },
+                    value: _employee,
+                    validator: (value) =>
+                        value == '' ? 'Angabe erforderlich' : null,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      icon: Icon(Icons.people),
+                      labelText: 'Anzahl Mitarbeiter',
+                    ),
                   ),
-                  FormField(
-                    builder: (FormFieldState state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.trending_up),
-                          labelText: 'Jahresumsatz',
-                        ),
-                        isEmpty: _turnover == '',
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: _turnover,
-                            isDense: true,
-                            onChanged: (String newValue) {
-                              setState(() => _turnover = newValue);
-                            },
-                            items: kTurnoverList.map((String value) {
-                              return DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
+                  DropdownButtonFormField<String>(
+                    items: kTurnoverList.map((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
                       );
+                    }).toList(),
+                    onChanged: (String newValue) {
+                      setState(() => _turnover = newValue);
                     },
+                    value: _turnover,
+                    validator: (value) =>
+                        value == '' ? 'Angabe erforderlich' : null,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      icon: Icon(Icons.trending_up),
+                      labelText: 'Jahresumsatz',
+                    ),
                   ),
-                  FormField(
-                    builder: (FormFieldState state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.business),
-                          labelText: 'Eigene Immobilie',
-                        ),
-                        isEmpty: _property == '',
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: _property,
-                            isDense: true,
-                            onChanged: (String newValue) {
-                              setState(() => _property = newValue);
-                            },
-                            items: kPropertyList.map((String value) {
-                              return DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
+                  DropdownButtonFormField<String>(
+                    items: kPropertyList.map((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
                       );
+                    }).toList(),
+                    onChanged: (String newValue) {
+                      setState(() => _property = newValue);
                     },
+                    value: _property,
+                    validator: (value) =>
+                        value == '' ? 'Angabe erforderlich' : null,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      icon: Icon(Icons.business),
+                      labelText: 'Eigene Immobilie',
+                    ),
                   ),
-                  FormField(
-                    builder: (FormFieldState state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.euro_symbol),
-                          labelText: 'Preis',
-                        ),
-                        isEmpty: _sellingPrice == '',
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: _sellingPrice,
-                            isDense: true,
-                            onChanged: (String newValue) {
-                              setState(() => _sellingPrice = newValue);
-                            },
-                            items: kSellingPriceList.map((String value) {
-                              return DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
+                  DropdownButtonFormField<String>(
+                    items: kSellingPriceList.map((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
                       );
+                    }).toList(),
+                    onChanged: (String newValue) {
+                      setState(() => _sellingPrice = newValue);
                     },
+                    value: _sellingPrice,
+                    validator: (value) =>
+                        value == '' ? 'Angabe erforderlich' : null,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      icon: Icon(Icons.euro_symbol),
+                      labelText: 'Preis',
+                    ),
                   ),
-                  FormField(
-                    builder: (FormFieldState state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.calendar_today),
-                          labelText: 'Zeitpunkt der Übergabe',
-                        ),
-                        isEmpty: _handoverTime == '',
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            value: _handoverTime,
-                            isDense: true,
-                            onChanged: (String newValue) {
-                              setState(() => _handoverTime = newValue);
-                            },
-                            items: kHandoverTimeList.map((String value) {
-                              return DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
+                  DropdownButtonFormField<String>(
+                    items: kHandoverTimeList.map((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
                       );
+                    }).toList(),
+                    onChanged: (String newValue) {
+                      setState(() => _handoverTime = newValue);
                     },
+                    value: _handoverTime,
+                    validator: (value) =>
+                        value == '' ? 'Angabe erforderlich' : null,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      icon: Icon(Icons.calendar_today),
+                      labelText: 'Zeitpunkt der Übergabe',
+                    ),
                   ),
+                  SizedBox(height: 10.0),
                   FormBuilderSwitch(
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       isDense: true,
-                      contentPadding: EdgeInsets.only(bottom: -10.0, top: 0),
                       suffixIcon: IconButton(
                         onPressed: () => showTermsAndConditions(context),
                         icon: Icon(Icons.info_outline),
@@ -401,10 +356,16 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     ),
                     activeColor: kSecondGreenColor,
                     attribute: "accept_terms_switch",
-                    initialValue: false,
+                    initialValue: _termsAccepted,
                     inactiveThumbColor: kMainGreyColor,
                     inactiveTrackColor: kMainLightGreyColor,
                     onChanged: _onChangedTerms,
+                    validators: [
+                      FormBuilderValidators.requiredTrue(
+                        errorText:
+                            "Sie müssen die Nutzungsbedingungen akzeptieren um fortzufahren",
+                      ),
+                    ],
                   ),
                   FormBuilderSwitch(
                     decoration: InputDecoration(
@@ -421,10 +382,16 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     ),
                     activeColor: kSecondGreenColor,
                     attribute: "accept_policy_switch",
-                    initialValue: false,
+                    initialValue: _policyAccepted,
                     inactiveThumbColor: kMainGreyColor,
                     inactiveTrackColor: kMainLightGreyColor,
                     onChanged: _onChangedPolicy,
+                    validators: [
+                      FormBuilderValidators.requiredTrue(
+                        errorText:
+                            "Sie müssen die Bestimmungen akzeptieren um fortzufahren.",
+                      ),
+                    ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -449,9 +416,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                           minWidth: 100,
                           onPressed: () {
                             // Check whether all validators of the fields are valid.
-                            if (_formKey.currentState.validate() &&
-                                _termsAccepted &&
-                                _policyAccepted) {
+                            if (_formKey.currentState.validate()) {
                               if (_updateMode) {
                                 final _firestore = Firestore.instance;
                                 // update firebase entry according to the collection 'user'
@@ -508,9 +473,6 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                                           (context),
                                         ));
                               }
-                            } else {
-                              // Form not complete, missing or incorrect entries.
-                              showInputNotComplete(context);
                             }
                           },
                         ),
