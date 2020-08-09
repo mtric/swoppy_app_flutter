@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _picked = '';
   String _userCategory = '';
   String _rightButtonTitle = 'WEITER';
-  String _leftButtonTitle = 'LÖSCHEN';
+  String _leftButtonTitle = 'ABBRECHEN';
 
   List<String> _titles = <String>['', 'Frau', 'Herr', 'Frau Dr.', 'Herr Dr.'];
 
@@ -81,14 +81,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Extract the arguments from the current ModalRoute settings and cast
     // them as ScreenArguments.
     final UserProfile args = ModalRoute.of(context).settings.arguments;
-
-    _myEmailController.text = _email;
-
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      _myEmailController.text = _email;
+    });
     // ----
     if (args != null) {
       _updateMode = true;
       _rightButtonTitle = 'AKTUALISIEREN';
-      _leftButtonTitle = 'ABBRECHEN';
 
       if (!_dataInitialized) {
         _dataInitialized = true;
@@ -190,8 +189,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 controller: _myEmailController,
                 decoration: InputDecoration(
                   icon: Icon(Icons.email),
+                  disabledBorder: InputBorder.none,
                 ),
-                keyboardType: TextInputType.emailAddress,
               ),
               TextFormField(
                 controller: _myPhoneController,
@@ -209,7 +208,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: TextFormField(
                     inputFormatters: [
                       DecimalTextInputFormatter(
-                          decimalRange: 5, activatedNegativeValues: false),
+                        decimalRange: 5,
+                        activatedNegativeValues: false,
+                      ),
                       LengthLimitingTextInputFormatter(5),
                     ],
                     keyboardType: TextInputType.number,
@@ -297,12 +298,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       colour: kMainGreyColor,
                       minWidth: 100,
                       onPressed: () {
-                        if (_updateMode) {
-                          Navigator.pop(context);
-                        } else {
-                          // resets all fields to the initial value.
-                          _formKey.currentState.reset();
-                        }
+                        Navigator.pop(context);
                       },
                     ),
                   ),

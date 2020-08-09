@@ -1,7 +1,10 @@
+import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/screens/resetPassword_screen.dart';
 import 'package:Swoppy/screens/user_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -96,8 +99,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     final user = await _auth.signInWithEmailAndPassword(
                         email: email.trim(), password: password.trim());
                     if (user != null) {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          UserScreen.id, ModalRoute.withName(UserScreen.id));
+                      FirebaseUser firebaseUser = user.user;
+                      if (firebaseUser.isEmailVerified) {
+                        final snapShot = await Firestore.instance
+                            .collection(kCollection)
+                            .document(email)
+                            .get();
+                        if (snapShot.exists) {
+                          Navigator.pushNamed(context, UserScreen.id);
+                        } else {
+                          Navigator.pushNamed(context, ProfileScreen.id);
+                        }
+                      } else {
+                        showEmailNotVerified(context);
+                      }
                     }
 
                     setState(() {

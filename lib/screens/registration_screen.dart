@@ -1,5 +1,5 @@
+import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/screens/registrationPhone_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +15,7 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _auth = FirebaseAuth.instance;
+
   bool showSpinner = false;
   String email;
   String password;
@@ -101,7 +102,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     final newUser = await _auth.createUserWithEmailAndPassword(
                         email: email.trim(), password: password.trim());
                     if (newUser != null) {
-                      Navigator.pushNamed(context, RegistrationPhoneScreen.id);
+                      FirebaseUser user = newUser.user;
+                      try {
+                        await user.sendEmailVerification();
+                        showRegistrationHint(context);
+                      } catch (e) {
+                        print(
+                            "An error occured while trying to send email verification");
+                        print(e.message);
+                      }
                     }
                     setState(() {
                       showSpinner = false;
