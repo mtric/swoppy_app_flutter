@@ -114,39 +114,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: ListView(
             padding: kPaddingProfileForm,
             children: <Widget>[
-              Row(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Expanded(
-                    child: FormField(
-                      builder: (FormFieldState state) {
-                        return InputDecorator(
-                          decoration: InputDecoration(
-                            icon: Icon(null),
-                            labelText: 'Anrede',
-                          ),
-                          isEmpty: _title == '',
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              value: _title,
-                              isDense: true,
-                              onChanged: (String newValue) {
-                                setState(() => _title = newValue);
-                              },
-                              items: _titles.map((String value) {
-                                return DropdownMenuItem(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        );
-                      },
+                  SizedBox(height: 10.0),
+                  DropdownButtonFormField<String>(
+                    isExpanded: false,
+                    items: _titles.map((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String newValue) {
+                      setState(() => _title = newValue);
+                    },
+                    value: _title,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      icon: Icon(null),
+                      labelText: 'Anrede',
                     ),
-                  ),
-                  SizedBox(width: 15.0),
-                  Expanded(
-                    child: SizedBox(height: 25.0),
                   ),
                 ],
               ),
@@ -159,12 +148,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         icon: Icon(Icons.person),
                         labelText: 'Vorname*',
                       ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return '';
-                        }
-                        return null;
-                      },
+                      validator: (value) =>
+                          (value.isEmpty) ? 'Eingabe erforderlich' : null,
                     ),
                   ),
                   SizedBox(width: 15.0),
@@ -174,16 +159,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       decoration: InputDecoration(
                         labelText: 'Nachname*',
                       ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return '';
-                        }
-                        return null;
-                      },
+                      validator: (value) =>
+                          (value.isEmpty) ? 'Eingabe erforderlich' : null,
                     ),
                   ),
                 ],
               ),
+              SizedBox(height: 10.0),
               TextFormField(
                 enabled: false,
                 controller: _myEmailController,
@@ -197,6 +179,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: InputDecoration(
                   icon: Icon(Icons.phone),
                   labelText: 'Phone',
+                  isDense: true,
                 ),
                 keyboardType: TextInputType.phone,
                 inputFormatters: [
@@ -219,14 +202,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icon(Icons.home),
                       labelText: 'PLZ*',
                     ),
-                    validator: (value) {
-                      if (value.isEmpty ||
-                          !value.contains(new RegExp(r'[0-9]')) ||
-                          value.length != 5) {
-                        return '';
-                      }
-                      return null;
-                    },
+                    validator: (value) => (value.isEmpty || value.length != 5)
+                        ? 'Eingabe üngültig'
+                        : null,
                   ),
                 ),
                 SizedBox(width: 15.0),
@@ -237,12 +215,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: InputDecoration(
                       labelText: 'Ort*',
                     ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return '';
-                      }
-                      return null;
-                    },
+                    validator: (value) =>
+                        (value.isEmpty) ? 'Eingabe erforderlich' : null,
                   ),
                 )
               ]),

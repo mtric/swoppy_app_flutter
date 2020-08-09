@@ -6,12 +6,10 @@ import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/screens/login_screen.dart';
 import 'package:Swoppy/screens/matching_screen.dart';
 import 'package:Swoppy/screens/profile_screen.dart';
-import 'package:Swoppy/screens/registrationPhone_screen.dart';
 import 'package:Swoppy/screens/registration_screen.dart';
 import 'package:Swoppy/screens/resetPassword_screen.dart';
 import 'package:Swoppy/screens/tutorial_screen.dart';
 import 'package:Swoppy/screens/user_screen.dart';
-import 'package:Swoppy/screens/verificationPhone_screen.dart';
 import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +36,6 @@ Future<void> main() async {
           MatchingScreen.id: (context) => MatchingScreen(),
           TutorialScreen.id: (context) => TutorialScreen(),
           ResetPasswordScreen.id: (context) => ResetPasswordScreen(),
-          RegistrationPhoneScreen.id: (context) => RegistrationPhoneScreen(),
-          VerificationPhoneScreen.id: (context) => VerificationPhoneScreen(),
           ChatScreen.id: (context) => ChatScreen(),
         },
       ),
