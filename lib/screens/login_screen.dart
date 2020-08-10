@@ -114,7 +114,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         showEmailNotVerified(context);
                       }
                     }
-
                     setState(() {
                       showSpinner = false;
                     });

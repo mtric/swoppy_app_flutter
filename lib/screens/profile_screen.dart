@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:group_radio_button/group_radio_button.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'profile_screen';
@@ -27,11 +27,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String _title = '';
   String _email = '';
-  String _picked = '';
   String _userCategory = '';
   String _rightButtonTitle = 'WEITER';
   String _leftButtonTitle = 'ABBRECHEN';
+  String _verticalGroupValue = "Verkäufer";
 
+  List<String> _status = ["Verkäufer", "Käufer"];
   List<String> _titles = <String>['', 'Frau', 'Herr', 'Frau Dr.', 'Herr Dr.'];
 
   void getCurrentUser() async {
@@ -99,6 +100,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _myCityController.text = args.city;
         _myAddressController.text = args.address;
         _myAbstractController.text = args.abstract;
+        args.userCategory == 'buyer'
+            ? _verticalGroupValue = 'Käufer'
+            : _verticalGroupValue = 'Verkäufer';
       }
     }
 
@@ -119,22 +123,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   SizedBox(height: 10.0),
-                  DropdownButtonFormField<String>(
-                    isExpanded: false,
-                    items: _titles.map((String value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String newValue) {
-                      setState(() => _title = newValue);
-                    },
-                    value: _title,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      icon: Icon(null),
-                      labelText: 'Anrede',
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 200.0,
+                    ),
+                    child: DropdownButtonFormField<String>(
+                      isExpanded: false,
+                      items: _titles.map((String value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String newValue) {
+                        setState(() => _title = newValue);
+                      },
+                      value: _title,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        icon: Icon(null),
+                        labelText: 'Anrede',
+                      ),
                     ),
                   ),
                 ],
@@ -178,7 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 controller: _myPhoneController,
                 decoration: InputDecoration(
                   icon: Icon(Icons.phone),
-                  labelText: 'Phone',
+                  labelText: 'Phone (optional)',
                   isDense: true,
                 ),
                 keyboardType: TextInputType.phone,
@@ -229,29 +238,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 keyboardType: TextInputType.text,
               ),
               SizedBox(height: 10),
-              RadioButtonGroup(
-                orientation: GroupedButtonsOrientation.HORIZONTAL,
-                activeColor: kMainRedColor,
-                margin: const EdgeInsets.only(left: 32.0),
-                onSelected: (String selected) => setState(() {
-                  _picked = selected;
-                  _picked == 'Käufer*'
-                      ? _userCategory = 'buyer'
-                      : _userCategory = 'seller';
-                }),
-                labels: <String>[
-                  "Käufer*",
-                  "Verkäufer*",
-                ],
-                picked: _picked,
-                itemBuilder: (Radio rb, Text txt, int i) {
-                  return Row(
-                    children: <Widget>[
-                      rb,
-                      txt,
-                    ],
-                  );
-                },
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 40.0, right: 20.0, top: 8.0, bottom: 8.0),
+                child: RadioGroup<String>.builder(
+                  direction: Axis.horizontal,
+                  groupValue: _verticalGroupValue,
+                  onChanged: (value) => setState(() {
+                    _verticalGroupValue = value;
+                  }),
+                  items: _status,
+                  itemBuilder: (item) => RadioButtonBuilder(
+                    item,
+                  ),
+                ),
               ),
               TextFormField(
                 maxLines: 5,
@@ -285,9 +285,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       colour: kMainRedColor,
                       minWidth: 100,
                       onPressed: () {
-                        if (_formKey.currentState.validate() &&
-                            (_picked != '')) {
+                        if (_formKey.currentState.validate()) {
                           if (_updateMode) {
+                            _verticalGroupValue == 'Käufer'
+                                ? _userCategory = 'buyer'
+                                : _userCategory = 'seller';
+
                             final _firestore = Firestore.instance;
                             // update firebase entry according to the collection 'user'
                             DocumentReference documentReference = _firestore
@@ -337,9 +340,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   null),
                             );
                           }
-                        } else {
-                          // Form not complete, missing or incorrect entries.
-                          showInputNotComplete(context);
                         }
                       },
                     ),

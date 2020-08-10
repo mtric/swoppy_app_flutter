@@ -8,31 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-/// Shows an alert dialog when mandatory fields are not filled
-showInputNotComplete(BuildContext context) {
-  Widget okButton = FlatButton(
-    color: kMainRedColor,
-    child: Text('OK'),
-    onPressed: () => Navigator.pop(context),
-  );
-
-  AlertDialog alert = AlertDialog(
-    title: Text('Fehler in der Eingabe'),
-    content: Text(
-        'Nicht vollständige (* Pflichfelder) oder ungültige Eingaben. Bitte überprüfen Sie ihre Werte.'),
-    actions: [
-      okButton,
-    ],
-  );
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
-
 /// Shows an alert dialog when data is successfully saved to database
 showDataSaved(BuildContext context) {
   Widget okButton = FlatButton(

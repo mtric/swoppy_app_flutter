@@ -14,6 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'chat_screen.dart';
 
 enum settings { user, hardfacts, video, delete }
@@ -271,6 +272,18 @@ class _UserScreenState extends State<UserScreen> {
                         ),
                       ),
                     );
+                  },
+                ),
+                SizedBox(height: 120.0),
+                RoundedButton(
+                  title: 'A B M E L D E N',
+                  colour: kMainGreyColor,
+                  onPressed: () {
+                    _clearLoggedInUserData();
+                    _auth.signOut();
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        WelcomeScreen.id,
+                        ModalRoute.withName(WelcomeScreen.id));
                   },
                 ),
               ],

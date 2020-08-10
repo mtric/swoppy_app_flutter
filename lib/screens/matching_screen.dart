@@ -12,6 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_radar_chart/flutter_radar_chart.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'matchingRequest_screen.dart';
 
@@ -22,6 +23,7 @@ class MatchingScreen extends StatefulWidget {
 }
 
 class _MatchingScreenState extends State<MatchingScreen> {
+  bool showSpinner = false;
   final _auth = FirebaseAuth.instance;
   FirebaseUser loggedInUser;
 
@@ -155,11 +157,11 @@ class _MatchingScreenState extends State<MatchingScreen> {
     var dx, dy;
 
     try {
-      final myData = await rootBundle.loadString("assets/res/plz.csv");
+      final myData = await rootBundle.loadString(kGeolocationDataPath);
       List<List<dynamic>> csvTable = CsvToListConverter().convert(myData);
       zipCodeGeoData = csvTable;
     } catch (e) {
-      print('Reading \"plz.csv\" file caught error: $e');
+      print('Reading $kGeolocationDataPath file caught error: $e');
     }
 
     zipCodeGeoData.forEach((e) => e.forEach((plz) {
@@ -233,6 +235,9 @@ class _MatchingScreenState extends State<MatchingScreen> {
         .snapshots()
         .listen(
           (data) async => {
+            setState(() {
+              showSpinner = true;
+            }),
             for (int i = 0; i <= data.documents.length - 1; i++)
               {
                 _matchingResultList = [0, 0, 0, 0, 0, 0, 0],
@@ -359,6 +364,10 @@ class _MatchingScreenState extends State<MatchingScreen> {
             categoryList = _candidatesCategoryMap.values.toList(),
             contactList = _candidatesMatchingMap.keys.toList(),
 
+            setState(() {
+              showSpinner = false;
+            }),
+
             // check whether a candidate has been found
             !resultList.isEmpty
                 ? setState(() {
@@ -444,278 +453,286 @@ class _MatchingScreenState extends State<MatchingScreen> {
               }),
         ],
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              SizedBox(height: 10.0),
-              Table(
-                  border: TableBorder.all(color: kMainGreyColor),
-                  columnWidths: {
-                    0: FlexColumnWidth(2),
-                    1: FlexColumnWidth(8),
-                    2: FlexColumnWidth(8),
-                  },
-                  children: [
-                    TableRow(children: [
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Icon((null)),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(
-                          '$_userCategoryTxt',
-                          style: TextStyle(
-                              color: kSecondGreenColor,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(
-                          '$_searchedCategoryTxt',
-                          style: TextStyle(
-                              color: kSecondBlueColor,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      )),
+      body: ModalProgressHUD(
+        color: kMainGreyColor,
+        inAsyncCall: showSpinner,
+        progressIndicator: CircularProgressIndicator(
+          backgroundColor: kMainGreyColor,
+          valueColor: AlwaysStoppedAnimation<Color>(kMainRedColor),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                SizedBox(height: 10.0),
+                Table(
+                    border: TableBorder.all(color: kMainGreyColor),
+                    columnWidths: {
+                      0: FlexColumnWidth(2),
+                      1: FlexColumnWidth(8),
+                      2: FlexColumnWidth(8),
+                    },
+                    children: [
+                      TableRow(children: [
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon((null)),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text(
+                            '$_userCategoryTxt',
+                            style: TextStyle(
+                                color: kSecondGreenColor,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text(
+                            '$_searchedCategoryTxt',
+                            style: TextStyle(
+                                color: kSecondBlueColor,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )),
+                      ]),
+                      TableRow(children: [
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon((Icons.business)),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('${matchingModel.trade}'),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('$_candidateTradeTxt'),
+                        )),
+                      ]),
+                      TableRow(children: [
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon(Icons.account_balance),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('${matchingModel.locationCode}'),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('$_candidateLocationTxt'),
+                        )),
+                      ]),
+                      TableRow(children: [
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon(Icons.trending_up),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('${matchingModel.turnover}'),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('$_candidateTurnoverTxt'),
+                        )),
+                      ]),
+                      TableRow(children: [
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon(Icons.people),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('${matchingModel.employee}'),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('$_candidateEmployeeTxt'),
+                        )),
+                      ]),
+                      TableRow(children: [
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon(Icons.business),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('${matchingModel.property}'),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('$_candidatePropertyTxt'),
+                        )),
+                      ]),
+                      TableRow(children: [
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon(Icons.euro_symbol),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('${matchingModel.sellingPrice}'),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('$_candidatePriceTxt'),
+                        )),
+                      ]),
+                      TableRow(children: [
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon(Icons.calendar_today),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('${matchingModel.handoverTime}'),
+                        )),
+                        TableCell(
+                            child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text('$_candidateTimeTxt'),
+                        )),
+                      ]),
                     ]),
-                    TableRow(children: [
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Icon((Icons.business)),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('${matchingModel.trade}'),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('$_candidateTradeTxt'),
-                      )),
-                    ]),
-                    TableRow(children: [
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Icon(Icons.account_balance),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('${matchingModel.locationCode}'),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('$_candidateLocationTxt'),
-                      )),
-                    ]),
-                    TableRow(children: [
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Icon(Icons.trending_up),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('${matchingModel.turnover}'),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('$_candidateTurnoverTxt'),
-                      )),
-                    ]),
-                    TableRow(children: [
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Icon(Icons.people),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('${matchingModel.employee}'),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('$_candidateEmployeeTxt'),
-                      )),
-                    ]),
-                    TableRow(children: [
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Icon(Icons.business),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('${matchingModel.property}'),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('$_candidatePropertyTxt'),
-                      )),
-                    ]),
-                    TableRow(children: [
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Icon(Icons.euro_symbol),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('${matchingModel.sellingPrice}'),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('$_candidatePriceTxt'),
-                      )),
-                    ]),
-                    TableRow(children: [
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Icon(Icons.calendar_today),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('${matchingModel.handoverTime}'),
-                      )),
-                      TableCell(
-                          child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text('$_candidateTimeTxt'),
-                      )),
-                    ]),
-                  ]),
-              SizedBox(height: 10.0),
-              Expanded(
-                child: RadarChart.light(
-                  ticks: ticks,
-                  features: kMatchingCriteria,
-                  data: chartData,
-                  reverseAxis: false,
+                SizedBox(height: 10.0),
+                Expanded(
+                  child: RadarChart.light(
+                    ticks: ticks,
+                    features: kMatchingCriteria,
+                    data: chartData,
+                    reverseAxis: false,
+                  ),
                 ),
-              ),
-              ListBody(
-                children: [
-                  Text('Treffer: $_hitCounter von $_numberOfMatches'),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: RoundedButton(
-                      title: '<',
-                      colour: kMainGreyColor,
-                      minWidth: 1.0,
-                      onPressed: () {
-                        if (_counter >= 1) {
-                          _counter--;
-                          _hitCounter--;
-                        } else {
-                          _counter = resultList.length - 1;
-                          _hitCounter = resultList.length;
-                        }
-                        setState(() {
-                          candidateMatchList = resultList[_counter];
-                          showSelectedCandidate(_counter);
-                          chartData = [kBaseRatingList, candidateMatchList];
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 1.0),
-                  Expanded(
-                    flex: 2,
-                    child: RoundedButton(
-                      title: 'START',
-                      colour: kMainRedColor,
-                      minWidth: 5.0,
-                      onPressed: () {
-                        _hitCounter = 1;
-                        _counter = 0;
-                        setState(() {
-                          candidateMatchList = resultList[_counter];
-                          showSelectedCandidate(_counter);
-                          chartData = [kBaseRatingList, candidateMatchList];
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 1.0),
-                  Expanded(
-                    flex: 1,
-                    child: RoundedButton(
-                      title: '>',
-                      colour: kMainGreyColor,
-                      minWidth: 1.0,
-                      onPressed: () {
-                        if (_counter < resultList.length - 1) {
-                          _counter++;
-                          _hitCounter++;
-                        } else {
-                          _counter = 0;
-                          _hitCounter = 1;
-                        }
-                        setState(() {
-                          candidateMatchList = resultList[_counter];
-                          showSelectedCandidate(_counter);
-                          chartData = [kBaseRatingList, candidateMatchList];
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 15.0),
-                  Expanded(
-                    flex: 3,
-                    child: RoundedButton(
-                      title: 'DETAILS',
-                      colour: kMainRedColor,
-                      minWidth: 10.0,
-                      onPressed: () {
-                        _getAbstractFromDataBase(contactList[_counter]);
-                        Future.delayed(const Duration(milliseconds: 300), () {
+                ListBody(
+                  children: [
+                    Text('Treffer: $_hitCounter von $_numberOfMatches'),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: RoundedButton(
+                        title: '<',
+                        colour: kMainGreyColor,
+                        minWidth: 1.0,
+                        onPressed: () {
+                          if (_counter >= 1) {
+                            _counter--;
+                            _hitCounter--;
+                          } else {
+                            _counter = resultList.length - 1;
+                            _hitCounter = resultList.length;
+                          }
                           setState(() {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MatchingRequestScreen(
-                                  abstract: getCandidateAbstract(),
-                                  candidateEMail: '${contactList[_counter]}',
-                                ),
-                              ),
-                            );
+                            candidateMatchList = resultList[_counter];
+                            showSelectedCandidate(_counter);
+                            chartData = [kBaseRatingList, candidateMatchList];
                           });
-                        });
-                      },
+                        },
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    SizedBox(width: 1.0),
+                    Expanded(
+                      flex: 2,
+                      child: RoundedButton(
+                        title: 'START',
+                        colour: kMainRedColor,
+                        minWidth: 5.0,
+                        onPressed: () {
+                          _hitCounter = 1;
+                          _counter = 0;
+                          setState(() {
+                            candidateMatchList = resultList[_counter];
+                            showSelectedCandidate(_counter);
+                            chartData = [kBaseRatingList, candidateMatchList];
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 1.0),
+                    Expanded(
+                      flex: 1,
+                      child: RoundedButton(
+                        title: '>',
+                        colour: kMainGreyColor,
+                        minWidth: 1.0,
+                        onPressed: () {
+                          if (_counter < resultList.length - 1) {
+                            _counter++;
+                            _hitCounter++;
+                          } else {
+                            _counter = 0;
+                            _hitCounter = 1;
+                          }
+                          setState(() {
+                            candidateMatchList = resultList[_counter];
+                            showSelectedCandidate(_counter);
+                            chartData = [kBaseRatingList, candidateMatchList];
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 15.0),
+                    Expanded(
+                      flex: 3,
+                      child: RoundedButton(
+                        title: 'DETAILS',
+                        colour: kMainRedColor,
+                        minWidth: 10.0,
+                        onPressed: () {
+                          _getAbstractFromDataBase(contactList[_counter]);
+                          Future.delayed(const Duration(milliseconds: 300), () {
+                            setState(() {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MatchingRequestScreen(
+                                    abstract: getCandidateAbstract(),
+                                    candidateEMail: '${contactList[_counter]}',
+                                  ),
+                                ),
+                              );
+                            });
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

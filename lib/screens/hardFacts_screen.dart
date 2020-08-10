@@ -217,17 +217,19 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                   SizedBox(height: 10.0),
                   Row(
                     children: <Widget>[
-                      Icon(Icons.location_on),
-                      SizedBox(width: 15.0),
                       Expanded(
-                        flex: 70,
-                        child: Text(
-                          'Standort des Unternehmens',
+                        flex: 85,
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            isDense: true,
+                            icon: Icon(Icons.location_on),
+                            labelText: 'Standort des Unternehmens (PLZ)',
+                            border: InputBorder.none,
+                          ),
                         ),
                       ),
-                      SizedBox(width: 20.0),
                       Expanded(
-                        flex: 30,
+                        flex: 15,
                         child: TextFormField(
                           controller: _myLocationCodeController,
                           inputFormatters: [
@@ -421,7 +423,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                                 final _firestore = Firestore.instance;
                                 // update firebase entry according to the collection 'user'
                                 DocumentReference documentReference = _firestore
-                                    .collection('user')
+                                    .collection(kCollection)
                                     .document(args.eMail);
 
                                 Map<String, dynamic> updatedData = {
