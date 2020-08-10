@@ -24,7 +24,6 @@ dependencies:
   cloud_firestore: ^0.13.7
   google_sign_in: ^4.5.1
   rxdart: ^0.24.1
-  grouped_buttons: ^1.0.4
   modal_progress_hud: ^0.1.3
   font_awesome_flutter: ^8.8.1
   fluttertoast: ^7.0.2
@@ -38,6 +37,7 @@ dependencies:
   flutter_page_indicator:
   auto_size_text: ^2.1.0
   csv: ^4.0.3
+  group_radio_button: ^1.0.1
 
 dev_dependencies:
   flutter_test:

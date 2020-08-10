@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:Swoppy/utilities/constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 final _firestore = Firestore.instance;
 FirebaseUser loggedInUser;
@@ -21,7 +21,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-
     getCurrentUser();
   }
 

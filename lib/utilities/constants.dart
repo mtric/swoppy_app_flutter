@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const kCollection = 'user';
 const ktutorialVideoPath = 'assets/example1_compressed.mp4';
+const kGeolocationDataPath = "assets/res/plz.csv";
 const kMinHitRate = 10.0;
 
 const kMainRedColor = Color(0xFFD50C2F);
