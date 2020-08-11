@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:group_radio_button/group_radio_button.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'profile_screen';
@@ -53,6 +54,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     getCurrentUser();
   }
 
+  @override
+  void didChangeDependencies() {
+    _titles = [
+      '',
+      AppLocalizations.of(context).translate('Mr.'),
+      AppLocalizations.of(context).translate('Mrs.')
+    ];
+    super.didChangeDependencies();
+  }
+
   // Text controller to retrieve the current value of the TextField.
   final _myFirstNameController = TextEditingController();
   final _myLastNameController = TextEditingController();
@@ -88,7 +99,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // ----
     if (args != null) {
       _updateMode = true;
-      _rightButtonTitle = 'AKTUALISIEREN';
+      _rightButtonTitle = AppLocalizations.of(context).translate('refresh');
+      _leftButtonTitle = AppLocalizations.of(context).translate('cancel');
 
       if (!_dataInitialized) {
         _dataInitialized = true;
@@ -109,7 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: null,
-        title: Text('Benutzerprofil'),
+        title: Text(AppLocalizations.of(context).translate('profil')),
       ),
       body: SafeArea(
         child: Form(
@@ -155,7 +167,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       controller: _myFirstNameController,
                       decoration: InputDecoration(
                         icon: Icon(Icons.person),
-                        labelText: 'Vorname*',
+                        labelText:
+                            AppLocalizations.of(context).translate('firstname'),
                       ),
                       validator: (value) =>
                           (value.isEmpty) ? 'Eingabe erforderlich' : null,
@@ -166,7 +179,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: TextFormField(
                       controller: _myLastNameController,
                       decoration: InputDecoration(
-                        labelText: 'Nachname*',
+                        labelText:
+                            AppLocalizations.of(context).translate('lastname'),
                       ),
                       validator: (value) =>
                           (value.isEmpty) ? 'Eingabe erforderlich' : null,
@@ -209,7 +223,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     controller: _myZipCodeController,
                     decoration: InputDecoration(
                       icon: Icon(Icons.home),
-                      labelText: 'PLZ*',
+                      labelText:
+                          AppLocalizations.of(context).translate('postcode'),
                     ),
                     validator: (value) => (value.isEmpty || value.length != 5)
                         ? 'Eingabe üngültig'
@@ -222,7 +237,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     controller: _myCityController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
-                      labelText: 'Ort*',
+                      labelText:
+                          AppLocalizations.of(context).translate('location'),
                     ),
                     validator: (value) =>
                         (value.isEmpty) ? 'Eingabe erforderlich' : null,
@@ -233,7 +249,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 controller: _myAddressController,
                 decoration: InputDecoration(
                   icon: Icon(null),
-                  labelText: 'Strasse, Haus-Nr. (optional)',
+                  labelText:
+                      AppLocalizations.of(context).translate('street name'),
                 ),
                 keyboardType: TextInputType.text,
               ),
@@ -259,7 +276,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 controller: _myAbstractController,
                 decoration: InputDecoration(
                   icon: Icon(Icons.text_fields),
-                  hintText: 'Kurzbeschreibung Unternehmen/Person',
+                  hintText:
+                      AppLocalizations.of(context).translate('company/person'),
                   border: OutlineInputBorder(),
                 ),
               ),

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
@@ -25,7 +26,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('REGISTRIERUNG'),
+        title: Text(AppLocalizations.of(context).translate('registration')),
       ),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
@@ -63,7 +64,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   email = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Geben Sie ihre E-Mail Adresse ein'),
+                    hintText:
+                        AppLocalizations.of(context).translate('enter e-mail')),
                 style: TextStyle(color: Colors.black),
               ),
               SizedBox(
@@ -77,7 +79,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   password = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Geben Sie ihr Passwort ein'),
+                    hintText: AppLocalizations.of(context)
+                        .translate('enter password')),
                 style: TextStyle(color: Colors.black),
               ),
               SizedBox(
@@ -92,7 +95,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
               ),
               RoundedButton(
-                title: 'REGISTRIEREN',
+                title: AppLocalizations.of(context).translate('register'),
                 colour: kMainRedColor,
                 onPressed: () async {
                   setState(() {
@@ -120,21 +123,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
                       setState(() {
                         showSpinner = false;
-                        warnung = 'Benutzer existiert bereits!';
+                        warnung = AppLocalizations.of(context)
+                            .translate('User doesn´t exist');
                       });
                       print(warnung);
                     } else if (e.code == 'ERROR_WEAK_PASSWORD') {
                       setState(() {
                         showSpinner = false;
-                        warnung =
-                            'Das Passwort muss mindestens 6 Zeichen lang sein.';
+                        warnung = AppLocalizations.of(context).translate(
+                            'The password must be at least 6 characters long');
                       });
                       print(warnung);
                     } else if (e.code == 'ERROR_INVALID_EMAIL') {
                       setState(() {
                         showSpinner = false;
-                        warnung =
-                            'Bitte geben Sie eine gültige Emailadresse ein.';
+                        warnung = AppLocalizations.of(context)
+                            .translate('Please check your email address');
                       });
                       print(warnung);
                     } else {

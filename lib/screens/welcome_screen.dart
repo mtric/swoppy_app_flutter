@@ -5,6 +5,7 @@ import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/screens/registration_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
@@ -62,14 +63,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               height: 48.0,
             ),
             RoundedButton(
-              title: 'EINLOGGEN',
+              title: AppLocalizations.of(context).translate('log in'),
               colour: kMainGreyColor,
               onPressed: () {
                 Navigator.pushNamed(context, LoginScreen.id);
               },
             ),
             RoundedButton(
-              title: 'REGISTRIEREN',
+              title: AppLocalizations.of(context).translate('register'),
               colour: kMainRedColor,
               onPressed: () {
                 Navigator.pushNamed(context, RegistrationScreen.id);
@@ -79,7 +80,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               padding: EdgeInsets.symmetric(vertical: 16),
               child: Center(
                 child: Text(
-                  'ODER',
+                  AppLocalizations.of(context).translate('or'),
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -121,7 +122,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           child: FittedBox(
                             fit: BoxFit.fitWidth,
                             child: Text(
-                              'MIT GOOGLE ANMELDEN',
+                              AppLocalizations.of(context)
+                                  .translate('log in with google'),
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.grey,

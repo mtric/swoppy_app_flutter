@@ -15,6 +15,11 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_localizations:
+    sdk: flutter
+
+
+
   camera: ^0.5.8+2
   path_provider: ^1.6.11
   path:
@@ -50,6 +55,8 @@ flutter:
     - images/
     - assets/res/plz.csv
     - assets/example1_compressed.mp4
+    - lang/en.json
+    - lang/de.json
 
   fonts:
     - family: Open Sans

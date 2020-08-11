@@ -6,6 +6,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 class TutorialScreen extends StatefulWidget {
   static const String id = 'tutorial_screen';
@@ -21,7 +22,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
     // TODO: implement build
     return new Scaffold(
       appBar: AppBar(
-        title: Text('Tutorial'),
+        title: Text('TUTORIAL'),
       ),
       body: new Swiper(
         itemBuilder: (BuildContext context, int index) {
@@ -35,7 +36,8 @@ class _TutorialScreenState extends State<TutorialScreen> {
                     if (index == slideList.length - 1)
                       Center(
                         child: RoundedButton(
-                          title: 'Hier zum Video',
+                          title: AppLocalizations.of(context)
+                              .translate('Here to the video'),
                           colour: kSecondBlueColor,
                           onPressed: () {
                             Navigator.push(

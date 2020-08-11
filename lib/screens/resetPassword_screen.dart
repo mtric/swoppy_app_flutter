@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   static const String id = 'resetPassword_screen';
@@ -61,7 +62,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   email = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Geben Sie ihre E-Mail Adresse ein'),
+                    hintText:
+                        AppLocalizations.of(context).translate('enter e-mail')),
                 style: TextStyle(color: Colors.black),
               ),
               SizedBox(
@@ -76,7 +78,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 ),
               ),
               RoundedButton(
-                title: 'Passwort zurücksetzen',
+                title: AppLocalizations.of(context).translate('reset password'),
                 colour: kMainGreyColor,
                 onPressed: () async {
                   setState(() {
@@ -86,21 +88,23 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     await _auth.sendPasswordResetEmail(email: email);
                     setState(() {
                       showSpinner = false;
-                      warnung =
-                          'Ein Link wurde an die angegebene Emailadresse gesendet.';
+                      warnung = AppLocalizations.of(context).translate(
+                          'A link has been sent to the specified email address');
                     });
                   } catch (e) {
                     print(e);
                     if (e.code == 'ERROR_INVALID_EMAIL') {
                       setState(() {
                         showSpinner = false;
-                        warnung = 'Bitte überprüfen Sie ihre Emailadresse!';
+                        warnung = AppLocalizations.of(context)
+                            .translate('Please check your email address');
                       });
                       print(warnung);
                     } else if (e.code == 'ERROR_USER_NOT_FOUND') {
                       setState(() {
                         showSpinner = false;
-                        warnung = 'Benutzer existiert nicht!';
+                        warnung = AppLocalizations.of(context)
+                            .translate('User doesn´t exist');
                       });
                       print(warnung);
                     } else {
@@ -118,7 +122,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               ),
               FlatButton(
                 child: Text(
-                  'Zurück zum Login',
+                  AppLocalizations.of(context).translate('back to login'),
                   style: kFlatButtonStyle,
                 ),
                 onPressed: () {

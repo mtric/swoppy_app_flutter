@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 class Gallery extends StatefulWidget {
   @override
@@ -66,7 +67,7 @@ class _GalleryState extends State<Gallery> {
           if (!snapshot.hasData || snapshot.data.isEmpty) {
             return Center(
               child: Text(
-                'Keine Dateien gefunden.',
+                AppLocalizations.of(context).translate('no data found'),
                 style: TextStyle(
                   color: Colors.black,
                 ),
@@ -76,7 +77,7 @@ class _GalleryState extends State<Gallery> {
           if (snapshot.data.length == 0) {
             return Center(
               child: Text(
-                'Keine Dateien gefunden.',
+                AppLocalizations.of(context).translate('no data found'),
                 style: TextStyle(
                   color: Colors.black,
                 ),
@@ -86,7 +87,7 @@ class _GalleryState extends State<Gallery> {
           if (snapshot.hasError) {
             return Center(
               child: Text(
-                'Fehler: ${snapshot.error.toString()}',
+                'Error: ${snapshot.error.toString()}',
                 style: TextStyle(
                   color: Colors.black,
                 ),

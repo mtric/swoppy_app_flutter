@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -21,13 +22,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   String email;
   String password;
-  String warnung = ' ';
+  String warnung = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('LOG IN'),
+        title: Text(AppLocalizations.of(context).translate('log in')),
       ),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
@@ -64,7 +65,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   email = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Geben Sie ihre E-Mail Adresse ein'),
+                    hintText:
+                        AppLocalizations.of(context).translate('enter e-mail')),
                 style: TextStyle(color: Colors.black),
               ),
               SizedBox(
@@ -77,7 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   password = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Geben Sie ihr Passwort ein'),
+                    hintText: AppLocalizations.of(context)
+                        .translate('enter password')),
                 style: TextStyle(color: Colors.black),
               ),
               SizedBox(
@@ -89,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               RoundedButton(
-                title: 'EINLOGGEN',
+                title: AppLocalizations.of(context).translate('log in'),
                 colour: kMainGreyColor,
                 onPressed: () async {
                   setState(() {
@@ -122,19 +125,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (e.code == 'ERROR_INVALID_EMAIL') {
                       setState(() {
                         showSpinner = false;
-                        warnung = 'Bitte überprüfen Sie ihre Emailadresse!';
+                        warnung = AppLocalizations.of(context)
+                            .translate('Please check your email address');
                       });
                       print(warnung);
                     } else if (e.code == 'ERROR_USER_NOT_FOUND') {
                       setState(() {
                         showSpinner = false;
-                        warnung = 'Benutzer existiert nicht!';
+                        warnung = AppLocalizations.of(context)
+                            .translate('User doesn´t exist');
+                        ;
                       });
                       print(warnung);
                     } else if (e.code == 'ERROR_WRONG_PASSWORD') {
                       setState(() {
                         showSpinner = false;
-                        warnung = 'Bitte überprüfen Sie ihr Passwort!';
+                        warnung = AppLocalizations.of(context)
+                            .translate('Please check your password');
                       });
                       print(warnung);
                     } else {
@@ -152,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               FlatButton(
                 child: Text(
-                  'Passwort vergessen?',
+                  AppLocalizations.of(context).translate('forgot password'),
                   style: kFlatButtonStyle,
                 ),
                 onPressed: () {
