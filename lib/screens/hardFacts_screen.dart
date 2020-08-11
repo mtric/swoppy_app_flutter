@@ -35,7 +35,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   String _rightButtonTitle = 'SPEICHERN';
   String _leftButtonTitle = 'ABBRECHEN';
 
-  IndustryData data = IndustryData();
+  // IndustryData data = IndustryData();
+  IndustryData data;
   List<String> _industry = [''];
   List<String> _branch = [''];
   String _selectedIndustry = '';
@@ -51,8 +52,16 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
 
   @override
   void initState() {
-    _industry = List.from(_industry)..addAll(data.getIndustries());
+//    data = IndustryData(AppLocalizations.of(context).locale);
+//    _industry = List.from(_industry)..addAll(data.getIndustries());
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    data = IndustryData(AppLocalizations.of(context).locale);
+    _industry = List.from(_industry)..addAll(data.getIndustries());
+    super.didChangeDependencies();
   }
 
   void _onSelectedIndustry(String value) {

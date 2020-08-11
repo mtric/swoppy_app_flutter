@@ -9,7 +9,7 @@
   "forgot password": "Forgot password?",
   "verification": "VERIFICATION",
   "enter phone": "Enter your phone number",
-  "send sms": "Send SMS",
+  "send sms": "SEND SMS",
   "refresh": "REFRESH",
   "cancel": "CANCEL",
   "profil": "User profile",
@@ -43,5 +43,9 @@
   "back to login": "Back to log in.",
   "Here to the video": "Here to the video",
   "The password must be at least 6 characters long": "The password must be at least 6 characters long."
+  "delete": "DELETE",
+  "next": "CONTINUE",
+  "Mr.": "Mr.",
+  "Mrs.": "Mrs.",
 
 }

@@ -7,10 +7,9 @@
   "enter e-mail": "Geben Sie ihre E-Mailadresse ein",
   "enter password": "Geben Sie ihr Passwort ein",
   "forgot password": "Passwort vergessen?",
-  "registration": "REGISTRIERUNG",
   "verification": "VERIFIZIERUNG",
   "enter phone": "Geben Sie ihre Handynummer ein",
-  "send sms": "SMS senden",
+  "send sms": "SMS SENDEN",
   "delete": "LÖSCHEN",
   "next": "WEITER",
   "Mr.": "Herr",
@@ -48,6 +47,4 @@
   "back to login": "Zurück zum Login",
   "Here to the video": "Hier zum Video",
   "The password must be at least 6 characters long": "Das Passwort muss mindestens 6 Zeichen lang sein."
-
-
 }
