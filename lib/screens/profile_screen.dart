@@ -88,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // ----
     if (args != null) {
       _updateMode = true;
-      _rightButtonTitle = 'AKTUALISIEREN';
+      _rightButtonTitle = AppLocalizations.of(context).translate('refresh');
       _leftButtonTitle = 'ABBRECHEN';
 
       if (!_dataInitialized) {

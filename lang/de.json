@@ -14,6 +14,15 @@
   "delete": "LÖSCHEN",
   "next": "WEITER",
   "Mr.": "Herr",
-  "Mrs.": "Frau"
-
+  "Mrs.": "Frau",
+  "refresh": "AKTUALISIEREN",
+  "cancel": "ABBRUCH",
+  "profil": "Benutzerprofil",
+  "person_title": "Anrede",
+  "firstname": "Vorname*",
+  "lastname": "Nachname*",
+  "postcode": "PLZ",
+  "Ort": "Stadt",
+  "street name": "Strasse, Haus-Nr. (optional)",
+  "company/person": "Kurzbeschreibung Unternehmen/Person"
 }
