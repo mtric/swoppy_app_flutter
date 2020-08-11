@@ -46,7 +46,7 @@ class _TutorialVideoScreenState extends State<TutorialVideoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tutorialvideo'),
+        title: Text('TUTORIAL VIDEO'),
       ),
       body: Center(
           child: AspectRatio(

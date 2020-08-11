@@ -111,19 +111,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (e.code == 'ERROR_INVALID_EMAIL') {
                       setState(() {
                         showSpinner = false;
-                        warnung = 'Bitte überprüfen Sie ihre Emailadresse!';
+                        warnung = AppLocalizations.of(context)
+                            .translate('Please check your email address');
                       });
                       print(warnung);
                     } else if (e.code == 'ERROR_USER_NOT_FOUND') {
                       setState(() {
                         showSpinner = false;
-                        warnung = 'Benutzer existiert nicht!';
+                        warnung = AppLocalizations.of(context)
+                            .translate('User doesn´t exist');
+                        ;
                       });
                       print(warnung);
                     } else if (e.code == 'ERROR_WRONG_PASSWORD') {
                       setState(() {
                         showSpinner = false;
-                        warnung = 'Bitte überprüfen Sie ihr Passwort!';
+                        warnung = AppLocalizations.of(context)
+                            .translate('Please check your password');
                       });
                       print(warnung);
                     } else {

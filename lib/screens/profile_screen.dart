@@ -89,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (args != null) {
       _updateMode = true;
       _rightButtonTitle = AppLocalizations.of(context).translate('refresh');
-      _leftButtonTitle = 'ABBRECHEN';
+      _leftButtonTitle = AppLocalizations.of(context).translate('cancel');
 
       if (!_dataInitialized) {
         _dataInitialized = true;
@@ -107,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: null,
-        title: Text('Benutzerprofil'),
+        title: Text(AppLocalizations.of(context).translate('profil')),
       ),
       body: SafeArea(
         child: Form(
@@ -159,7 +159,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       controller: _myFirstNameController,
                       decoration: InputDecoration(
                         icon: Icon(Icons.person),
-                        labelText: 'Vorname*',
+                        labelText:
+                            AppLocalizations.of(context).translate('firstname'),
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
@@ -174,7 +175,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: TextFormField(
                       controller: _myLastNameController,
                       decoration: InputDecoration(
-                        labelText: 'Nachname*',
+                        labelText:
+                            AppLocalizations.of(context).translate('lastname'),
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
@@ -217,7 +219,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     controller: _myZipCodeController,
                     decoration: InputDecoration(
                       icon: Icon(Icons.home),
-                      labelText: 'PLZ*',
+                      labelText:
+                          AppLocalizations.of(context).translate('postcode'),
                     ),
                     validator: (value) {
                       if (value.isEmpty ||
@@ -235,7 +238,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     controller: _myCityController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
-                      labelText: 'Ort*',
+                      labelText:
+                          AppLocalizations.of(context).translate('location'),
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
@@ -250,7 +254,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 controller: _myAddressController,
                 decoration: InputDecoration(
                   icon: Icon(null),
-                  labelText: 'Strasse, Haus-Nr. (optional)',
+                  labelText:
+                      AppLocalizations.of(context).translate('street name'),
                 ),
                 keyboardType: TextInputType.text,
               ),
@@ -285,7 +290,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 controller: _myAbstractController,
                 decoration: InputDecoration(
                   icon: Icon(Icons.text_fields),
-                  hintText: 'Kurzbeschreibung Unternehmen/Person',
+                  hintText:
+                      AppLocalizations.of(context).translate('company/person'),
                   border: OutlineInputBorder(),
                 ),
               ),

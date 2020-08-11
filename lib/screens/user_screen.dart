@@ -14,6 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 enum settings { user, hardfacts, video, delete }
 
@@ -220,14 +221,15 @@ class _UserScreenState extends State<UserScreen> {
               children: [
                 SizedBox(height: 30.0),
                 RoundedButton(
-                  title: 'VIDEO AUFNEHMEN',
+                  title: AppLocalizations.of(context).translate('record video'),
                   colour: kMainRedColor,
                   onPressed: () {
                     Navigator.pushNamed(context, CameraScreen.id);
                   },
                 ),
                 RoundedButton(
-                  title: 'KANDIDATEN ANZEIGEN',
+                  title:
+                      AppLocalizations.of(context).translate('show candidate'),
                   colour: kMainGreyColor,
                   onPressed: () {
                     Navigator.pushNamed(
