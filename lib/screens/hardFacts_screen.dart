@@ -204,7 +204,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.business),
-                      labelText: 'Branche',
+                      labelText:
+                          AppLocalizations.of(context).translate('industry'),
                     ),
                   ),
                   DropdownButtonFormField<String>(
@@ -221,7 +222,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.account_balance),
-                      labelText: 'Branchensparte',
+                      labelText: AppLocalizations.of(context)
+                          .translate('branch devision'),
                     ),
                   ),
                   SizedBox(height: 10.0),
@@ -233,7 +235,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                           decoration: InputDecoration(
                             isDense: true,
                             icon: Icon(Icons.location_on),
-                            labelText: 'Standort des Unternehmens (PLZ)',
+                            labelText: AppLocalizations.of(context)
+                                .translate('location of company'),
                             border: InputBorder.none,
                           ),
                         ),
@@ -274,7 +277,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.people),
-                      labelText: 'Anzahl Mitarbeiter',
+                      labelText: AppLocalizations.of(context)
+                          .translate('number of employee'),
                     ),
                   ),
                   DropdownButtonFormField<String>(
@@ -293,7 +297,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.trending_up),
-                      labelText: 'Jahresumsatz',
+                      labelText: AppLocalizations.of(context)
+                          .translate('annual sales'),
                     ),
                   ),
                   DropdownButtonFormField<String>(
@@ -312,7 +317,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.business),
-                      labelText: 'Eigene Immobilie',
+                      labelText: AppLocalizations.of(context)
+                          .translate('own property'),
                     ),
                   ),
                   DropdownButtonFormField<String>(
@@ -331,7 +337,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.euro_symbol),
-                      labelText: 'Preis',
+                      labelText:
+                          AppLocalizations.of(context).translate('price'),
                     ),
                   ),
                   DropdownButtonFormField<String>(
@@ -350,7 +357,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.calendar_today),
-                      labelText: 'Zeitpunkt der Übergabe',
+                      labelText: AppLocalizations.of(context)
+                          .translate('time of transfer'),
                     ),
                   ),
                   SizedBox(height: 10.0),

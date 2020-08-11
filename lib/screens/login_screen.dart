@@ -134,7 +134,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         showSpinner = false;
                         warnung = AppLocalizations.of(context)
                             .translate('User doesn´t exist');
-                        ;
                       });
                       print(warnung);
                     } else if (e.code == 'ERROR_WRONG_PASSWORD') {

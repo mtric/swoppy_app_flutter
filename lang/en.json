@@ -22,6 +22,7 @@
   "company/person": "Brief description of the company/person.",
   "no data found": "No data found.",
   "save": "SAVE",
+  "industry": "Industry",
   "branch devision": "Branch devision",
   "location of company": "Location of the company",
   "the first 2 digits of postcode": "the first 2 digits of postcode",
@@ -42,10 +43,9 @@
   "Please check your password": "Please check your password!",
   "back to login": "Back to log in.",
   "Here to the video": "Here to the video",
-  "The password must be at least 6 characters long": "The password must be at least 6 characters long."
+  "The password must be at least 6 characters long": "The password must be at least 6 characters long.",
   "delete": "DELETE",
   "next": "CONTINUE",
   "Mr.": "Mr.",
-  "Mrs.": "Mrs.",
-
+  "Mrs.": "Mrs."
 }
