@@ -109,7 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             .document(email)
                             .get();
                         if (snapShot.exists) {
-                          Navigator.pushNamed(context, UserScreen.id);
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              UserScreen.id,
+                              ModalRoute.withName(UserScreen.id));
                         } else {
                           Navigator.pushNamed(context, ProfileScreen.id);
                         }

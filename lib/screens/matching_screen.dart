@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
-import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/matchingData.dart';
 import 'package:Swoppy/utilities/matchingModel.dart';
@@ -443,15 +442,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Matching Screen'),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                _auth.signOut();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    WelcomeScreen.id, ModalRoute.withName(WelcomeScreen.id));
-              }),
-        ],
+        actions: <Widget>[],
       ),
       body: ModalProgressHUD(
         color: kMainGreyColor,

@@ -60,6 +60,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
   void didChangeDependencies() {
     data = IndustryData(AppLocalizations.of(context).locale);
     _industry = List.from(_industry)..addAll(data.getIndustries());
+    _rightButtonTitle = AppLocalizations.of(context).translate('save');
+    _leftButtonTitle = AppLocalizations.of(context).translate('cancel');
     super.didChangeDependencies();
   }
 
@@ -97,7 +99,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
       _updateMode = true;
       _termsAccepted = false;
       _policyAccepted = false;
-      _rightButtonTitle = 'AKTUALISIEREN';
+      _rightButtonTitle = AppLocalizations.of(context).translate('refresh');
 
       if (!_dataInitialized) {
         _dataInitialized = true;
@@ -232,6 +234,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       Expanded(
                         flex: 85,
                         child: TextFormField(
+                          enabled: false,
                           decoration: InputDecoration(
                             isDense: true,
                             icon: Icon(Icons.location_on),
@@ -358,7 +361,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       isDense: true,
                       icon: Icon(Icons.calendar_today),
                       labelText: AppLocalizations.of(context)
-                          .translate('time of transfer'),
+                          .translate('date of transfer'),
                     ),
                   ),
                   SizedBox(height: 10.0),
