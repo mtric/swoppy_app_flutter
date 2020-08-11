@@ -109,7 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             .document(email)
                             .get();
                         if (snapShot.exists) {
-                          Navigator.pushNamed(context, UserScreen.id);
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              UserScreen.id,
+                              ModalRoute.withName(UserScreen.id));
                         } else {
                           Navigator.pushNamed(context, ProfileScreen.id);
                         }
@@ -134,7 +136,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         showSpinner = false;
                         warnung = AppLocalizations.of(context)
                             .translate('User doesn´t exist');
-                        ;
                       });
                       print(warnung);
                     } else if (e.code == 'ERROR_WRONG_PASSWORD') {

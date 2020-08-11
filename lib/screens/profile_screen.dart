@@ -58,9 +58,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void didChangeDependencies() {
     _titles = [
       '',
+      AppLocalizations.of(context).translate('Ms.'),
       AppLocalizations.of(context).translate('Mr.'),
-      AppLocalizations.of(context).translate('Mrs.')
+      AppLocalizations.of(context).translate('Dr.'),
+      AppLocalizations.of(context).translate('Prof.')
     ];
+    _status = [
+      AppLocalizations.of(context).translate('seller'),
+      AppLocalizations.of(context).translate('buyer'),
+    ];
+    _rightButtonTitle = AppLocalizations.of(context).translate('next');
+    _leftButtonTitle = AppLocalizations.of(context).translate('cancel');
     super.didChangeDependencies();
   }
 
@@ -154,7 +162,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       decoration: InputDecoration(
                         isDense: true,
                         icon: Icon(null),
-                        labelText: 'Anrede',
+                        labelText: AppLocalizations.of(context)
+                            .translate('person_title'),
                       ),
                     ),
                   ),

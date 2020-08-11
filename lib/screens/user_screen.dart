@@ -205,14 +205,6 @@ class _UserScreenState extends State<UserScreen> {
               onPressed: () {
                 Navigator.pushNamed(context, ChatScreen.id);
               }),
-          IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                _clearLoggedInUserData();
-                _auth.signOut();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    WelcomeScreen.id, ModalRoute.withName(WelcomeScreen.id));
-              }),
         ],
         title: Text('User Screen'),
       ),
@@ -224,69 +216,80 @@ class _UserScreenState extends State<UserScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: 30.0),
-                RoundedButton(
-                  title: AppLocalizations.of(context).translate('record video'),
-                  colour: kMainRedColor,
-                  onPressed: () {
-                    Navigator.pushNamed(context, CameraScreen.id);
-                  },
+                Expanded(child: SizedBox(height: 30.0)),
+                Expanded(
+                  child: RoundedButton(
+                    title:
+                        AppLocalizations.of(context).translate('record video'),
+                    colour: kMainRedColor,
+                    onPressed: () {
+                      Navigator.pushNamed(context, CameraScreen.id);
+                    },
+                  ),
                 ),
-                RoundedButton(
-                  title:
-                      AppLocalizations.of(context).translate('show candidate'),
-                  colour: kMainGreyColor,
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      MatchingScreen.id,
-                      arguments: MatchingModel(
-                        userCategory,
-                        trade,
-                        locationCode,
-                        employee,
-                        turnover,
-                        property,
-                        sellingPrice,
-                        handoverTime,
-                      ),
-                    );
-                  },
-                ),
-                RoundedButton(
-                  title: 'TUTORIAL',
-                  colour: kSecondGreenColor,
-                  onPressed: () {
-                    Navigator.pushNamed(context, TutorialScreen.id);
-                  },
-                ),
-                RoundedButton(
-                  title: 'TUTORIAL VIDEO',
-                  colour: kSecondBlueColor,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => VideoScreen(
-                          videoPath: ktutorialVideoPath,
-                          isAsset: true,
-                          isNetwork: false,
+                Expanded(
+                  child: RoundedButton(
+                    title: AppLocalizations.of(context)
+                        .translate('show candidate'),
+                    colour: kMainGreyColor,
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        MatchingScreen.id,
+                        arguments: MatchingModel(
+                          userCategory,
+                          trade,
+                          locationCode,
+                          employee,
+                          turnover,
+                          property,
+                          sellingPrice,
+                          handoverTime,
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-                SizedBox(height: 120.0),
-                RoundedButton(
-                  title: 'A B M E L D E N',
-                  colour: kMainGreyColor,
-                  onPressed: () {
-                    _clearLoggedInUserData();
-                    _auth.signOut();
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        WelcomeScreen.id,
-                        ModalRoute.withName(WelcomeScreen.id));
-                  },
+                Expanded(
+                  child: RoundedButton(
+                    title: 'TUTORIAL',
+                    colour: kSecondGreenColor,
+                    onPressed: () {
+                      Navigator.pushNamed(context, TutorialScreen.id);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: RoundedButton(
+                    title: 'TUTORIAL VIDEO',
+                    colour: kSecondBlueColor,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VideoScreen(
+                            videoPath: ktutorialVideoPath,
+                            isAsset: true,
+                            isNetwork: false,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Expanded(child: SizedBox(height: 120.0)),
+                Expanded(
+                  child: RoundedButton(
+                    title: 'A B M E L D E N',
+                    colour: kMainGreyColor,
+                    onPressed: () {
+                      _clearLoggedInUserData();
+                      _auth.signOut();
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          WelcomeScreen.id,
+                          ModalRoute.withName(WelcomeScreen.id));
+                    },
+                  ),
                 ),
               ],
             ),
