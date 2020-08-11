@@ -194,7 +194,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       return InputDecorator(
                         decoration: InputDecoration(
                             icon: Icon(Icons.account_balance),
-                            labelText: 'Branchensparte',
+                            labelText: AppLocalizations.of(context)
+                                .translate('branch devision'),
                             labelStyle: TextStyle(
                               fontSize: 20.0,
                             )),
@@ -223,7 +224,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       Expanded(
                         flex: 40,
                         child: Text(
-                          'Standort des Unternehmens',
+                          AppLocalizations.of(context)
+                              .translate('location of company'),
                         ),
                       ),
                       SizedBox(width: 20.0),
@@ -247,7 +249,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       SizedBox(width: 20.0),
                       Expanded(
                         flex: 42,
-                        child: Text('die ersten 2 Ziffern der PLZ'),
+                        child: Text(AppLocalizations.of(context)
+                            .translate('the first 2 digits of postcode')),
                       ),
                     ],
                   ),
@@ -256,7 +259,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       return InputDecorator(
                         decoration: InputDecoration(
                           icon: Icon(Icons.people),
-                          labelText: 'Anzahl Mitarbeiter',
+                          labelText: AppLocalizations.of(context)
+                              .translate('number of employee'),
                         ),
                         isEmpty: _employee == '',
                         child: DropdownButtonHideUnderline(
@@ -282,7 +286,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       return InputDecorator(
                         decoration: InputDecoration(
                           icon: Icon(Icons.trending_up),
-                          labelText: 'Jahresumsatz',
+                          labelText: AppLocalizations.of(context)
+                              .translate('annual sales'),
                         ),
                         isEmpty: _turnover == '',
                         child: DropdownButtonHideUnderline(
@@ -308,7 +313,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       return InputDecorator(
                         decoration: InputDecoration(
                           icon: Icon(Icons.business),
-                          labelText: 'Eigene Immobilie',
+                          labelText: AppLocalizations.of(context)
+                              .translate('own property'),
                         ),
                         isEmpty: _property == '',
                         child: DropdownButtonHideUnderline(
@@ -334,7 +340,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       return InputDecorator(
                         decoration: InputDecoration(
                           icon: Icon(Icons.euro_symbol),
-                          labelText: 'Preis',
+                          labelText:
+                              AppLocalizations.of(context).translate('price'),
                         ),
                         isEmpty: _sellingPrice == '',
                         child: DropdownButtonHideUnderline(
@@ -360,7 +367,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       return InputDecorator(
                         decoration: InputDecoration(
                           icon: Icon(Icons.calendar_today),
-                          labelText: 'Zeitpunkt der Übergabe',
+                          labelText: AppLocalizations.of(context)
+                              .translate('time of transfer'),
                         ),
                         isEmpty: _handoverTime == '',
                         child: DropdownButtonHideUnderline(
@@ -392,7 +400,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       ),
                     ),
                     label: Text(
-                      'Ich akzeptiere die Nutzungsbedingungen*',
+                      AppLocalizations.of(context)
+                          .translate('I accept the terms of use'),
                     ),
                     activeColor: kSecondGreenColor,
                     attribute: "accept_terms_switch",
@@ -412,7 +421,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       ),
                     ),
                     label: Text(
-                      'Die Datenschutz-Bestimmungen habe ich gelesen und erteile hiermit meine Einwilligung zur Nutzung*',
+                      AppLocalizations.of(context).translate(
+                          'I have read the data protection regulations and hereby give my consent to their use'),
                     ),
                     activeColor: kSecondGreenColor,
                     attribute: "accept_policy_switch",

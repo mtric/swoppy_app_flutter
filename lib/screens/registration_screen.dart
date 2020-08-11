@@ -114,21 +114,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
                       setState(() {
                         showSpinner = false;
-                        warnung = 'Benutzer existiert bereits!';
+                        warnung = AppLocalizations.of(context)
+                            .translate('User doesn´t exist');
                       });
                       print(warnung);
                     } else if (e.code == 'ERROR_WEAK_PASSWORD') {
                       setState(() {
                         showSpinner = false;
-                        warnung =
-                            'Das Passwort muss mindestens 6 Zeichen lang sein.';
+                        warnung = AppLocalizations.of(context).translate(
+                            'The password must be at least 6 characters long');
                       });
                       print(warnung);
                     } else if (e.code == 'ERROR_INVALID_EMAIL') {
                       setState(() {
                         showSpinner = false;
-                        warnung =
-                            'Bitte geben Sie eine gültige Emailadresse ein.';
+                        warnung = AppLocalizations.of(context)
+                            .translate('Please check your email address');
                       });
                       print(warnung);
                     } else {
