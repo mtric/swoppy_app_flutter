@@ -27,6 +27,7 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
           '${widget.candidateEMail}/${widget.candidateEMail}_profileVideo.mp4');
       String url = (await ref.getDownloadURL()).toString();
       videoURL = url;
+      print(videoURL);
     } catch (e) {
       videoExists = false;
     }
@@ -45,57 +46,78 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(15.0),
-                child: Text('Informationen zum Unternehmen / zur Person'),
-              ),
-              TextFormField(
-                maxLines: 5,
-                maxLength: 120,
-                enabled: false,
-                initialValue: widget.abstract,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 0),
+                  child: Text('Informationen zum Unternehmen / zur Person'),
                 ),
               ),
-              SizedBox(height: 40.0),
-              RoundedButton(
-                title: 'IMAGE-VIDEO ANSEHEN',
-                colour: kMainRedColor,
-                onPressed: () {
-                  getVideoUrl();
-                  Future.delayed(const Duration(milliseconds: 1000), () {
-                    if (videoExists) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => VideoScreen(
-                            videoPath: videoURL,
-                            isAsset: false,
-                            isNetwork: true,
+              Expanded(
+                flex: 2,
+                child: TextFormField(
+                  maxLines: 5,
+                  maxLength: 120,
+                  enabled: false,
+                  initialValue: widget.abstract,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              Expanded(flex: 1, child: SizedBox(height: 10.0)),
+              Expanded(
+                flex: 1,
+                child: RoundedButton(
+                  title: 'IMAGE-VIDEO ANSEHEN',
+                  colour: kMainRedColor,
+                  onPressed: () {
+                    getVideoUrl();
+                    Future.delayed(const Duration(milliseconds: 1000), () {
+                      if (videoExists) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VideoScreen(
+                              videoPath: videoURL,
+                              isAsset: false,
+                              isNetwork: true,
+                            ),
                           ),
-                        ),
-                      );
-                    } else {
-                      showNoVideoFound(context);
-                    }
-                  });
-                },
+                        );
+                      } else {
+                        showNoVideoFound(context);
+                      }
+                    });
+                  },
+                ),
               ),
-              RoundedButton(
-                title: 'KONTAKTANFRAGE SENDEN',
-                colour: kMainRedColor,
-                onPressed: () {
-                  Navigator.pushNamed(context, ChatScreen.id);
-                },
+              Expanded(
+                flex: 1,
+                child: RoundedButton(
+                  title: 'KONTAKTANFRAGE SENDEN',
+                  colour: kMainRedColor,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ChatScreen(canEMail: '${widget.candidateEMail}'),
+                      ),
+                    );
+                  },
+                ),
               ),
-              RoundedButton(
-                title: 'ZURÜCK',
-                colour: kMainGreyColor,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+              Expanded(
+                flex: 1,
+                child: RoundedButton(
+                  title: 'ZURÜCK',
+                  colour: kMainGreyColor,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
               ),
+              Expanded(flex: 1, child: SizedBox(height: 80.0)),
             ],
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:Swoppy/components/AppLocalizations.dart';
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/screens/camera_screen.dart';
@@ -12,9 +13,9 @@ import 'package:Swoppy/utilities/matchingModel.dart';
 import 'package:Swoppy/utilities/userProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Swoppy/components/AppLocalizations.dart';
 
 import 'chat_screen.dart';
 
@@ -93,6 +94,20 @@ class _UserScreenState extends State<UserScreen> {
         });
       });
     });
+  }
+
+  String videoURL = '';
+  bool videoExists = true;
+
+  getVideoUrl() async {
+    try {
+      StorageReference ref =
+          FirebaseStorage.instance.ref().child(ktutorialVideoPath);
+      String url = (await ref.getDownloadURL()).toString();
+      videoURL = url;
+    } catch (e) {
+      videoExists = false;
+    }
   }
 
   @override
@@ -203,7 +218,12 @@ class _UserScreenState extends State<UserScreen> {
           IconButton(
               icon: Icon(Icons.chat),
               onPressed: () {
-                Navigator.pushNamed(context, ChatScreen.id);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatScreen(canEMail: ''),
+                  ),
+                );
               }),
         ],
         title: Text('User Screen'),
@@ -264,16 +284,19 @@ class _UserScreenState extends State<UserScreen> {
                     title: 'TUTORIAL VIDEO',
                     colour: kSecondBlueColor,
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => VideoScreen(
-                            videoPath: ktutorialVideoPath,
-                            isAsset: true,
-                            isNetwork: false,
+                      getVideoUrl();
+                      Future.delayed(const Duration(milliseconds: 1000), () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VideoScreen(
+                              videoPath: videoURL,
+                              isAsset: false,
+                              isNetwork: true,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      });
                     },
                   ),
                 ),
