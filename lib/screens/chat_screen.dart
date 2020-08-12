@@ -7,7 +7,11 @@ final _firestore = Firestore.instance;
 FirebaseUser loggedInUser;
 
 class ChatScreen extends StatefulWidget {
-  static const String id = 'chat_screen';
+  ChatScreen({this.canEMail});
+
+  final String canEMail;
+
+//  static const String id = 'chat_screen';
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -37,6 +41,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.canEMail);
+    //ToDo Chat personalisieren - eMail des Kandidaten ist hier
+    //ToDo über widget.canEMail verfügbar ...
+
     return Scaffold(
       appBar: AppBar(
         leading: null,

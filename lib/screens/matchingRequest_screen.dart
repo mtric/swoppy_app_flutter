@@ -86,7 +86,14 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
                 title: 'KONTAKTANFRAGE SENDEN',
                 colour: kMainRedColor,
                 onPressed: () {
-                  Navigator.pushNamed(context, ChatScreen.id);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatScreen(
+                        canEMail: '${widget.candidateEMail}',
+                      ),
+                    ),
+                  );
                 },
               ),
               RoundedButton(

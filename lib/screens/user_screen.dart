@@ -1,3 +1,4 @@
+import 'package:Swoppy/components/AppLocalizations.dart';
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/screens/camera_screen.dart';
@@ -14,7 +15,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Swoppy/components/AppLocalizations.dart';
 
 import 'chat_screen.dart';
 
@@ -203,7 +203,14 @@ class _UserScreenState extends State<UserScreen> {
           IconButton(
               icon: Icon(Icons.chat),
               onPressed: () {
-                Navigator.pushNamed(context, ChatScreen.id);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatScreen(
+                      canEMail: '',
+                    ),
+                  ),
+                );
               }),
         ],
         title: Text('User Screen'),
