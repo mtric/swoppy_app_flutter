@@ -6,6 +6,7 @@ import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 class MatchingRequestScreen extends StatefulWidget {
   MatchingRequestScreen(
@@ -36,7 +37,7 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kontaktanfrage'),
+        title: Text(AppLocalizations.of(context).translate('contact request')),
       ),
       body: SafeArea(
         child: Padding(
@@ -47,7 +48,8 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(15.0),
-                child: Text('Informationen zum Unternehmen / zur Person'),
+                child: Text(AppLocalizations.of(context)
+                    .translate('information about the company/person')),
               ),
               TextFormField(
                 maxLines: 5,
@@ -60,7 +62,8 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
               ),
               SizedBox(height: 40.0),
               RoundedButton(
-                title: 'IMAGE-VIDEO ANSEHEN',
+                title:
+                    AppLocalizations.of(context).translate('show image video'),
                 colour: kMainRedColor,
                 onPressed: () {
                   getVideoUrl();
@@ -83,14 +86,15 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
                 },
               ),
               RoundedButton(
-                title: 'KONTAKTANFRAGE SENDEN',
+                title: AppLocalizations.of(context)
+                    .translate('send contact request'),
                 colour: kMainRedColor,
                 onPressed: () {
                   Navigator.pushNamed(context, ChatScreen.id);
                 },
               ),
               RoundedButton(
-                title: 'ZURÜCK',
+                title: AppLocalizations.of(context).translate('return'),
                 colour: kMainGreyColor,
                 onPressed: () {
                   Navigator.pop(context);
