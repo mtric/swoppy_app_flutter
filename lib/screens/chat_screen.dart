@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 
 final _firestore = Firestore.instance;
 FirebaseUser loggedInUser;
+String canMail;
 
 class ChatScreen extends StatefulWidget {
   ChatScreen({this.canEMail});
 
   final String canEMail;
-
 //  static const String id = 'chat_screen';
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -42,6 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     print(widget.canEMail);
+    canMail = widget.canEMail;
     //ToDo Chat personalisieren - eMail des Kandidaten ist hier
     //ToDo über widget.canEMail verfügbar ...
 
@@ -78,6 +79,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       _firestore.collection('messages').add({
                         'text': messageText,
                         'sender': loggedInUser.email,
+                        'recipient': canMail,
                       });
                     },
                     child: Text(
@@ -113,18 +115,23 @@ class MessagesStream extends StatelessWidget {
         List<MessageBubble> messageBubbles = [];
 
         for (var message in messages) {
-          final messageText = message.data['text'];
-          final messageSender = message.data['sender'];
+          if ((message.data['sender'] == loggedInUser.email &&
+                  message.data['recipient'] == canMail) ||
+              (message.data['sender'] == canMail &&
+                  message.data['recipient'] == loggedInUser.email)) {
+            final messageText = message.data['text'];
+            final messageSender = message.data['sender'];
 
-          final currentUser = loggedInUser.email;
+            final currentUser = loggedInUser.email;
 
-          final messageBubble = MessageBubble(
-            sender: messageSender,
-            text: messageText,
-            isMe: currentUser == messageSender,
-          );
+            final messageBubble = MessageBubble(
+              sender: messageSender,
+              text: messageText,
+              isMe: currentUser == messageSender,
+            );
 
-          messageBubbles.add(messageBubble);
+            messageBubbles.add(messageBubble);
+          }
         }
 
         return Expanded(
