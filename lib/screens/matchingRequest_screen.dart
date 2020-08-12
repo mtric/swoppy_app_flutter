@@ -27,6 +27,7 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
           '${widget.candidateEMail}/${widget.candidateEMail}_profileVideo.mp4');
       String url = (await ref.getDownloadURL()).toString();
       videoURL = url;
+      print(videoURL);
     } catch (e) {
       videoExists = false;
     }

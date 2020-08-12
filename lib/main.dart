@@ -65,7 +65,6 @@ Future<void> main() async {
           MatchingScreen.id: (context) => MatchingScreen(),
           TutorialScreen.id: (context) => TutorialScreen(),
           ResetPasswordScreen.id: (context) => ResetPasswordScreen(),
-          //       ChatScreen.id: (context) => ChatScreen(),
         },
       ),
     );
