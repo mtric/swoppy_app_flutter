@@ -17,7 +17,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'chat_screen.dart';
+// import 'chat_screen.dart';
 
 enum settings { user, hardfacts, video, delete }
 
@@ -215,18 +215,20 @@ class _UserScreenState extends State<UserScreen> {
               ),
             ],
           ),
-          IconButton(
-              icon: Icon(Icons.chat),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatScreen(canEMail: ''),
-                  ),
-                );
-              }),
+// TODO: implement a screen with overview about all existing conversations a user has and link to it here
+//          IconButton(
+//            icon: Icon(Icons.chat),
+//            onPressed: () {
+//              Navigator.push(
+//                context,
+//                MaterialPageRoute(
+//                  builder: (context) => ChatScreen(canEMail: ''),
+//                ),
+//              );
+//            },
+//          ),
         ],
-        title: Text('User Screen'),
+        title: Text(AppLocalizations.of(context).translate('dashboard')),
       ),
       body: SafeArea(
         child: Padding(

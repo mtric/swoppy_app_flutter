@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:Swoppy/components/AppLocalizations.dart';
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/utilities/constants.dart';
@@ -441,7 +442,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
     // return the widget tree for the matching screen
     return Scaffold(
       appBar: AppBar(
-        title: Text('Matching Screen'),
+        title: Text(AppLocalizations.of(context).translate('matching')),
         actions: <Widget>[],
       ),
       body: ModalProgressHUD(

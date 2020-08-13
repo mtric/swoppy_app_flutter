@@ -47,73 +47,80 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-
               Container(
                 padding: EdgeInsets.all(15.0),
                 child: Text(AppLocalizations.of(context)
                     .translate('information about the company/person')),
               ),
-              
               Expanded(
                 flex: 2,
                 child: TextFormField(
                   maxLines: 5,
                   maxLength: 120,
                   enabled: false,
-                  initialValue: widget.abstract,
+                  initialValue: (widget.abstract == '')
+                      ? 'Keine Angabe'
+                      : widget.abstract,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                   ),
                 ),
               ),
-              
               SizedBox(height: 40.0),
-              
-              RoundedButton(
-                title:
-                    AppLocalizations.of(context).translate('show image video'),
-                colour: kMainRedColor,
-                onPressed: () {
-                  getVideoUrl();
-                  Future.delayed(const Duration(milliseconds: 1000), () {
-                    if (videoExists) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => VideoScreen(
-                            videoPath: videoURL,
-                            isAsset: false,
-                            isNetwork: true,
-                          ),
-                        );
-                      } else {
-                        showNoVideoFound(context);
-                      }
-                    });
+              Expanded(
+                child: RoundedButton(
+                  title: AppLocalizations.of(context)
+                      .translate('show image video'),
+                  colour: kMainRedColor,
+                  onPressed: () {
+                    getVideoUrl();
+                    Future.delayed(
+                      const Duration(milliseconds: 1000),
+                      () {
+                        if (videoExists) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VideoScreen(
+                                videoPath: videoURL,
+                                isAsset: false,
+                                isNetwork: true,
+                              ),
+                            ),
+                          );
+                        } else {
+                          showNoVideoFound(context);
+                        }
+                      },
+                    );
                   },
                 ),
               ),
-              RoundedButton(
-                title: AppLocalizations.of(context)
-                    .translate('send contact request'),
-                colour: kMainRedColor,
-                onPressed: () {
-                  Navigator.push(
+              Expanded(
+                child: RoundedButton(
+                  title: AppLocalizations.of(context)
+                      .translate('send contact request'),
+                  colour: kSecondOrangeColor,
+                  onPressed: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
                             ChatScreen(canEMail: '${widget.candidateEMail}'),
                       ),
                     );
-                },
+                  },
+                ),
               ),
-              RoundedButton(
-                title: AppLocalizations.of(context).translate('return'),
-                colour: kMainGreyColor,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-               ),
+              Expanded(
+                child: RoundedButton(
+                  title: AppLocalizations.of(context).translate('return'),
+                  colour: kMainGreyColor,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
               Expanded(flex: 1, child: SizedBox(height: 80.0)),
             ],
           ),
