@@ -179,8 +179,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         labelText:
                             AppLocalizations.of(context).translate('firstname'),
                       ),
-                      validator: (value) =>
-                          (value.isEmpty) ? 'Eingabe erforderlich' : null,
+                      validator: (value) => (value.isEmpty)
+                          ? AppLocalizations.of(context)
+                              .translate('information required')
+                          : null,
                     ),
                   ),
                   SizedBox(width: 15.0),
@@ -191,8 +193,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         labelText:
                             AppLocalizations.of(context).translate('lastname'),
                       ),
-                      validator: (value) =>
-                          (value.isEmpty) ? 'Eingabe erforderlich' : null,
+                      validator: (value) => (value.isEmpty)
+                          ? AppLocalizations.of(context)
+                              .translate('information required')
+                          : null,
                     ),
                   ),
                 ],
@@ -236,7 +240,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           AppLocalizations.of(context).translate('postcode'),
                     ),
                     validator: (value) => (value.isEmpty || value.length != 5)
-                        ? 'Eingabe üngültig'
+                        ? AppLocalizations.of(context)
+                            .translate('input invalid')
                         : null,
                   ),
                 ),
@@ -249,8 +254,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       labelText:
                           AppLocalizations.of(context).translate('location'),
                     ),
-                    validator: (value) =>
-                        (value.isEmpty) ? 'Eingabe erforderlich' : null,
+                    validator: (value) => (value.isEmpty)
+                        ? AppLocalizations.of(context)
+                            .translate('information required')
+                        : null,
                   ),
                 )
               ]),

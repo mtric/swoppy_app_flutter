@@ -57,5 +57,8 @@
   "information about the company/person": "Information about the company/person",
   "show image video": "SHOW IMAGE VIDEO",
   "send contact request": "SEND CONTACT REQUEST",
-  "return": "Return"
+  "return": "Return",
+  "information required": "Information required",
+  "input invalid": "Input invalid",
+  "accept terms": "You must accept the terms of use to continue."
 }

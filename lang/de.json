@@ -57,5 +57,8 @@
   "information about the company/person": "Informationen zum Unternehmen / zur Person",
   "show image video": "IMAGE VIDEO ANSEHEN",
   "send contact request": "KONTAKTANFRAGE SENDEN",
-  "return": "Zurück"
+  "return": "Zurück",
+  "information required": "Eingabe erforderlich",
+  "input invalid": "Eingabe ungültig",
+  "accept terms": "Sie müssen die Nutzungsbedingungen akzeptieren um fortzufahren."
 }
