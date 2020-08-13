@@ -51,5 +51,14 @@
   "Please check your password": "Bitte überprüfen Sie ihr Passwort",
   "back to login": "Zurück zum Login",
   "Here to the video": "Hier zum Video",
-  "The password must be at least 6 characters long": "Das Passwort muss mindestens 6 Zeichen lang sein."
+  "The password must be at least 6 characters long": "Das Passwort muss mindestens 6 Zeichen lang sein.",
+  "send": "Senden",
+  "contact request": "KONTAKTANFRAGE",
+  "information about the company/person": "Informationen zum Unternehmen / zur Person",
+  "show image video": "IMAGE VIDEO ANSEHEN",
+  "send contact request": "KONTAKTANFRAGE SENDEN",
+  "return": "Zurück",
+  "information required": "Eingabe erforderlich",
+  "input invalid": "Eingabe ungültig",
+  "accept terms": "Sie müssen die Nutzungsbedingungen akzeptieren um fortzufahren."
 }

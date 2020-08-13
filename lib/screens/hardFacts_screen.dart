@@ -201,8 +201,10 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     }).toList(),
                     onChanged: (value) => _onSelectedIndustry(value),
                     value: _selectedIndustry,
-                    validator: (value) =>
-                        value == '' ? 'Angabe erforderlich' : null,
+                    validator: (value) => value == ''
+                        ? AppLocalizations.of(context)
+                            .translate('information required')
+                        : null,
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.business),
@@ -258,7 +260,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                           keyboardType: TextInputType.number,
                           validator: (value) =>
                               (value.isEmpty || value.length != 5)
-                                  ? 'Eingabe üngültig'
+                                  ? AppLocalizations.of(context)
+                                      .translate('input invalid')
                                   : null,
                         ),
                       ),
@@ -275,8 +278,10 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       setState(() => _employee = newValue);
                     },
                     value: _employee,
-                    validator: (value) =>
-                        value == '' ? 'Angabe erforderlich' : null,
+                    validator: (value) => value == ''
+                        ? AppLocalizations.of(context)
+                            .translate('information required')
+                        : null,
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.people),
@@ -295,8 +300,10 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       setState(() => _turnover = newValue);
                     },
                     value: _turnover,
-                    validator: (value) =>
-                        value == '' ? 'Angabe erforderlich' : null,
+                    validator: (value) => value == ''
+                        ? AppLocalizations.of(context)
+                            .translate('information required')
+                        : null,
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.trending_up),
@@ -315,8 +322,10 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       setState(() => _property = newValue);
                     },
                     value: _property,
-                    validator: (value) =>
-                        value == '' ? 'Angabe erforderlich' : null,
+                    validator: (value) => value == ''
+                        ? AppLocalizations.of(context)
+                            .translate('information required')
+                        : null,
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.business),
@@ -335,8 +344,10 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       setState(() => _sellingPrice = newValue);
                     },
                     value: _sellingPrice,
-                    validator: (value) =>
-                        value == '' ? 'Angabe erforderlich' : null,
+                    validator: (value) => value == ''
+                        ? AppLocalizations.of(context)
+                            .translate('information required')
+                        : null,
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.euro_symbol),
@@ -355,8 +366,10 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                       setState(() => _handoverTime = newValue);
                     },
                     value: _handoverTime,
-                    validator: (value) =>
-                        value == '' ? 'Angabe erforderlich' : null,
+                    validator: (value) => value == ''
+                        ? AppLocalizations.of(context)
+                            .translate('information required')
+                        : null,
                     decoration: InputDecoration(
                       isDense: true,
                       icon: Icon(Icons.calendar_today),
@@ -386,8 +399,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     onChanged: _onChangedTerms,
                     validators: [
                       FormBuilderValidators.requiredTrue(
-                        errorText:
-                            "Sie müssen die Nutzungsbedingungen akzeptieren um fortzufahren",
+                        errorText: AppLocalizations.of(context)
+                            .translate('accept terms'),
                       ),
                     ],
                   ),
@@ -413,8 +426,8 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                     onChanged: _onChangedPolicy,
                     validators: [
                       FormBuilderValidators.requiredTrue(
-                        errorText:
-                            "Sie müssen die Bestimmungen akzeptieren um fortzufahren.",
+                        errorText: AppLocalizations.of(context)
+                            .translate('accept terms'),
                       ),
                     ],
                   ),

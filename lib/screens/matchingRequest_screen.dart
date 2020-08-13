@@ -6,6 +6,7 @@ import 'package:Swoppy/utilities/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 
 class MatchingRequestScreen extends StatefulWidget {
   MatchingRequestScreen(
@@ -37,7 +38,7 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kontaktanfrage'),
+        title: Text(AppLocalizations.of(context).translate('contact request')),
       ),
       body: SafeArea(
         child: Padding(
@@ -46,12 +47,13 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 0),
-                  child: Text('Informationen zum Unternehmen / zur Person'),
-                ),
+
+              Container(
+                padding: EdgeInsets.all(15.0),
+                child: Text(AppLocalizations.of(context)
+                    .translate('information about the company/person')),
               ),
+              
               Expanded(
                 flex: 2,
                 child: TextFormField(
@@ -64,24 +66,24 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
                   ),
                 ),
               ),
-              Expanded(flex: 1, child: SizedBox(height: 10.0)),
-              Expanded(
-                flex: 1,
-                child: RoundedButton(
-                  title: 'IMAGE-VIDEO ANSEHEN',
-                  colour: kMainRedColor,
-                  onPressed: () {
-                    getVideoUrl();
-                    Future.delayed(const Duration(milliseconds: 1000), () {
-                      if (videoExists) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => VideoScreen(
-                              videoPath: videoURL,
-                              isAsset: false,
-                              isNetwork: true,
-                            ),
+              
+              SizedBox(height: 40.0),
+              
+              RoundedButton(
+                title:
+                    AppLocalizations.of(context).translate('show image video'),
+                colour: kMainRedColor,
+                onPressed: () {
+                  getVideoUrl();
+                  Future.delayed(const Duration(milliseconds: 1000), () {
+                    if (videoExists) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VideoScreen(
+                            videoPath: videoURL,
+                            isAsset: false,
+                            isNetwork: true,
                           ),
                         );
                       } else {
@@ -91,32 +93,27 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
                   },
                 ),
               ),
-              Expanded(
-                flex: 1,
-                child: RoundedButton(
-                  title: 'KONTAKTANFRAGE SENDEN',
-                  colour: kMainRedColor,
-                  onPressed: () {
-                    Navigator.push(
+              RoundedButton(
+                title: AppLocalizations.of(context)
+                    .translate('send contact request'),
+                colour: kMainRedColor,
+                onPressed: () {
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
                             ChatScreen(canEMail: '${widget.candidateEMail}'),
                       ),
                     );
-                  },
-                ),
+                },
               ),
-              Expanded(
-                flex: 1,
-                child: RoundedButton(
-                  title: 'ZURÜCK',
-                  colour: kMainGreyColor,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
+              RoundedButton(
+                title: AppLocalizations.of(context).translate('return'),
+                colour: kMainGreyColor,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+               ),
               Expanded(flex: 1, child: SizedBox(height: 80.0)),
             ],
           ),
