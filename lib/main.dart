@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:Swoppy/components/AppLocalizations.dart';
 import 'package:Swoppy/screens/camera_screen.dart';
-import 'package:Swoppy/screens/chat_screen.dart';
 import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/screens/login_screen.dart';
 import 'package:Swoppy/screens/matching_screen.dart';
@@ -15,6 +14,7 @@ import 'package:Swoppy/screens/welcome_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -65,7 +65,6 @@ Future<void> main() async {
           MatchingScreen.id: (context) => MatchingScreen(),
           TutorialScreen.id: (context) => TutorialScreen(),
           ResetPasswordScreen.id: (context) => ResetPasswordScreen(),
-          ChatScreen.id: (context) => ChatScreen(),
         },
       ),
     );

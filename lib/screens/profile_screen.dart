@@ -69,6 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ];
     _rightButtonTitle = AppLocalizations.of(context).translate('next');
     _leftButtonTitle = AppLocalizations.of(context).translate('cancel');
+    _verticalGroupValue = AppLocalizations.of(context).translate('seller');
     super.didChangeDependencies();
   }
 
@@ -121,8 +122,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _myAddressController.text = args.address;
         _myAbstractController.text = args.abstract;
         args.userCategory == 'buyer'
-            ? _verticalGroupValue = 'Käufer'
-            : _verticalGroupValue = 'Verkäufer';
+            ? _verticalGroupValue =
+                AppLocalizations.of(context).translate('buyer')
+            : _verticalGroupValue =
+                AppLocalizations.of(context).translate('seller');
       }
     }
 
@@ -321,7 +324,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
                           if (_updateMode) {
-                            _verticalGroupValue == 'Käufer'
+                            _verticalGroupValue ==
+                                    AppLocalizations.of(context)
+                                        .translate('buyer')
                                 ? _userCategory = 'buyer'
                                 : _userCategory = 'seller';
 

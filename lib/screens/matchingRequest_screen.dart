@@ -28,6 +28,7 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
           '${widget.candidateEMail}/${widget.candidateEMail}_profileVideo.mp4');
       String url = (await ref.getDownloadURL()).toString();
       videoURL = url;
+      print(videoURL);
     } catch (e) {
       videoExists = false;
     }
@@ -46,21 +47,28 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+
               Container(
                 padding: EdgeInsets.all(15.0),
                 child: Text(AppLocalizations.of(context)
                     .translate('information about the company/person')),
               ),
-              TextFormField(
-                maxLines: 5,
-                maxLength: 120,
-                enabled: false,
-                initialValue: widget.abstract,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+              
+              Expanded(
+                flex: 2,
+                child: TextFormField(
+                  maxLines: 5,
+                  maxLength: 120,
+                  enabled: false,
+                  initialValue: widget.abstract,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
+              
               SizedBox(height: 40.0),
+              
               RoundedButton(
                 title:
                     AppLocalizations.of(context).translate('show image video'),
@@ -77,20 +85,26 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
                             isAsset: false,
                             isNetwork: true,
                           ),
-                        ),
-                      );
-                    } else {
-                      showNoVideoFound(context);
-                    }
-                  });
-                },
+                        );
+                      } else {
+                        showNoVideoFound(context);
+                      }
+                    });
+                  },
+                ),
               ),
               RoundedButton(
                 title: AppLocalizations.of(context)
                     .translate('send contact request'),
                 colour: kMainRedColor,
                 onPressed: () {
-                  Navigator.pushNamed(context, ChatScreen.id);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ChatScreen(canEMail: '${widget.candidateEMail}'),
+                      ),
+                    );
                 },
               ),
               RoundedButton(
@@ -99,7 +113,8 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-              ),
+               ),
+              Expanded(flex: 1, child: SizedBox(height: 80.0)),
             ],
           ),
         ),
