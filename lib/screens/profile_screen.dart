@@ -1,3 +1,4 @@
+import 'package:Swoppy/components/AppLocalizations.dart';
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/decimalTextInputFormatter.dart';
 import 'package:Swoppy/components/rounded_button.dart';
@@ -9,7 +10,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:group_radio_button/group_radio_button.dart';
-import 'package:Swoppy/components/AppLocalizations.dart';
+
+import 'user_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'profile_screen';
@@ -23,18 +25,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
 
+  final _titlesKeyList = ['', 'Ms.', 'Mr.', 'Dr.', 'Prof.'];
+
   bool _dataInitialized = false;
   bool _updateMode = false;
 
   String _title = '';
   String _email = '';
   String _userCategory = '';
-  String _rightButtonTitle = 'WEITER';
-  String _leftButtonTitle = 'ABBRECHEN';
-  String _verticalGroupValue = "Verkäufer";
+  String _rightButtonTitle = '';
+  String _leftButtonTitle = '';
+  String _verticalGroupValue = '';
 
-  List<String> _status = ["Verkäufer", "Käufer"];
-  List<String> _titles = <String>['', 'Frau', 'Herr', 'Frau Dr.', 'Herr Dr.'];
+  List<String> _status, _titlesList;
+  Map<String, String> _titlesMap;
 
   void getCurrentUser() async {
     try {
@@ -56,13 +60,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void didChangeDependencies() {
-    _titles = [
+    _titlesList = [
       '',
       AppLocalizations.of(context).translate('Ms.'),
       AppLocalizations.of(context).translate('Mr.'),
       AppLocalizations.of(context).translate('Dr.'),
       AppLocalizations.of(context).translate('Prof.')
     ];
+    _titlesMap = Map.fromIterables(_titlesList, _titlesKeyList);
     _status = [
       AppLocalizations.of(context).translate('seller'),
       AppLocalizations.of(context).translate('buyer'),
@@ -105,7 +110,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Future.delayed(const Duration(milliseconds: 1000), () {
       _myEmailController.text = _email;
     });
-    // ----
+
+    // Check whether the data should be updated (args != null) or re-entered
     if (args != null) {
       _updateMode = true;
       _rightButtonTitle = AppLocalizations.of(context).translate('refresh');
@@ -113,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       if (!_dataInitialized) {
         _dataInitialized = true;
-        _title = args.title;
+        _title = AppLocalizations.of(context).translate(args.title);
         _myFirstNameController.text = args.firstName;
         _myLastNameController.text = args.lastName;
         _myPhoneController.text = args.phone;
@@ -152,14 +158,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     child: DropdownButtonFormField<String>(
                       isExpanded: false,
-                      items: _titles.map((String value) {
+                      items: _titlesList.map((String value) {
                         return DropdownMenuItem(
                           value: value,
                           child: Text(value),
                         );
                       }).toList(),
                       onChanged: (String newValue) {
-                        setState(() => _title = newValue);
+                        if (this.mounted) {
+                          setState(() => _title = newValue);
+                        }
                       },
                       value: _title,
                       decoration: InputDecoration(
@@ -280,9 +288,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: RadioGroup<String>.builder(
                   direction: Axis.horizontal,
                   groupValue: _verticalGroupValue,
-                  onChanged: (value) => setState(() {
-                    _verticalGroupValue = value;
-                  }),
+                  onChanged: (value) {
+                    if (this.mounted) {
+                      setState(() {
+                        _verticalGroupValue = value;
+                      });
+                    }
+                  },
                   items: _status,
                   itemBuilder: (item) => RadioButtonBuilder(
                     item,
@@ -309,7 +321,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       colour: kMainGreyColor,
                       minWidth: 100,
                       onPressed: () {
-                        Navigator.pop(context);
+                        _updateMode
+                            ? Navigator.of(context).pushNamedAndRemoveUntil(
+                                UserScreen.id,
+                                ModalRoute.withName(UserScreen.id))
+                            : Navigator.pop(context);
                       },
                     ),
                   ),
@@ -333,11 +349,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             final _firestore = Firestore.instance;
                             // update firebase entry according to the collection 'user'
                             DocumentReference documentReference = _firestore
-                                .collection('user')
-                                .document(args.eMail);
+                                .collection(kCollection)
+                                .document(args.eMail.trim()?.toLowerCase());
 
                             Map<String, dynamic> updatedData = {
-                              'title': _title,
+                              'title': _titlesMap[_title],
                               'category': _userCategory,
                               'lastName': _myLastNameController.text,
                               'firstName': _myFirstNameController.text,
@@ -356,12 +372,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                           // Check whether all validators of the fields are valid.
                           else {
+                            _verticalGroupValue ==
+                                    AppLocalizations.of(context)
+                                        .translate('buyer')
+                                ? _userCategory = 'buyer'
+                                : _userCategory = 'seller';
                             Navigator.pushNamed(
                               context,
                               HardFactsScreen.id,
                               arguments: UserProfile(
                                   _userCategory,
-                                  _title,
+                                  _titlesMap[_title],
                                   _myLastNameController.text,
                                   _myFirstNameController.text,
                                   _myEmailController.text,

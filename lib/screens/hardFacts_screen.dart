@@ -1,3 +1,4 @@
+import 'package:Swoppy/components/AppLocalizations.dart';
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/decimalTextInputFormatter.dart';
 import 'package:Swoppy/components/rounded_button.dart';
@@ -10,7 +11,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:Swoppy/components/AppLocalizations.dart';
+
+import 'user_screen.dart';
 
 class HardFactsScreen extends StatefulWidget {
   static const String id = 'hardFacts_screen';
@@ -51,8 +53,6 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
 
   @override
   void initState() {
-//    data = IndustryData(AppLocalizations.of(context).locale);
-//    _industry = List.from(_industry)..addAll(data.getIndustries());
     super.initState();
   }
 
@@ -146,7 +146,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
       }
     }
 
-    // Add additional option for buyers
+    // Add additional option for buyer
     if (args.userCategory == 'buyer' &&
         (!kEmployeeList.contains(kAdditionalOption) ||
             !kTurnoverList.contains(kAdditionalOption) ||
@@ -160,6 +160,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
       kHandoverTimeList.add(kAdditionalOption);
     }
 
+    // Remove additional option for setter
     if (args.userCategory == 'seller' &&
         (kEmployeeList.contains(kAdditionalOption) ||
             kTurnoverList.contains(kAdditionalOption) ||
@@ -440,7 +441,11 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                           colour: kMainGreyColor,
                           minWidth: 100,
                           onPressed: () {
-                            Navigator.pop(context);
+                            _updateMode
+                                ? Navigator.of(context).pushNamedAndRemoveUntil(
+                                    UserScreen.id,
+                                    ModalRoute.withName(UserScreen.id))
+                                : Navigator.pop(context);
                           },
                         ),
                       ),
@@ -460,7 +465,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                                 // update firebase entry according to the collection 'user'
                                 DocumentReference documentReference = _firestore
                                     .collection(kCollection)
-                                    .document(args.eMail);
+                                    .document(args.eMail.trim()?.toLowerCase());
 
                                 Map<String, dynamic> updatedData = {
                                   'trade': _selectedBranchKey,
@@ -482,7 +487,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                                 // Create firebase entry according to the collection 'user'
                                 DocumentReference documentReference = _firestore
                                     .collection(_collection)
-                                    .document(args.eMail);
+                                    .document(args.eMail.trim()?.toLowerCase());
 
                                 Map<String, dynamic> userData = {
                                   'title': args.title,

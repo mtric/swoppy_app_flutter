@@ -1,3 +1,4 @@
+import 'package:Swoppy/components/AppLocalizations.dart';
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/screens/profile_screen.dart';
@@ -8,7 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:Swoppy/components/AppLocalizations.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (firebaseUser.isEmailVerified) {
                         final snapShot = await Firestore.instance
                             .collection(kCollection)
-                            .document(email)
+                            .document(email.trim()?.toLowerCase())
                             .get();
                         if (snapShot.exists) {
                           Navigator.of(context).pushNamedAndRemoveUntil(

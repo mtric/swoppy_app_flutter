@@ -68,32 +68,36 @@ class _UserScreenState extends State<UserScreen> {
   String handoverTime = '';
 
   _readDataFromDataBase(currentUser) {
-    setState(() {
-      documentReference =
-          _firestore.collection(_collection).document(currentUser);
+    if (this.mounted) {
+      setState(() {
+        documentReference =
+            _firestore.collection(_collection).document(currentUser);
 
-      documentReference.get().then((datasnapshot) {
-        setState(() {
-          title = datasnapshot.data['title'];
-          firstName = datasnapshot.data['firstName'];
-          lastName = datasnapshot.data['lastName'];
-          eMail = datasnapshot.data['eMail'];
-          phone = datasnapshot.data['phone'];
-          zipCode = datasnapshot.data['zipCode'];
-          city = datasnapshot.data['city'];
-          address = datasnapshot.data['address'];
-          abstract = datasnapshot.data['abstract'];
-          userCategory = datasnapshot.data['category'];
-          trade = datasnapshot.data['trade'];
-          locationCode = datasnapshot.data['locationCode'];
-          employee = datasnapshot.data['employee'];
-          turnover = datasnapshot.data['turnover'];
-          property = datasnapshot.data['property'];
-          sellingPrice = datasnapshot.data['sellingPrice'];
-          handoverTime = datasnapshot.data['handoverTime'];
+        documentReference.get().then((datasnapshot) {
+          if (this.mounted) {
+            setState(() {
+              title = datasnapshot.data['title'];
+              firstName = datasnapshot.data['firstName'];
+              lastName = datasnapshot.data['lastName'];
+              eMail = datasnapshot.data['eMail'];
+              phone = datasnapshot.data['phone'];
+              zipCode = datasnapshot.data['zipCode'];
+              city = datasnapshot.data['city'];
+              address = datasnapshot.data['address'];
+              abstract = datasnapshot.data['abstract'];
+              userCategory = datasnapshot.data['category'];
+              trade = datasnapshot.data['trade'];
+              locationCode = datasnapshot.data['locationCode'];
+              employee = datasnapshot.data['employee'];
+              turnover = datasnapshot.data['turnover'];
+              property = datasnapshot.data['property'];
+              sellingPrice = datasnapshot.data['sellingPrice'];
+              handoverTime = datasnapshot.data['handoverTime'];
+            });
+          }
         });
       });
-    });
+    }
   }
 
   String videoURL = '';
@@ -124,69 +128,71 @@ class _UserScreenState extends State<UserScreen> {
         actions: <Widget>[
           PopupMenuButton<settings>(
             onSelected: (settings _selection) {
-              setState(() {
-                switch (_selection) {
-                  case settings.user:
-                    {
-                      Navigator.pushNamed(
-                        context,
-                        ProfileScreen.id,
-                        arguments: UserProfile(
-                            userCategory,
-                            title,
-                            lastName,
-                            firstName,
-                            eMail,
-                            phone,
-                            zipCode,
-                            city,
-                            address,
-                            abstract,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null),
-                      );
-                    }
-                    break;
-                  case settings.hardfacts:
-                    {
-                      Navigator.pushNamed(
-                        context,
-                        HardFactsScreen.id,
-                        arguments: UserProfile(
-                            userCategory,
-                            null,
-                            null,
-                            null,
-                            eMail,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            trade,
-                            locationCode,
-                            employee,
-                            turnover,
-                            property,
-                            sellingPrice,
-                            handoverTime),
-                      );
-                    }
-                    break;
-                  case settings.video:
-                    showDeleteUserVideo(context, loggedInUser);
-                    break;
-                  case settings.delete:
-                    showDeleteUserAccount(
-                        context, loggedInUser, documentReference);
-                    break;
-                }
-              });
+              if (this.mounted) {
+                setState(() {
+                  switch (_selection) {
+                    case settings.user:
+                      {
+                        Navigator.pushNamed(
+                          context,
+                          ProfileScreen.id,
+                          arguments: UserProfile(
+                              userCategory,
+                              title,
+                              lastName,
+                              firstName,
+                              eMail,
+                              phone,
+                              zipCode,
+                              city,
+                              address,
+                              abstract,
+                              null,
+                              null,
+                              null,
+                              null,
+                              null,
+                              null,
+                              null),
+                        );
+                      }
+                      break;
+                    case settings.hardfacts:
+                      {
+                        Navigator.pushNamed(
+                          context,
+                          HardFactsScreen.id,
+                          arguments: UserProfile(
+                              userCategory,
+                              null,
+                              null,
+                              null,
+                              eMail,
+                              null,
+                              null,
+                              null,
+                              null,
+                              null,
+                              trade,
+                              locationCode,
+                              employee,
+                              turnover,
+                              property,
+                              sellingPrice,
+                              handoverTime),
+                        );
+                      }
+                      break;
+                    case settings.video:
+                      showDeleteUserVideo(context, loggedInUser);
+                      break;
+                    case settings.delete:
+                      showDeleteUserAccount(
+                          context, loggedInUser, documentReference);
+                      break;
+                  }
+                });
+              }
             },
             icon: Icon(Icons.settings),
             itemBuilder: (BuildContext context) => <PopupMenuEntry<settings>>[
