@@ -221,7 +221,7 @@ showNoVideoFound(BuildContext context) {
 
   AlertDialog alert = AlertDialog(
     title: Text('ACHTUNG'),
-    content: Text('Es ist kein Image-Video vorhanden.'),
+    content: Text('Es konnte kein Video gefunden werden.'),
     actions: [
       okButton,
     ],

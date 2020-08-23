@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const kCollection = 'user';
-const ktutorialVideoPath = 'Tutorial_Video/Nachfolge_Matching_V01.mov';
+const ktutorialVideoPath = 'Tutorial_Video/Nachfolge_Matching.mp4';
 const kGeolocationDataPath = "assets/res/plz.csv";
 const kMinHitRate = 10.0;
 
@@ -17,6 +17,8 @@ const kSecondLightGreenColor = Color(0xFF8Cb84F);
 const kSecondOrangeColor = Color(0xFFE9883E);
 
 const kBackgroundColor = Colors.white;
+const kSubMenuBackgroundColor = Color(0xFFF5F5F5);
+const kDevisionColor = Colors.grey;
 const kBottomAppBarColor = Color(0x20000000);
 
 const kAppBarTheme = AppBarTheme(

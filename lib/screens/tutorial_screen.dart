@@ -1,12 +1,13 @@
+import 'package:Swoppy/components/AppLocalizations.dart';
 import 'package:Swoppy/components/rounded_button.dart';
 import 'package:Swoppy/components/slides.dart';
+import 'package:Swoppy/components/video_url.dart';
 import 'package:Swoppy/screens/video_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:Swoppy/components/AppLocalizations.dart';
 
 class TutorialScreen extends StatefulWidget {
   static const String id = 'tutorial_screen';
@@ -39,17 +40,24 @@ class _TutorialScreenState extends State<TutorialScreen> {
                           title: AppLocalizations.of(context)
                               .translate('Here to the video'),
                           colour: kSecondBlueColor,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VideoScreen(
-                                  videoPath: ktutorialVideoPath,
-                                  isAsset: true,
-                                  isNetwork: false,
-                                ),
-                              ),
-                            );
+                          onPressed: () async {
+                            final videoURL = await fetchVideoUrl(
+                                context, ktutorialVideoPath);
+                            Future.delayed(const Duration(milliseconds: 1000),
+                                () {
+                              if (videoURL != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => VideoScreen(
+                                      videoPath: videoURL,
+                                      isAsset: false,
+                                      isNetwork: true,
+                                    ),
+                                  ),
+                                );
+                              }
+                            });
                           },
                         ),
                       )

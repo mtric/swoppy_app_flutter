@@ -4,7 +4,6 @@ import 'package:Swoppy/components/AppLocalizations.dart';
 import 'package:Swoppy/screens/camera_screen.dart';
 import 'package:Swoppy/screens/hardFacts_screen.dart';
 import 'package:Swoppy/screens/login_screen.dart';
-import 'package:Swoppy/screens/matching_screen.dart';
 import 'package:Swoppy/screens/profile_screen.dart';
 import 'package:Swoppy/screens/registration_screen.dart';
 import 'package:Swoppy/screens/resetPassword_screen.dart';
@@ -62,7 +61,6 @@ Future<void> main() async {
           ProfileScreen.id: (context) => ProfileScreen(),
           HardFactsScreen.id: (context) => HardFactsScreen(),
           UserScreen.id: (context) => UserScreen(),
-          MatchingScreen.id: (context) => MatchingScreen(),
           TutorialScreen.id: (context) => TutorialScreen(),
           ResetPasswordScreen.id: (context) => ResetPasswordScreen(),
         },

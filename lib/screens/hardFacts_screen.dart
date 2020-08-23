@@ -2,6 +2,7 @@ import 'package:Swoppy/components/AppLocalizations.dart';
 import 'package:Swoppy/components/alertShowDialogCollection.dart';
 import 'package:Swoppy/components/decimalTextInputFormatter.dart';
 import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/screens/user_screen.dart';
 import 'package:Swoppy/utilities/IndustryData.dart';
 import 'package:Swoppy/utilities/constants.dart';
 import 'package:Swoppy/utilities/matchingData.dart';
@@ -11,8 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-
-import 'user_screen.dart';
 
 class HardFactsScreen extends StatefulWidget {
   static const String id = 'hardFacts_screen';
@@ -442,9 +441,7 @@ class _HardFactsScreenState extends State<HardFactsScreen> {
                           minWidth: 100,
                           onPressed: () {
                             _updateMode
-                                ? Navigator.of(context).pushNamedAndRemoveUntil(
-                                    UserScreen.id,
-                                    ModalRoute.withName(UserScreen.id))
+                                ? Navigator.of(context).pushNamed(UserScreen.id)
                                 : Navigator.pop(context);
                           },
                         ),

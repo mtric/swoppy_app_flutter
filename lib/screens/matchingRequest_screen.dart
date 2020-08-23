@@ -1,12 +1,11 @@
-import 'package:Swoppy/components/alertShowDialogCollection.dart';
+import 'package:Swoppy/components/AppLocalizations.dart';
 import 'package:Swoppy/components/rounded_button.dart';
+import 'package:Swoppy/components/video_url.dart';
 import 'package:Swoppy/screens/chat_screen.dart';
 import 'package:Swoppy/screens/video_screen.dart';
 import 'package:Swoppy/utilities/constants.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Swoppy/components/AppLocalizations.dart';
 
 class MatchingRequestScreen extends StatefulWidget {
   MatchingRequestScreen(
@@ -20,20 +19,6 @@ class MatchingRequestScreen extends StatefulWidget {
 }
 
 class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
-  String videoURL = '';
-  bool videoExists = true;
-  getVideoUrl() async {
-    try {
-      StorageReference ref = FirebaseStorage.instance.ref().child(
-          '${widget.candidateEMail}/${widget.candidateEMail}_profileVideo.mp4');
-      String url = (await ref.getDownloadURL()).toString();
-      videoURL = url;
-      print(videoURL);
-    } catch (e) {
-      videoExists = false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,12 +57,13 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
                   title: AppLocalizations.of(context)
                       .translate('show image video'),
                   colour: kMainRedColor,
-                  onPressed: () {
-                    getVideoUrl();
+                  onPressed: () async {
+                    final videoURL = await fetchVideoUrl(context,
+                        '${widget.candidateEMail}/${widget.candidateEMail}_profileVideo.mp4');
                     Future.delayed(
                       const Duration(milliseconds: 1000),
                       () {
-                        if (videoExists) {
+                        if (videoURL != null) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -88,8 +74,6 @@ class _MatchingRequestScreenState extends State<MatchingRequestScreen> {
                               ),
                             ),
                           );
-                        } else {
-                          showNoVideoFound(context);
                         }
                       },
                     );
